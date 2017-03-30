@@ -29,36 +29,13 @@ Please report issues or suggestions to [Gibran Hemani](mailto:g.hemani@bristol.a
 
 ## Installation
 
-### Option 1:
-
 To install version 0.6.1:
 
 ```r
-install.packages("readstata13")
-install.packages("https://www.dropbox.com/s/ef7v8l26pub5zs4/alspac_0.6.1.tar.gz?dl=1", repos = NULL, type="source")
+install.packages("devtools")
+install_github("explodecomputer/alspac")
 ```
 
-### Option 2:
-
-To install:
-
-```
-git clone git@scmv-ieugit.epi.bris.ac.uk:gh13047/alspacr.git
-cd alspacr
-```
-
-then in R:
-
-```r
-library(devtools)
-install()
-```
-
-Load the package:
-
-```r
-library(alspac)
-```
 
 
 ## Finding variables
