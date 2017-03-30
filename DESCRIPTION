@@ -1,0 +1,12 @@
+Package: alspac
+Title: Data dictionary for ALSPAC
+Description: Functions to search and extract variables based on keywords from the ALSPAC data dictionary
+Version: 0.6.1
+Authors@R: person("Gibran", "Hemani", email = "g.hemani@bristol.ac.uk",
+                  role = c("aut", "cre"))
+Depends:
+	R (>= 3.1.0),
+	readstata13
+License: Artistic-2.0
+LazyData: no
+RoxygenNote: 5.0.1
