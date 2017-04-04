@@ -5,7 +5,7 @@ Version: 0.6.1
 Authors@R: person("Gibran", "Hemani", email = "g.hemani@bristol.ac.uk",
                   role = c("aut", "cre"))
 Depends:
-	R (>= 3.1.0),
+	R (>= 3.0.0),
 	readstata13
 License: Artistic-2.0
 LazyData: no
