@@ -23,7 +23,7 @@ getDefaultDataDir <- function()
 	d <- switch(Sys.info()['sysname'],
 		Darwin = "/Volumes/data/",
 		Linux = "~/.gvfs/data on is-socmed.isys.bris.ac.uk/",
-		Windows = "R:/Data/"
+		Windows = "R:/Data"
 	)
 	return(d)
 }
