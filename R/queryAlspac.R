@@ -241,3 +241,50 @@ convertQlet <- function(qlet)
 	}
 	return(qlet)
 }
+
+
+#' Extract variables exported from the ALSPAC variable lookup web app
+#'
+#' The variable lookup webapp allows you to browse the available
+#' variables and export a list of selected variables.
+#' This function will read that exported list and extract the individual
+#' level data for each of the selected variables.
+#' 
+#' More generally, this function requires a file that has at least one 
+#' column with the header 'Variable' followed by a list of variable names.
+#' 
+#' The R: drive must be mounted and its path set with the \code{setDataDir} function.
+#'
+#' @param filename Name of file exported from ALSPAC variable lookup web app
+#'
+#' @export
+#' @return Data frame
+extractWebOutput <- function(filename)
+{
+	input <- read.csv(filename)
+	if(names(input)[1] != "Variable")
+	{
+		stop("The first column in ", filename, " should be names 'Variable'. Make sure this file has been exported from the ALSPAC variable lookup webapp.")
+	}
+	if(nrow(input) == 0)
+	{
+		stop("No variables present in ", filename)
+	}
+	data(current)
+	data(useful)
+
+	l <- rbind(
+		subset(current, name %in% input$Variable),
+		subset(useful, name %in% input$Variable)
+	)
+
+	if(nrow(l) != 0)
+	{
+		out <- extractVars(l)
+		return(out)
+	} else {
+		stop("None of the variables in ", filename, " were in either the current or useful_data dictionaries")
+	}
+	return(l)
+}
+
