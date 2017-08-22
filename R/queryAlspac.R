@@ -54,9 +54,13 @@ setDataDir <- function(datadir=getDefaultDataDir())
 	test <- file.exists(datadir)
 	if(test)
 	{
-		cat("The data directory has been recognised\n")
+		message("The data directory has been recognised")
 	} else {
-		cat("The data directory", datadir, "has NOT been found.\nIt is normally located on the remote R drive, R:/Data/.\nYou will be able to search for variables from the dictionary but unable to extract them from the data.\nPlease check that the R: drive has been mounted onto your computer through the UoB VPN\nRun setDataDir(<directory name>) to try again.\n")
+		message("The data directory ", datadir, " has NOT been found.
+			It is normally located on the remote R drive, R:/Data/.
+			You will be able to search for variables from the dictionary but unable to extract them from the data.
+			Please check that the R: drive has been mounted onto your computer through the UoB VPN
+			Run setDataDir(<directory name>) to try again.")
 	}
 	options(alspac_data_dir=datadir)
 }
@@ -121,7 +125,9 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 		g <- n[!n %in% a]
 	}
 	index <- n %in% g
-	return(dictionary[index, ])
+	out <- dictionary[index, ]
+	rownames(out) <- NULL
+	return(out)
 }
 
 
@@ -166,7 +172,18 @@ extractVars <- function(x)
 {
 	# require(plyr)
 	# require(readstata13)
-	cat("Starting extraction\n")
+
+	message("Getting consent exclusions")
+	withdrawal <- readExclusions()
+	withdrawal <- c(
+		paste0(withdrawal$child, "A"),
+		paste0(withdrawal$child, "B"),
+		paste0(withdrawal$child, "C"),
+		paste0(withdrawal$child, "D"),
+		withdrawal$mother
+	)
+
+	message("Starting extraction")
 	variable_names <- 
 	dat <- plyr::dlply(x, c("obj"), .progress="text", function(x)
 	{
@@ -194,7 +211,7 @@ extractVars <- function(x)
 		if(!all(index == TRUE))
 		{
 			print(x$name)
-			cat("Missing vars from ", x$objname, ":", x$name[!index], "\n")
+			message("Missing vars from ", x$objname, ":", x$name[!index], "\n")
 		}
 		# extract requested variables
 		cvars <- names(obj)[names(obj) %in% x$name]
@@ -209,7 +226,7 @@ extractVars <- function(x)
 		}
 		return(obj)
 	})
-	cat("Collapsing data\n")
+	message("Collapsing data\n")
 	x <- dat[[1]]
 	if(length(dat) > 1)
 	{
@@ -225,6 +242,7 @@ extractVars <- function(x)
 	}
 	names(x)[names(x) == "aln"] <- "alnqlet"
 	names(x)[names(x) == "aln2"] <- "aln"
+	x <- subset(x, ! alnqlet %in% withdrawal)
 	return(x)
 }
 
@@ -287,4 +305,39 @@ extractWebOutput <- function(filename)
 	}
 	return(l)
 }
+
+
+
+#' Get list of ALNs to exclude
+#'
+#' The exclusion lists for mothers and children are stored in .do files
+#' in the R: drive. This function reads the child_completed*.do file, and the
+#' mother*.do file, then parses out the withdrawal consent ALNs.
+#'
+#' @export
+#' @return List of ALNs for mothers and children
+readExclusions <- function()
+{
+	fn_child <- list.files(paste0(options()$alspac_data_dir, "/Syntax/Withdrawal of consent/"), pattern="child_completed.*do", full.names=TRUE)
+	fn_mother <- list.files(paste0(options()$alspac_data_dir, "/Syntax/Withdrawal of consent/"), pattern="mother.*do", full.names=TRUE)
+
+	mother <- scan(fn_mother, what=character(), quiet=TRUE) %>% 
+		paste(collapse=" ") %>%
+		stringr::str_extract_all("aln *== *[0-9]+") %>% 
+		unlist() %>% 
+		stringr::str_replace_all(" ", "") %>% 
+		stringr::str_replace_all("aln==", "") %>% 
+		as.integer %>% unique
+
+	child <- scan(fn_child, what=character(), quiet=TRUE) %>% 
+		paste(collapse=" ") %>%
+		stringr::str_extract_all("aln *== *[0-9]+") %>% 
+		unlist() %>% 
+		stringr::str_replace_all(" ", "") %>% 
+		stringr::str_replace_all("aln==", "") %>% 
+		as.integer %>% unique
+
+	return(list(mother=mother, child=child))
+}
+
 

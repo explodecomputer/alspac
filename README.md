@@ -11,13 +11,14 @@ To obtain ALSPAC variables, the general procedure is:
 
 This package combines the search and extraction procedure into two functions, this makes the work a bit more reproducible. It works for the curated data in the `R:/Current/` and `R:/Useful_data` directories.
 
+The extracted data has withdrawn consent individuals removed automatically.
+
 
 ## Limitations
 
 - The data is not curated further than what is present already in the STATA `.dta` files
 - The `Useful_data` folder contains only some of the known user derived variables. As these variables continue to be processed the directory will be updated, but contact the ALSPAC team if there is something you need which cannot be found here.
 - This is a beta version of the package, please report errors or suggestions to [g.hemani@bristol.ac.uk](mailto:g.hemani@bristol.ac.uk)
-- The extraction function is not removing withdrawn consent individuals automatically
 - Variable look-ups can be performed off-line and without any restrictions, but variable extraction requires access to the R drive where the data is residing.
 - ALN IDs refer to pregnancies. The same ALN is shared between mothers, their children, partners and fathers. Children can be distinguished from the others by virtue of having a QLET code. But distinguishing between mothers, fathers and partners is not straightforward. See note below on how data that includes different individuals with the same ALN is presented.
 
@@ -115,6 +116,12 @@ vars <- findVars("difficulties", dictionary=useful)
 
 Some of these arguments have defaults but just writing them out for illustration. So once you have a list of variables in the required format (i.e. the output from findVars) you can extract those variables:
 
+
+### Browsing variables
+
+
+
+
 ## Extracting variables
 
 For this you need to have mounted the `R:/Data` drive on your computer. When you load the package (`library(alspac)`), if you have the R drive loaded then you should get a message like this:
@@ -180,6 +187,19 @@ This has returned the variables requested, along with some other columns -
     > Please be aware that some women may appear in the release file more than once. This is due to the way in which women were originally enrolled into the study and were assigned IDs. ALSPAC started by enrolling pregnant women and the main study ID is a pregnancy based ID. Therefore if a women enrolled with two different pregnancies (both having an expected delivery date within the recruitment period [April 1991-December 1992]), she will have two separate IDs to uniquely identify these women and their pregnancies. An indicator variable has been included in the file, called mult_mum to identify these women. If you are carrying out mother based research that does not require you to consider repeat pregnancies for which we have data then please select mult_mum == 'No' to remove the duplicate entries. This will keep one pregnancy and randomly drop the other pregnancy. If you are matching the data included in this file to child based data or have been provided with a dataset that includes the children of the ALSPAC pregnancies, as well as the mother-based data, you need not do anything as each pregnancy (and hence each child from a separate pregnancy) has a unique identifier and a mothers’ data has been included/repeated here for each of her pregnancies where appropriate.
 
 If you have a better way to present these data do contact me.
+
+
+## Using the website to browse variables
+
+You can browse the variables at [https://alspac-example.shinyapps.io/alspac-dt/](https://alspac-example.shinyapps.io/alspac-dt/). This contains both the 'Current' and 'Useful_data' variables.
+
+You can use this to help extract variables also. 
+
+1. Select the variables that you want from the table, then click 'Download variable list'. This will download a csv file containing information about the variables chosen. 
+2. Next, you can use the R package to extract those variables. Use the `extractWebOutput` function, specifying the name of the file that you just downloaded. For example
+        
+        extractWebOutput("data-2017-08-22.csv")
+        
 
 
 ## Package Maintenance
