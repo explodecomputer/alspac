@@ -57,10 +57,11 @@ setDataDir <- function(datadir=getDefaultDataDir())
 		message("The data directory has been recognised")
 	} else {
 		message("The data directory ", datadir, " has NOT been found.
-			It is normally located on the remote R drive, R:/Data/.
-			You will be able to search for variables from the dictionary but unable to extract them from the data.
-			Please check that the R: drive has been mounted onto your computer through the UoB VPN
-			Run setDataDir(<directory name>) to try again.")
+It is normally located on the remote R drive, R:/Data/.
+You will be able to search for variables from the dictionary but unable to extract them from the data.
+Please check that the R: drive has been mounted onto your computer through the UoB VPN
+Run setDataDir(<directory name>) to try again."
+)
 	}
 	options(alspac_data_dir=datadir)
 }
