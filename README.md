@@ -219,3 +219,11 @@ document()
 build()
 install()
 ```
+
+To update the shiny variable app use
+
+```
+cd ../../alspac-dt
+Rscript -e "rsconnect::deployApp()"
+```
+
