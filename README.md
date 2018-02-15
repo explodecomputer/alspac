@@ -211,7 +211,7 @@ cd misc/
 Rscript create_dictionary_from_stata.R /Volumes/data
 ```
 
-Following on, the package can be built in R:
+Following on, the package can be built in R. First edit the 
 
 ```
 library(devtools)
@@ -220,10 +220,4 @@ build()
 install()
 ```
 
-To update the shiny variable app use
-
-```
-cd ../../alspac-dt
-Rscript -e "rsconnect::deployApp()"
-```
-
+To update the shiny variable app see [https://github.com/explodecomputer/alspac-shiny](https://github.com/explodecomputer/alspac-shiny)
