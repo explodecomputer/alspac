@@ -21,7 +21,7 @@ getDefaultDataDir <- function()
 {
 
 	d <- switch(Sys.info()['sysname'],
-		Darwin = "/Volumes/data/",
+		Darwin = "/Volumes/ALSPAC-data/",
 		Linux = "~/.gvfs/data on is-socmed.isys.bris.ac.uk/",
 		Windows = "R:/Data"
 	)
@@ -322,23 +322,30 @@ readExclusions <- function()
 	fn_child <- list.files(paste0(options()$alspac_data_dir, "/Syntax/Withdrawal of consent/"), pattern="child_completed.*do", full.names=TRUE)
 	fn_mother <- list.files(paste0(options()$alspac_data_dir, "/Syntax/Withdrawal of consent/"), pattern="mother.*do", full.names=TRUE)
 
-	mother <- scan(fn_mother, what=character(), quiet=TRUE) %>% 
+	mother <- function(fn_mother)
+	{
+		scan(fn_mother, what=character(), quiet=TRUE) %>% 
 		paste(collapse=" ") %>%
 		stringr::str_extract_all("aln *== *[0-9]+") %>% 
 		unlist() %>% 
 		stringr::str_replace_all(" ", "") %>% 
 		stringr::str_replace_all("aln==", "") %>% 
 		as.integer %>% unique
+	}
 
-	child <- scan(fn_child, what=character(), quiet=TRUE) %>% 
+	child <- function(fn_child)
+	{
+		scan(fn_child, what=character(), quiet=TRUE) %>% 
 		paste(collapse=" ") %>%
 		stringr::str_extract_all("aln *== *[0-9]+") %>% 
 		unlist() %>% 
 		stringr::str_replace_all(" ", "") %>% 
 		stringr::str_replace_all("aln==", "") %>% 
 		as.integer %>% unique
-
-	return(list(mother=mother, child=child))
+	}
+	m <- lapply(fn_mother, mother) %>% unlist %>% unique
+	c <- lapply(fn_child, child) %>% unlist %>% unique
+	return(list(mother=m, child=c))
 }
 
 
