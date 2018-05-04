@@ -86,7 +86,7 @@ makeDictionaryStata <- function(path, subdir)
 		dat <- data.frame(
 			name = colnames(temp),
 			lab = attributes(temp)$var.labels,
-			counts = sapply(temp, function(x) sum(!is.na(x))),
+			counts = sapply(temp, function(x) sum(!is.na(x) | x == -10 | x == -11)),
 			type = sapply(temp, function(x) class(x)[1]),
 			obj = basename(fls[i]),
 			stringsAsFactors=FALSE
