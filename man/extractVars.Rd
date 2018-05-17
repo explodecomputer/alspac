@@ -4,10 +4,12 @@
 \alias{extractVars}
 \title{Extract variables from data}
 \usage{
-extractVars(x)
+extractVars(x, exclude_withdrawn = TRUE)
 }
 \arguments{
 \item{x}{Output from `findVars`}
+
+\item{exclude_withdrawn}{Whether to automatically exclude withdrawn consent IDs. Default is TRUE. This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here if you have a more specific list of withdrawn consent IDs for your specific variables.}
 }
 \value{
 A data frame with all the variable specified in `x`
@@ -47,4 +49,3 @@ bmi <- extractVars(bmi_variables)
 bmi <- extractVars(subset(bmi_variables, cat3 \%in\% c("Mother", "Adult")))
 }
 }
-

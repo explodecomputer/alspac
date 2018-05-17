@@ -15,4 +15,3 @@ This function guesses the path to be used as default in setDataDir
 
 }
 }
-

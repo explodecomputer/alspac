@@ -29,4 +29,3 @@ setDataDir() # This sets the path based on the operating system's default
 setDataDir("/some/other/path/") # This is how to supply a path manually
 }
 }
-

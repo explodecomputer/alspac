@@ -11,4 +11,4 @@ Depends:
 	plyr
 License: Artistic-2.0
 LazyData: no
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

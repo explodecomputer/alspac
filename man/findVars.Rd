@@ -46,4 +46,3 @@ The resulting data frame will have the following columns:
 bmi_variables <- findVars("bmi", "height", logic="any", ignore.case=TRUE)
 }
 }
-

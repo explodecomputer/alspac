@@ -54,7 +54,12 @@ setDataDir <- function(datadir=getDefaultDataDir())
 	test <- file.exists(datadir)
 	if(test)
 	{
-		message("The data directory has been recognised")
+		if(all(file.exists(paste0(datadir, c("/Syntax", "/Current", "/Useful_data")))))
+		{
+			message("The data directory has been recognised")
+		} else {
+			message("The specified data directory exists but it is not the correct directory. It should have the directories 'Syntax', 'Current' and 'Useful_data' contained within. It is normally located on the remote R drive, R:/Data/")
+		}
 	} else {
 		message("The data directory ", datadir, " has NOT been found.
 It is normally located on the remote R drive, R:/Data/.
@@ -158,6 +163,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 #' and how many variables you are extracting at once.
 #'
 #' @param x Output from `findVars`
+#' @param exclude_withdrawn Whether to automatically exclude withdrawn consent IDs. Default is TRUE. This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here if you have a more specific list of withdrawn consent IDs for your specific variables.
 #'
 #' @export
 #' @return A data frame with all the variable specified in `x`
@@ -169,7 +175,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x)
+extractVars <- function(x, exclude_withdrawn = TRUE)
 {
 	# require(plyr)
 	# require(readstata13)
@@ -243,7 +249,13 @@ extractVars <- function(x)
 	}
 	names(x)[names(x) == "aln"] <- "alnqlet"
 	names(x)[names(x) == "aln2"] <- "aln"
-	x <- subset(x, ! alnqlet %in% withdrawal)
+	if(exclude_withdrawn)
+	{
+		x <- subset(x, ! alnqlet %in% withdrawal)
+		message("Automatically removing all withdrawn consent ALNs from the entire dataset")
+	} else {
+		warning("Withdrawn consent individuals have NOT been removed. Re-run with the default option or remove the relevant IDs manually before proceeding with analysis.")
+	}
 	return(x)
 }
 

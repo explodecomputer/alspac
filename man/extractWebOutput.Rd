@@ -24,4 +24,3 @@ column with the header 'Variable' followed by a list of variable names.
 
 The R: drive must be mounted and its path set with the \code{setDataDir} function.
 }
-

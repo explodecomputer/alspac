@@ -14,4 +14,3 @@ The exclusion lists for mothers and children are stored in .do files
 in the R: drive. This function reads the child_completed*.do file, and the
 mother*.do file, then parses out the withdrawal consent ALNs.
 }
-
