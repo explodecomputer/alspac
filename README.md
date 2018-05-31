@@ -13,6 +13,8 @@ This package combines the search and extraction procedure into two functions, th
 
 The extracted data has withdrawn consent individuals removed automatically.
 
+You can browse the variables here: [http://variables.alspac.bris.ac.uk/](http://variables.alspac.bris.ac.uk/)
+
 
 ## Limitations
 

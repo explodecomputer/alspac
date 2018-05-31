@@ -22,7 +22,7 @@ getDefaultDataDir <- function()
 
 	d <- switch(Sys.info()['sysname'],
 		Darwin = "/Volumes/ALSPAC-data/",
-		Linux = "~/.gvfs/data on is-socmed.isys.bris.ac.uk/",
+		Linux = "~/.gvfs/data/",
 		Windows = "R:/Data"
 	)
 	return(d)
@@ -38,7 +38,7 @@ getDefaultDataDir <- function()
 #' \itemize{
 #' \item{Windows: R:/Data/Useful_data/current_R/}
 #' \item{Mac: /Volumes/data/Useful_data/current_R/}
-#' \item{Linux: ~/.gvfs/data on is-socmed.isys.bris.ac.uk/Useful_data/current_R/}
+#' \item{Linux: ~/.gvfs/data/Useful_data/current_R/}
 #' }
 #' 
 #' @param datadir The directory where the ALSPAC data can be found
