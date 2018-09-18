@@ -1,5 +1,10 @@
 library(plyr)
 library(readstata13)
+library(openssl)
+library(dplyr)
+alspacdir <- "/Volumes/ALSPAC-Data"
+
+
 
 
 getFileList <- function(alspacdir)
@@ -23,7 +28,6 @@ getFileList <- function(alspacdir)
 	fls <- fls[!duplicated(fls_n)]
 	return(fls)
 }
-
 
 countCharOccurrences <- function(char, s)
 {
@@ -69,14 +73,35 @@ createFileTable <- function(fls, alspacdir)
 	names(dat) <- paste("cat", 1:nfield, sep="")
 	dat$obj <- fls_bn
 	dat$path <- fls_d
+	dat$md5 <- openssl::md5(fls)
+	dat$access_date <- date()
 	return(dat)
 }
+
+whichToUpdate <- function(new_fls, old_fls)
+{
+	if(file.exists(old_fls))
+	{
+		load(old_fls)		
+	}
+}
+
 
 makeDictionaryStata <- function(path, subdir)
 {
 	fullpath <- file.path(path, subdir)
 	fls <- getFileList(fullpath)
 	files <- createFileTable(fls, path)
+	old_files <- paste0("../data/", subdir, "_filelist.rdata")
+	if(file.exists(old_files))
+	{
+		load(paste0("../data/", subdir, "_filelist.rdata"))
+		## Datasets to remove
+		## New datasets
+		## Changed datasets
+		fo
+
+	}
 	l <- list()
 	n <- length(fls)
 	for(i in 1:n)
