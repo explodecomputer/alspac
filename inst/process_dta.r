@@ -1,5 +1,5 @@
-library(dplyr)
-suppressWarnings(library(readstata13))
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(readstata13)))
 
 process_dta <- function(fn)
 {
