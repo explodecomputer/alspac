@@ -8,9 +8,9 @@ out <- lapply(commandArgs(T), function(x)
 	return(dat)
 }) %>% bind_rows
 
-Current <- subset(out, grepl("^/Current", path), select=-c(path))
+Current <- subset(out, cat1 == "Current", select=-c(path))
 save(Current, file="../data/Current.RData")
 
-Useful_data <- subset(out, grepl("^/Useful_data", path), select=-c(path))
+Useful_data <- subset(out, cat1 == "Useful_data", select=-c(path))
 save(Useful_data, file="../data/Useful_data.RData")
 
