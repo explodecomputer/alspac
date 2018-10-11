@@ -1,0 +1,96 @@
+## NOTE
+## This doesn't work due to spaces in filenames and directory names
+
+
+import glob, os.path
+R = 'Rscript'
+
+"""Find all the paths .dta files"""
+
+ALSPACDIR='/Volumes/ALSPAC-Data'
+# SOURCES = [filename for filename in glob.iglob(ALSPACDIR+'/Current/**/*.dta', recursive=True)] + [filename for filename in glob.iglob(ALSPACDIR+'/Useful_data/**/*.dta', recursive=True)]
+
+# OBJECTS = ["scratch/"+os.path.basename(filename) for filename in SOURCES]
+
+
+
+from pathlib import Path   
+
+dta_dict = {}
+dta_path = Path(ALSPACDIR).glob('Current/Other/Sample Definition/**/*.dta')
+for f in dta_path:
+    dta_name = f.name.replace('.dta', '')
+    dta_dict[dta_name] = str(f)
+
+dta_path = Path(ALSPACDIR).glob('Useful_data/adiposity rebound/**/*.dta')
+for f in dta_path:
+    dta_name = f.name.replace('.dta', '')
+    dta_dict[dta_name] = str(f)
+
+rule rdata:
+    output:
+        'Current.RData',
+        'Useful_data.RData'
+    input:
+        expand('scratch/{dta_name}.rdata', dta_name=dta_dict.keys())
+    shell:
+        'Rscript collate.r {input:q}'
+
+rule Dta_process:
+    input:
+        lambda wildcards: dta_dict[wildcards.dta_name]
+    output:
+        'scratch/{dta_name}.rdata'
+    shell:
+        'Rscript process_dta.r {input:q} {output} {ALSPACDIR}'
+
+
+
+
+
+
+# rule all:
+#   input: expand("{dataset}", dataset=SOURCES)
+
+# rule all:
+#   """collate individual header files"""
+#   input:
+#       expand("{headers}", dataset=OBJECTS)
+#   output: 
+#       '../data/Current.RData',
+#       '../data/Useful_data.RData'
+#   script:
+#       'scripts/collate.r {headers}'
+
+
+# rule get_headers:
+#   input:
+
+
+
+
+# SOURCES := $(shell find $(ALSPACDIR)/Current -iname '*.dta' | sed "s@ @\\\ @g")
+# # SOURCES += $(shell find $(ALSPACDIR)/Useful_data -iname '*.dta' | tr ' ' '_')
+# vpath %.dta $(sort $(dir $(SOURCES)))
+
+# OBJECTS := $(notdir $(SOURCES))
+# OBJECTS := $(OBJECTS:%.dta=scratch/%.rdata)
+
+# $(info   objects: $(OBJECTS))
+# $(info   sources: $(SOURCES))
+
+# all: ../data/Current.RData ../data/Useful_data.RData
+
+# ../data/Current.RData ../data/Useful_data.RData: $(OBJECTS)
+#   $(R) collate.r $(OBJECTS)
+
+# scratch/%.rdata: %.dta
+#   $(R) process_dta.r $< $@ $(ALSPACDIR)
+
+# dirs:
+#   @mkdir -p scratch
+
+# report: report.html
+
+# %.html: %.rmd
+#   ./render $<
