@@ -3,8 +3,8 @@
 # 1. Find all variables for a particular search term
 # 2. Create dataframe for a list of chosen variables
 
-load(system.file("data", "current.RData", package="alspac"))
-load(system.file("data", "useful.RData", package="alspac"))
+load(system.file("data", "current.rdata", package="alspac"))
+load(system.file("data", "useful.rdata", package="alspac"))
 
 
 #' Guess the default data directory
