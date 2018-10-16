@@ -18,8 +18,8 @@ for f in dta_path:
 
 rule rdata:
     output:
-        '../data/Current.RData',
-        '../data/Useful_data.RData'
+        '../data/current.RData',
+        '../data/useful.RData'
     input:
         expand('scratch/{dta_name}.rdata', dta_name=dta_dict.keys())
     shell:

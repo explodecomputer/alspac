@@ -9,8 +9,8 @@ out <- lapply(commandArgs(T), function(x)
 }) %>% bind_rows
 
 current <- subset(out, cat1 == "Current", select=-c(path))
-save(current, file="../data/Current.RData")
+save(current, file="../data/current.RData")
 
 useful <- subset(out, cat1 == "Useful_data", select=-c(path))
-save(useful, file="../data/Useful_data.RData")
+save(useful, file="../data/useful.RData")
 
