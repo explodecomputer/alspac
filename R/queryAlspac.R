@@ -190,24 +190,34 @@ extractVars <- function(x, exclude_withdrawn = TRUE)
 		withdrawal$mother
 	)
 
-	message("Starting extraction")
+	message("Starting extraction from ", length(unique(x$obj)), " files in the ALSPAC data directory")
 	variable_names <- 
-	dat <- plyr::dlply(x, c("obj"), .progress="text", function(x)
+	dat <- plyr::dlply(x, c("obj"), function(x)
 	{
 		x <- plyr::mutate(x)
 		# Read in data
 		fn <- paste0(options()$alspac_data_dir, "/", x$path[1], "/", x$obj[1])
+		message("Extracting from: ", fn)
+		if(!file.exists(fn))
+		{
+			message("PROBLEM: ", fn, " does not exist. Either the dictionary is out of date, in which case please contact the maintainer and ask for it to be updated; or the input to this function was generated in an older version of the package and will need to be regenerated.")
+			message("Skipping...")
+			return(NULL)
+		}
 		obj <- suppressWarnings(readstata13::read.dta13(fn))
 
 		# Make sure aln and qlet variables are lower case
-		alnc <- grep("ALN", names(obj), ignore.case=TRUE)
+		alnc <- grep("^ALN$", names(obj), ignore.case=TRUE)
 		if(length(alnc) == 1)
 		{
 			names(obj)[alnc] <- "aln"
 		} else {
-			stop("No ALN code in ", x$objname[1])
+			message("ALN codes missing or not as expected in ", x$obj[1])
+			message(names(obj)[alnc])
+			message("Please contact maintainers. Skipping...")
+			return(NULL)
 		}
-		qletc <- grep("QLET", names(obj), ignore.case=TRUE)
+		qletc <- grep("^QLET$", names(obj), ignore.case=TRUE)
 		if(length(qletc) != 0)
 		{
 			names(obj)[qletc] <- "qlet"
@@ -218,7 +228,7 @@ extractVars <- function(x, exclude_withdrawn = TRUE)
 		if(!all(index == TRUE))
 		{
 			print(x$name)
-			message("Missing vars from ", x$objname, ":", x$name[!index], "\n")
+			message("Missing vars from ", x$obj, ":", x$name[!index], "\n")
 		}
 		# extract requested variables
 		cvars <- names(obj)[names(obj) %in% x$name]
@@ -233,7 +243,13 @@ extractVars <- function(x, exclude_withdrawn = TRUE)
 		}
 		return(obj)
 	})
-	message("Collapsing data\n")
+	message("Collapsing data")
+	dat <- Filter(Negate(is.null), dat)
+	if(length(dat) == 0)
+	{
+		message("No data found")
+		return(NULL)
+	}
 	x <- dat[[1]]
 	if(length(dat) > 1)
 	{
