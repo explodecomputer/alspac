@@ -3,6 +3,8 @@ R = 'Rscript'
 
 ALSPACDIR='/Volumes/ALSPAC-Data'
 
+[os.makedirs(x) for x in ["scratch"] if not os.path.exists(x)]
+
 from pathlib import Path   
 
 dta_dict = {}
@@ -11,10 +13,13 @@ for f in dta_path:
     dta_name = f.name.replace('.dta', '')
     dta_dict[dta_name] = str(f)
 
+print(len(dta_dict))
+
 dta_path = Path(ALSPACDIR).glob('Useful_data/**/*.dta')
 for f in dta_path:
     dta_name = f.name.replace('.dta', '')
     dta_dict[dta_name] = str(f)
+
 
 rule rdata:
     output:

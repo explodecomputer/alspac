@@ -4,6 +4,7 @@ filelist <- commandArgs(T)
 
 out <- lapply(commandArgs(T), function(x)
 {
+	print(x)
 	load(x)
 	return(dat)
 }) %>% bind_rows

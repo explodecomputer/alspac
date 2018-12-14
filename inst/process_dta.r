@@ -1,5 +1,6 @@
 suppressMessages(suppressWarnings(library(dplyr)))
 suppressMessages(suppressWarnings(library(readstata13)))
+# suppressMessages(suppressWarnings(library(haven)))
 
 countCharOccurrences <- function(char, s)
 {
@@ -50,10 +51,12 @@ createFileTable <- function(fls, alspacdir)
 
 process_dta <- function(fn)
 {
-	temp <- suppressWarnings(read.dta13(fn))
+	temp <- suppressWarnings(readstata13::read.dta13(fn))
+	# temp <- haven::read_dta(fn)
 	dat <- data_frame(
 		name = colnames(temp),
 		lab = attributes(temp)$var.labels,
+		# lab = sapply(temp, function(x) attr(x, "label")),
 		counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11)),
 		type = sapply(temp, function(x) class(x)[1]),
 		obj = basename(fn)
