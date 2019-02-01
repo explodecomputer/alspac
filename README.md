@@ -113,7 +113,7 @@ vars <- findVars("sleep", "slept", logic="any", whole.word=FALSE, ignore.case=TR
 To find all variables that have the term "difficulties" from the `useful` data:
 
 ```r
-vars <- findVars("difficulties", dictionary=useful)
+vars <- findVars("difficulties", dictionary="useful")
 ```
 
 Some of these arguments have defaults but just writing them out for illustration. So once you have a list of variables in the required format (i.e. the output from findVars) you can extract those variables:
