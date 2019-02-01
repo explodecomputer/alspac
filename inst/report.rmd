@@ -1,30 +1,30 @@
 ```{r }
 # library(alspac)
-load("../data/Current.RData")
+load("../data/current.rdata")
 library(knitr)
 ```
 
 How many variables in Current?
 
 ```{r }
-nrow(Current)
+nrow(current)
 ```
 
 How many variables per questionnaire type (approx)
 
 ```{r }
-kable(as.data.frame(table(Current$cat2)))
+kable(as.data.frame(table(current$cat2)))
 ```
 
 How many variables per person type (approx)
 
 ```{r }
-kable(as.data.frame(table(Current$cat3)))
+kable(as.data.frame(table(current$cat3)))
 ```
 
 Distribution of sample sizes per question
 
 ```{r }
-hist(Current$counts, xlab="Number of non-missing values per variable", breaks=100, main=NULL)
+hist(current$counts, xlab="Number of non-missing values per variable", breaks=100, main=NULL)
 ```
 

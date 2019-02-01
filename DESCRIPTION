@@ -8,7 +8,9 @@ Depends:
 	R (>= 3.0.0),
 	readstata13,
 	stringr,
-	plyr
+	plyr,
+	dplyr,
+	parallel
 License: Artistic-2.0
 LazyData: no
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

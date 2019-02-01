@@ -5,7 +5,7 @@
 \title{Find variables}
 \usage{
 findVars(..., logic = "any", ignore.case = TRUE, perl = FALSE,
-  fixed = FALSE, whole.word = FALSE, dictionary = current)
+  fixed = FALSE, whole.word = FALSE, dictionary = "current")
 }
 \arguments{
 \item{...}{Search terms}
@@ -20,7 +20,7 @@ findVars(..., logic = "any", ignore.case = TRUE, perl = FALSE,
 
 \item{whole.word}{If 'TRUE' search term "word" will be changed to "\\bword\\b" to only match whole words. Defaults to FALSE.}
 
-\item{dictionary}{Data frame of data dictionary. Defaults to "current", but "useful" is also an option - this contains the data dictionary for the R:/Data/Useful_data directory}
+\item{dictionary}{Data frame or name of a data dictionary. Defaults to "current", but "useful" is also an option - this contains the data dictionary for the R:/Data/Useful_data directory. New dictionaries can be created using the \code{\link{createDictionary}()} function.}
 }
 \value{
 A data frame containing a list of the variables, the files they originate from, and some descripton about the files

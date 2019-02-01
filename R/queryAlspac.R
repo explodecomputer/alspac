@@ -3,73 +3,7 @@
 # 1. Find all variables for a particular search term
 # 2. Create dataframe for a list of chosen variables
 
-load(system.file("data", "current.rdata", package="alspac"))
-load(system.file("data", "useful.rdata", package="alspac"))
 
-
-#' Guess the default data directory
-#'
-#' The R drive will be mounted in different paths for different systems.
-#' This function guesses the path to be used as default in setDataDir
-#' 
-#' @export
-#' @return NULL
-#' @examples \dontrun{
-#'
-#'}
-getDefaultDataDir <- function()
-{
-
-	d <- switch(Sys.info()['sysname'],
-		Darwin = "/Volumes/ALSPAC-data/",
-		Linux = "~/.gvfs/data/",
-		Windows = "R:/Data"
-	)
-	return(d)
-}
-
-
-#' Set the data directory
-#'
-#' This function is automatically called upon loading the package through `library(alspac)`
-#' It creates a global option called `alspac_data_dir` which is used by the \code{extractVars}
-#' function to locate the alspac data files.
-#' This function guesses the path to be used as default in setDataDir. The defaults are:
-#' \itemize{
-#' \item{Windows: R:/Data/Useful_data/current_R/}
-#' \item{Mac: /Volumes/data/Useful_data/current_R/}
-#' \item{Linux: ~/.gvfs/data/Useful_data/current_R/}
-#' }
-#' 
-#' @param datadir The directory where the ALSPAC data can be found
-#' 
-#' @export
-#' @return Null. Assigns the option alspac_data_dir
-#' @examples \dontrun{
-#' setDataDir() # This sets the path based on the operating system's default
-#' setDataDir("/some/other/path/") # This is how to supply a path manually
-#'}
-setDataDir <- function(datadir=getDefaultDataDir())
-{
-	test <- file.exists(datadir)
-	if(test)
-	{
-		if(all(file.exists(paste0(datadir, c("/Syntax", "/Current", "/Useful_data")))))
-		{
-			message("The data directory has been recognised")
-		} else {
-			message("The specified data directory exists but it is not the correct directory. It should have the directories 'Syntax', 'Current' and 'Useful_data' contained within. It is normally located on the remote R drive, R:/Data/")
-		}
-	} else {
-		message("The data directory ", datadir, " has NOT been found.
-It is normally located on the remote R drive, R:/Data/.
-You will be able to search for variables from the dictionary but unable to extract them from the data.
-Please check that the R: drive has been mounted onto your computer through the UoB VPN
-Run setDataDir(<directory name>) to try again."
-)
-	}
-	options(alspac_data_dir=datadir)
-}
 
 
 #' Find variables
@@ -93,7 +27,7 @@ Run setDataDir(<directory name>) to try again."
 #' @param perl logical.  Should perl-compatible regexps be used? Defaults to FALSE.
 #' @param fixed logical.  If 'TRUE', 'pattern' is a string to be matched as is.  Overrides all conflicting arguments. Defaults to FALSE.
 #' @param whole.word If 'TRUE' search term "word" will be changed to "\\bword\\b" to only match whole words. Defaults to FALSE.
-#' @param dictionary Data frame of data dictionary. Defaults to "current", but "useful" is also an option - this contains the data dictionary for the R:/Data/Useful_data directory
+#' @param dictionary Data frame or name of a data dictionary. Defaults to "current", but "useful" is also an option - this contains the data dictionary for the R:/Data/Useful_data directory. New dictionaries can be created using the \code{\link{createDictionary}()} function.
 #'
 #' @export
 #' @return A data frame containing a list of the variables, the files they originate from, and some descripton about the files
@@ -101,8 +35,11 @@ Run setDataDir(<directory name>) to try again."
 #' # Find variables with BMI or height in the description (this will return a lot of results!)
 #' bmi_variables <- findVars("bmi", "height", logic="any", ignore.case=TRUE)
 #'}
-findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary=current)
+findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="current")
 {
+        if (is.character(dictionary))
+            dictionary <- retrieveDictionary(dictionary)
+          
 	l <- list(...)
 	stopifnot(length(l) > 0)
 	stopifnot(logic %in% c("any", "all", "none"))
@@ -163,10 +100,19 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 #' and how many variables you are extracting at once.
 #'
 #' @param x Output from `findVars`
-#' @param exclude_withdrawn Whether to automatically exclude withdrawn consent IDs. Default is TRUE. This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here if you have a more specific list of withdrawn consent IDs for your specific variables.
-#'
+#' @param exclude_withdrawn Whether to automatically exclude withdrawn consent IDs. Default is TRUE.
+#' This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here
+#' if you have a more specific list of withdrawn consent IDs for your specific variables.
+#' @param core_only Whether to automatically exclude data from participants not in the core ALSPAC dataset.
+#' This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder (Default: TRUE).
+#' @param adult_only Whether the dataset includes data from ALSPAC mothers and partners only.
+#' If \code{TRUE} and \code{core_only == TRUE}, then this should give the same samples
+#' as the STATA/SPSS scripts in the R:/Data/Syntax folder marked "adultonly".
+#' Any requested variables for young people in this case will be omitted (Default: FALSE).
+#' 
 #' @export
-#' @return A data frame with all the variable specified in `x`
+#' @return A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
+#' named \code{withdrawn_consent_*} indicate which samples were excluded.
 #' @examples \dontrun{
 #' # Find all variables with BMI in the description
 #' bmi_variables <- findVars("bmi", ignore.case=TRUE)
@@ -175,25 +121,186 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, exclude_withdrawn = TRUE)
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE) {
+    if (core_only) 
+        x <- extractVarsCore(x,adult_only=adult_only) 
+    else
+        x <- extractVarsFull(x, adult_only=adult_only)
+    
+    if(exclude_withdrawn) {
+        x <- removeExclusions(x)
+        message("Automatically removing all withdrawn consent ALNs from the entire dataset")
+    } else {
+        warning("Withdrawn consent individuals have NOT been removed. Re-run with the default option or remove the relevant IDs manually before proceeding with analysis.")
+    }
+    x
+}
+
+## restrict data extracted as in the SPSS/STATA
+## scripts in R:\Data\Syntax\
+extractVarsCore <- function(x,adult_only=F) {
+    ##based on R:\Data\Syntax\syntax_template_12Apr18.do
+    core.vars <- c("mz001","mz010","mz010a","mz013","mz014","mz028b",
+                   "a006","a525","b032","b650","b663","b665","b667",
+                   "c645a","c755","c765",paste0("c80",0:4),"bestgest")
+    child.vars <- c("kz011b","kz021","kz030","tripquad",
+                    "in_core","in_alsp","in_phase2","in_phase3")
+    core.files <- c("Current/Other/Sample Definition/mz_[0-9]+[a-z]+.dta", 
+                    "Current/Quest/Mother/a_[0-9]+[a-z]+.dta",
+                    "Current/Quest/Mother/b_[0-9]+[a-z]+.dta",
+                    "Current/Quest/Mother/c_[0-9]+[a-z]+.dta",
+                    "Useful_data/bestgest/bestgest.dta",
+                    "Current/Other/Cohort Profile/cp_[0-9]+[a-z]+.dta",
+                    "Current/Other/Sample Definition/kz_[0-9]+[a-z]+.dta")
+    if (!adult_only)
+        core.vars <- c(core.vars, child.vars)
+    current <- retrieveDictionary("current")
+    useful <- retrieveDictionary("useful")[,colnames(current)]
+    dictionary <- rbind(current, useful)
+    idx <- which(dictionary$name %in% core.vars
+                 & rowSums(sapply(basename(core.files), function(patt) grepl(patt, dictionary$obj))) > 0
+                 & dictionary$path %in% dirname(core.files)) 
+    stopifnot(length(setdiff(core.vars, dictionary$name[idx])) == 0)
+    all.vars <- rbind(x, dictionary[idx,])
+    all.vars <- all.vars[match(unique(all.vars$name), all.vars$name),]
+    dat <- extractVarsFull(all.vars, adult_only=adult_only)
+
+    if (!adult_only) {
+        dat <- dat[which(dat$in_alsp == 1
+                         & dat$tripquad == 2),]
+        ## length(unique(dat$alnqlet)) == 15643
+    } else { ## adult only dataset
+        dat <- dat[which(grepl("Yes",dat$mz001)),]
+        ## length(unique(dat.adult$aln)) == 14541 
+    }
+
+    dat
+}
+
+
+#' Remove data for participants who have withdrawn consent.
+#'
+#' The exclusion lists for mothers and children are stored in .do
+#' files in the R: drive. This function obtains ALNs to exclude
+#' from these files and then sets the variable
+#' values to missing for the appropriate participants
+#' and adds indicator variables for these participants ("withdrawn_consent_*").
+#'
+#' @param x Data frame output from \code{\link{extractVars}()}.
+#' 
+#' @export
+#' @return The input data frame but with appropriate values set to missing
+#' with additional variables ("withdrawn_consent_*") identifying participants
+#' who have withdrawn consent.
+removeExclusions <- function(x) {
+    ## colnames(x) <- tolower(colnames(x))
+    
+    stopifnot("aln" %in% names(x))
+    
+    withdrawals <- readExclusions()
+        
+    ##exclude aln and qlet and cohort variables from removal,
+    ##these are used for sample size selection (e.g. subset data)
+    keep <- c("aln","qlet","alnqlet","in_alsp", "in_core",
+              "in_phase2", "in_phase3", "tripquad", "kz011b",
+              "kz021","mz001")
+
+    current <- retrieveDictionary("current")
+    useful <- retrieveDictionary("useful")[,colnames(current)]
+    dictionary <- rbind(current, useful)
+    
+    varnames <- colnames(x)
+    dictionary <- dictionary[which(dictionary$name %in% varnames),]
+    
+    paths <- list(mother_clinic=c("Useful_data",
+                      "Other/Cohort Profile",
+                      "Other/Sample Definition",
+                      "Other/Samples/Mother",
+                      "Other/Obstetric",
+                      "Clinic/Adult"),
+                  mother_quest=c("Useful_data",
+                      "Other/Cohort Profile",
+                      "Other/Sample Definition",
+                      "Other/Social_Class",
+                      "Quest/Mother"),
+                  partner_quest=c("Useful_data",
+                      "Other/Cohort Profile",
+                      "Other/Social_Class",
+                      "Quest/Father"),
+                  partner_clinic=c("Useful_data",
+                      "Other/Cohort Profile",
+                      "Other/Samples/Father",
+                      "Clinic/Adult"),
+                  child_based=c("Useful_data",
+                      "Other/Cohort Profile",
+                      "Other/Sample Definition",
+                      "Other/Obstetric",
+                      "Other/Samples/Child",
+                      "Quest/Child Based",
+                      "Quest/Puberty",
+                      "Clinic/Child"),
+                  child_completed=c("Useful_data",
+                      "Other/Cohort Profile",
+                      "Other/Sample Definition",
+                      "Other/Obstetric",
+                      "Other/Samples/Child",
+                      "Quest/Child Completed",
+                      "Quest/Puberty",
+                      "Clinic/Child"))
+    stopifnot(all(names(withdrawals) %in% names(paths)))
+
+    varnames <- lapply(paths, function(paths) {
+        idx <- unlist(lapply(paths, function(path) grep(path, dictionary$path)))
+        setdiff(dictionary$name[unique(idx)], keep)
+    })
+
+    for (group in names(varnames)) {
+        sample.idx <- which(x$aln %in% withdrawals[[group]])
+        if (length(sample.idx) == 0) next
+        
+        var.idx <- which(colnames(x) %in% varnames[[group]])
+        x[sample.idx, var.idx] <- NA
+        x[[paste("withdrawn","consent",group,sep=".")]] <- x$aln %in% withdrawals[[group]]
+    }
+    x
+}
+
+#' Get list of ALNs to exclude
+#'
+#' The exclusion lists for mothers and children are stored in .do
+#' files in the R: drive. This function reads all of these .do files
+#' and then parses out the ALNS for withdrawn consent.
+#' 
+#' @export
+#' @return List of ALNs for each .do file.
+readExclusions <- function() {
+    do.files <- list.files(file.path(options()$alspac_data_dir, "Syntax/Withdrawal of consent"),
+                           pattern=".do$",
+                           full.names=T)
+    if (length(do.files) == 0)
+        stop("do files in Syntax/Withdrawal of consent/ appear to be missing")
+    
+    names(do.files) <- sub("_WoC.do", "", basename(do.files))
+    lapply(do.files, function(file) {
+        scan(file, what=character(), quiet=TRUE) %>%
+        paste(collapse=" ") %>%
+        stringr::str_extract_all("aln *== *[0-9]+") %>%
+        unlist() %>%
+        stringr::str_replace_all(" ", "") %>%
+        stringr::str_replace_all("aln==", "") %>%
+        as.integer %>% unique
+    })
+}
+
+
+
+extractVarsFull <- function(x, adult_only=FALSE)
 {
 	# require(plyr)
 	# require(readstata13)
 
-	message("Getting consent exclusions")
-	withdrawal <- readExclusions()
-	withdrawal <- c(
-		paste0(withdrawal$child, "A"),
-		paste0(withdrawal$child, "B"),
-		paste0(withdrawal$child, "C"),
-		paste0(withdrawal$child, "D"),
-		withdrawal$mother
-	)
-
 	message("Starting extraction from ", length(unique(x$obj)), " files in the ALSPAC data directory")
-	variable_names <- 
-	dat <- plyr::dlply(x, c("obj"), function(x)
-	{
+	dat <- plyr::dlply(x, c("obj"), function(x) {
 		x <- plyr::mutate(x)
 		# Read in data
 		fn <- paste0(options()$alspac_data_dir, "/", x$path[1], "/", x$obj[1])
@@ -220,6 +327,12 @@ extractVars <- function(x, exclude_withdrawn = TRUE)
 		qletc <- grep("^QLET$", names(obj), ignore.case=TRUE)
 		if(length(qletc) != 0)
 		{
+                        if (adult_only) {
+                               message("adult_only dataset requested but includes variables for ALSPAC young people:")
+                               message(paste(x$name, collapse=", "))
+                               message("Skipping...")
+                               return(NULL)
+                        }
 			names(obj)[qletc] <- "qlet"
 		}
 		# Get aln, mult and qlet variables
@@ -238,7 +351,7 @@ extractVars <- function(x, exclude_withdrawn = TRUE)
 		obj$aln2 <- obj$aln
 		if("qlet" %in% vars)
 		{
-			obj$qlet <- convertQlet(obj$qlet)
+			obj$qlet <- alspac:::convertQlet(obj$qlet)
 			obj$aln <- paste(obj$aln, obj$qlet, sep="")
 		}
 		return(obj)
@@ -250,30 +363,46 @@ extractVars <- function(x, exclude_withdrawn = TRUE)
 		message("No data found")
 		return(NULL)
 	}
-	x <- dat[[1]]
-	if(length(dat) > 1)
-	{
-		for(i in 2:length(dat))
-		{
-			if("qlet" %in% names(dat[[i]]) & "qlet" %in% names(x))
-			{
-				x <- merge(x, dat[[i]], by=c("aln", "qlet", "aln2"), all=TRUE)
-			} else {
-				x <- merge(x, dat[[i]], by=c("aln", "aln2"), all=TRUE)
-			}
-		}
-	}
+
+        ## create a complete id set ids=aln/aln2/[optional]qlet
+        aln2 <- unique(unlist(lapply(dat, function(dat) dat$aln2)))
+        aln <- unique(unlist(lapply(dat, function(dat) dat$aln)))
+        if (all(aln %in% aln2))
+            ## includes only mothers and/or partners
+            ids <- data.frame(aln2=aln2, aln=aln2, stringsAsFactors=F)
+        else {
+            ## includes young people
+            aln <- setdiff(aln, aln2)
+            ids <- data.frame(aln2=as.integer(sub("[A-Z]+","",aln)),
+                              aln=as.character(aln),
+                              qlet=sub("[0-9]+","",aln),
+                              stringsAsFactors=F)
+            aln2 <- setdiff(aln2,ids$aln2)
+            if (length(aln2) > 0)
+                ## includes some mothers with no young people
+                ids <- rbind(ids,
+                             data.frame(aln2=aln2,
+                                        aln=aln2,
+                                        qlet=NA,
+                                        stringsAsFactors=F))
+        }
+
+        ## merge ids and dat into a single data frame
+        dat <- lapply(dat, function(dat) {
+            row.idx <- match(ids$aln, dat$aln)
+            col.idx <- which(!(colnames(dat) %in% c("aln","qlet","aln2")))
+            dat[row.idx,col.idx,drop=F]
+        })
+        dat <- c(list(ids), dat)
+        names(dat) <- NULL
+        x <- do.call(cbind, dat)
+        
 	names(x)[names(x) == "aln"] <- "alnqlet"
 	names(x)[names(x) == "aln2"] <- "aln"
-	if(exclude_withdrawn)
-	{
-		x <- subset(x, ! alnqlet %in% withdrawal)
-		message("Automatically removing all withdrawn consent ALNs from the entire dataset")
-	} else {
-		warning("Withdrawn consent individuals have NOT been removed. Re-run with the default option or remove the relevant IDs manually before proceeding with analysis.")
-	}
+        rownames(x) <- NULL
 	return(x)
 }
+
 
 
 convertQlet <- function(qlet)
@@ -317,8 +446,8 @@ extractWebOutput <- function(filename)
 	{
 		stop("No variables present in ", filename)
 	}
-	data(current)
-	data(useful)
+        current <- retrieveDictionary("current")
+        useful <- retrieveDictionary("useful")[,colnames(current)]
 
 	l <- rbind(
 		subset(current, name %in% input$Variable),
@@ -336,44 +465,5 @@ extractWebOutput <- function(filename)
 }
 
 
-
-#' Get list of ALNs to exclude
-#'
-#' The exclusion lists for mothers and children are stored in .do files
-#' in the R: drive. This function reads the child_completed*.do file, and the
-#' mother*.do file, then parses out the withdrawal consent ALNs.
-#'
-#' @export
-#' @return List of ALNs for mothers and children
-readExclusions <- function()
-{
-	fn_child <- list.files(paste0(options()$alspac_data_dir, "/Syntax/Withdrawal of consent/"), pattern="child_completed.*do", full.names=TRUE)
-	fn_mother <- list.files(paste0(options()$alspac_data_dir, "/Syntax/Withdrawal of consent/"), pattern="mother.*do", full.names=TRUE)
-
-	mother <- function(fn_mother)
-	{
-		scan(fn_mother, what=character(), quiet=TRUE) %>% 
-		paste(collapse=" ") %>%
-		stringr::str_extract_all("aln *== *[0-9]+") %>% 
-		unlist() %>% 
-		stringr::str_replace_all(" ", "") %>% 
-		stringr::str_replace_all("aln==", "") %>% 
-		as.integer %>% unique
-	}
-
-	child <- function(fn_child)
-	{
-		scan(fn_child, what=character(), quiet=TRUE) %>% 
-		paste(collapse=" ") %>%
-		stringr::str_extract_all("aln *== *[0-9]+") %>% 
-		unlist() %>% 
-		stringr::str_replace_all(" ", "") %>% 
-		stringr::str_replace_all("aln==", "") %>% 
-		as.integer %>% unique
-	}
-	m <- lapply(fn_mother, mother) %>% unlist %>% unique
-	c <- lapply(fn_child, child) %>% unlist %>% unique
-	return(list(mother=m, child=c))
-}
 
 

@@ -7,10 +7,10 @@
 readExclusions()
 }
 \value{
-List of ALNs for mothers and children
+List of ALNs for each .do file.
 }
 \description{
-The exclusion lists for mothers and children are stored in .do files
-in the R: drive. This function reads the child_completed*.do file, and the
-mother*.do file, then parses out the withdrawal consent ALNs.
+The exclusion lists for mothers and children are stored in .do
+files in the R: drive. This function reads all of these .do files
+and then parses out the ALNS for withdrawn consent.
 }

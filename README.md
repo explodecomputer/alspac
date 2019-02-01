@@ -199,27 +199,35 @@ You can use this to help extract variables also.
 
 1. Select the variables that you want from the table, then click 'Download variable list'. This will download a csv file containing information about the variables chosen. 
 2. Next, you can use the R package to extract those variables. Use the `extractWebOutput` function, specifying the name of the file that you just downloaded. For example
-        
-        extractWebOutput("data-2017-08-22.csv")
-        
-
-
-## Package Maintenance
-
-From time to time the `R:\Data\Current\` directory is updated with new files. To update the R package run the following:
 
 ```
-cd misc/
-Rscript create_dictionary_from_stata.R /Volumes/data
+extractWebOutput("data-2017-08-22.csv")
 ```
 
-Following on, the package can be built in R. First edit the 
+## Dictionary Maintenance
+
+From time to time the `R:\Data\Current\` directory is updated with new files.
+The variable dictionaries that the package uses can be updated using the
+`createDictionary` function.
 
 ```
-library(devtools)
-document()
-build()
-install()
+current <- createDictionary("Current")
+useful <- createDictionary("Useful_data")
+```
+
+These commands may require several minutes to complete.  The resulting
+dictionaries can be saved as part of the R package for later by giving the
+dictionary a name, e.g.
+
+```
+dict <- createDictionary("Current", name="dict")
+```
+
+This dictionary will now be available in this R session and any
+subsequent sessions, e.g.
+
+```
+vars <- findVars("height", dictionary="dict")
 ```
 
 To update the shiny variable app see [https://github.com/explodecomputer/alspac-shiny](https://github.com/explodecomputer/alspac-shiny)

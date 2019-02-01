@@ -4,15 +4,27 @@
 \alias{extractVars}
 \title{Extract variables from data}
 \usage{
-extractVars(x, exclude_withdrawn = TRUE)
+extractVars(x, exclude_withdrawn = TRUE, core_only = TRUE,
+  adult_only = FALSE)
 }
 \arguments{
 \item{x}{Output from `findVars`}
 
-\item{exclude_withdrawn}{Whether to automatically exclude withdrawn consent IDs. Default is TRUE. This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here if you have a more specific list of withdrawn consent IDs for your specific variables.}
+\item{exclude_withdrawn}{Whether to automatically exclude withdrawn consent IDs. Default is TRUE.
+This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here
+if you have a more specific list of withdrawn consent IDs for your specific variables.}
+
+\item{core_only}{Whether to automatically exclude data from participants not in the core ALSPAC dataset.
+This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder (Default: TRUE).}
+
+\item{adult_only}{Whether the dataset includes data from ALSPAC mothers and partners only.
+If \code{TRUE} and \code{core_only == TRUE}, then this should give the same samples
+as the STATA/SPSS scripts in the R:/Data/Syntax folder marked "adultonly".
+Any requested variables for young people in this case will be omitted (Default: FALSE).}
 }
 \value{
-A data frame with all the variable specified in `x`
+A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
+named \code{withdrawn_consent_*} indicate which samples were excluded.
 }
 \description{
 Take the output from `findVars` as a list of variables to extract from ALSPAC data

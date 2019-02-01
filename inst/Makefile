@@ -1,30 +1,16 @@
-## NOTE
-## This doesn't work due to spaces in filenames and directory names
+## directory of ALSPAC data
+ALSPACDIR=R:/Data
 
-R := Rscript
-ALSPACDIR?=/Volumes/ALSPAC-Data
-SOURCES := $(shell find $(ALSPACDIR)/Current -iname '*.dta' | sed "s@ @\\\ @g")
-# SOURCES += $(shell find $(ALSPACDIR)/Useful_data -iname '*.dta' | tr ' ' '_')
-vpath %.dta $(sort $(dir $(SOURCES)))
+## number of processors that are available
+MCCORES=10 
 
-OBJECTS := $(notdir $(SOURCES))
-OBJECTS := $(OBJECTS:%.dta=scratch/%.rdata)
+all: report.html ../data/current.rdata  
 
-$(info   objects: $(OBJECTS))
-$(info   sources: $(SOURCES))
+../data/current.rdata: 
+	Rscript create_dictionary_from_stata.R ${ALSPACDIR} ${MCCORES}
 
-all: ../data/Current.RData ../data/Useful_data.RData
+report.html: report.rmd ../data/current.rdata 
+	Rscript -e "rmarkdown::render('report.rmd', output_format='all')"
 
-../data/Current.RData ../data/Useful_data.RData: $(OBJECTS)
-	$(R) collate.r $(OBJECTS)
-
-scratch/%.rdata: %.dta
-	$(R) process_dta.r $< $@ $(ALSPACDIR)
-
-dirs:
-	@mkdir -p scratch
-
-report: report.html
-
-%.html: %.rmd
-	./render $<
+clean:
+	rm report.html ../data/current.rdata ../data/useful.rdata
