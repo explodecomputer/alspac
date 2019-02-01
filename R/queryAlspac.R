@@ -155,14 +155,17 @@ extractVarsCore <- function(x,adult_only=F) {
     if (!adult_only)
         core.vars <- c(core.vars, child.vars)
     current <- retrieveDictionary("current")
-    useful <- retrieveDictionary("useful")[,colnames(current)]
-    dictionary <- rbind(current, useful)
+    useful <- retrieveDictionary("useful")
+    dictionary <- rbind.fill(current, useful)
     idx <- which(dictionary$name %in% core.vars
                  & rowSums(sapply(basename(core.files), function(patt) grepl(patt, dictionary$obj))) > 0
-                 & dictionary$path %in% dirname(core.files)) 
+                 & dictionary$path %in% dirname(core.files))
+
+    browser()
+    idx <- unique(idx)
     stopifnot(length(setdiff(core.vars, dictionary$name[idx])) == 0)
-    all.vars <- rbind(x, dictionary[idx,])
-    all.vars <- all.vars[match(unique(all.vars$name), all.vars$name),]
+    all.vars <- rbind.fill(dictionary[idx,], x)
+    all.vars <- unique(all.vars)
     dat <- extractVarsFull(all.vars, adult_only=adult_only)
 
     if (!adult_only) {
@@ -206,8 +209,8 @@ removeExclusions <- function(x) {
               "kz021","mz001")
 
     current <- retrieveDictionary("current")
-    useful <- retrieveDictionary("useful")[,colnames(current)]
-    dictionary <- rbind(current, useful)
+    useful <- retrieveDictionary("useful")
+    dictionary <- rbind.fill(current, useful)
     
     varnames <- colnames(x)
     dictionary <- dictionary[which(dictionary$name %in% varnames),]
@@ -447,9 +450,9 @@ extractWebOutput <- function(filename)
 		stop("No variables present in ", filename)
 	}
         current <- retrieveDictionary("current")
-        useful <- retrieveDictionary("useful")[,colnames(current)]
+        useful <- retrieveDictionary("useful")
 
-	l <- rbind(
+	l <- rbind.fill(
 		subset(current, name %in% input$Variable),
 		subset(useful, name %in% input$Variable)
 	)
