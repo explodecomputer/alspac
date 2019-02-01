@@ -1,0 +1,42 @@
+import glob, os.path
+R = 'Rscript'
+
+ALSPACDIR='/Volumes/ALSPAC-Data'
+
+[os.makedirs(x) for x in ["scratch"] if not os.path.exists(x)]
+
+from pathlib import Path   
+
+dta_dict = {}
+dta_path = Path(ALSPACDIR).glob('Current/**/*.dta')
+for f in dta_path:
+    dta_name = f.name.replace('.dta', '')
+    dta_dict[dta_name] = str(f)
+
+print(len(dta_dict))
+print(dta_dict)
+
+dta_path = Path(ALSPACDIR).glob('Useful_data/**/*.dta')
+for f in dta_path:
+    dta_name = f.name.replace('.dta', '')
+    dta_dict[dta_name] = str(f)
+
+
+rule rdata:
+    output:
+        '../data/current.RData',
+        '../data/useful.RData'
+    input:
+        expand('scratch/{dta_name}.rdata', dta_name=dta_dict.keys())
+    shell:
+        'Rscript collate.r {input:q}'
+
+rule dta_process:
+    input:
+        lambda wildcards: dta_dict[wildcards.dta_name]
+    output:
+        'scratch/{dta_name}.rdata'
+    shell:
+        'Rscript process_dta.r {input:q} {output:q} {ALSPACDIR}'
+
+
