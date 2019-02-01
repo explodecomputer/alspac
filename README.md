@@ -211,24 +211,13 @@ The variable dictionaries that the package uses can be updated using the
 `createDictionary` function.
 
 ```
-current <- createDictionary("Current")
-useful <- createDictionary("Useful_data")
+current <- createDictionary("Current", name="current")
+useful <- createDictionary("Useful_data", name="useful")
 ```
 
-These commands may require several minutes to complete.  The resulting
-dictionaries can be saved as part of the R package for later by giving the
-dictionary a name, e.g.
-
-```
-dict <- createDictionary("Current", name="dict")
-```
-
-This dictionary will now be available in this R session and any
-subsequent sessions, e.g.
-
-```
-vars <- findVars("height", dictionary="dict")
-```
+These updated dictionaries will be saved within the R package
+for use in later R sessions.  In other words, an update will only
+need to be peformed one time.  
 
 To update the shiny variable app see [https://github.com/explodecomputer/alspac-shiny](https://github.com/explodecomputer/alspac-shiny)
 

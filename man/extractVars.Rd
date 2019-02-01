@@ -4,11 +4,21 @@
 \alias{extractVars}
 \title{Extract variables from data}
 \usage{
-extractVars(x, exclude_withdrawn = TRUE, core_only = TRUE,
-  adult_only = FALSE)
+extractVars(x, dictionary = "both", exclude_withdrawn = TRUE,
+  core_only = TRUE, adult_only = FALSE)
 }
 \arguments{
 \item{x}{Output from `findVars`}
+
+\item{dictionary}{Data frame or name of a data dictionary.
+This dictionary is only used when \code{core_only==TRUE}
+to identify core ALSPAC participants.
+Dictionaries available by default are
+"current" (from the R:/Data/Current folder),
+"useful" (from the R:/Data/Useful_data folder)
+and "both" (combined "current" and "useful").
+New dictionaries can be created using the
+\code{\link{createDictionary}()} function. (Default: "both").}
 
 \item{exclude_withdrawn}{Whether to automatically exclude withdrawn consent IDs. Default is TRUE.
 This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here

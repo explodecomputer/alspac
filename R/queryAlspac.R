@@ -27,7 +27,9 @@
 #' @param perl logical.  Should perl-compatible regexps be used? Defaults to FALSE.
 #' @param fixed logical.  If 'TRUE', 'pattern' is a string to be matched as is.  Overrides all conflicting arguments. Defaults to FALSE.
 #' @param whole.word If 'TRUE' search term "word" will be changed to "\\bword\\b" to only match whole words. Defaults to FALSE.
-#' @param dictionary Data frame or name of a data dictionary. Defaults to "current", but "useful" is also an option - this contains the data dictionary for the R:/Data/Useful_data directory. New dictionaries can be created using the \code{\link{createDictionary}()} function.
+#' @param dictionary Data frame or name of a data dictionary. Dictionaries available by default are
+#' "current" (from the R:/Data/Current folder), "useful" (from the R:/Data/Useful_data folder) and "both" (combined "current" and "useful").
+#' New dictionaries can be created using the \code{\link{createDictionary}()} function. (Default: "both").
 #'
 #' @export
 #' @return A data frame containing a list of the variables, the files they originate from, and some descripton about the files
@@ -35,11 +37,11 @@
 #' # Find variables with BMI or height in the description (this will return a lot of results!)
 #' bmi_variables <- findVars("bmi", "height", logic="any", ignore.case=TRUE)
 #'}
-findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="current")
+findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="both")
 {
         if (is.character(dictionary))
             dictionary <- retrieveDictionary(dictionary)
-          
+        
 	l <- list(...)
 	stopifnot(length(l) > 0)
 	stopifnot(logic %in% c("any", "all", "none"))
@@ -70,6 +72,8 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	index <- n %in% g
 	out <- dictionary[index, ]
 	rownames(out) <- NULL
+
+        dictionaryGood(out)
 	return(out)
 }
 
@@ -100,6 +104,15 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 #' and how many variables you are extracting at once.
 #'
 #' @param x Output from `findVars`
+#' @param dictionary Data frame or name of a data dictionary.
+#' This dictionary is only used when \code{core_only==TRUE}
+#' to identify core ALSPAC participants.
+#' Dictionaries available by default are
+#' "current" (from the R:/Data/Current folder),
+#' "useful" (from the R:/Data/Useful_data folder)
+#' and "both" (combined "current" and "useful").
+#' New dictionaries can be created using the
+#' \code{\link{createDictionary}()} function. (Default: "both").
 #' @param exclude_withdrawn Whether to automatically exclude withdrawn consent IDs. Default is TRUE.
 #' This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here
 #' if you have a more specific list of withdrawn consent IDs for your specific variables.
@@ -121,9 +134,11 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE) {
+extractVars <- function(x, dictionary="both", exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE) {
+    dictionaryGood(x)
+    
     if (core_only) 
-        x <- extractVarsCore(x,adult_only=adult_only) 
+        x <- extractVarsCore(x,dictionary=dictionary,adult_only=adult_only) 
     else
         x <- extractVarsFull(x, adult_only=adult_only)
     
@@ -138,7 +153,10 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x,adult_only=F) {
+extractVarsCore <- function(x,dictionary="both",adult_only=F) {
+    if (is.character(dictionary))
+        dictionary <- retrieveDictionary(dictionary)
+    
     ##based on R:\Data\Syntax\syntax_template_12Apr18.do
     core.vars <- c("mz001","mz010","mz010a","mz013","mz014","mz028b",
                    "a006","a525","b032","b650","b663","b665","b667",
@@ -154,16 +172,18 @@ extractVarsCore <- function(x,adult_only=F) {
                     "Current/Other/Sample Definition/kz_[0-9]+[a-z]+.dta")
     if (!adult_only)
         core.vars <- c(core.vars, child.vars)
-    current <- retrieveDictionary("current")
-    useful <- retrieveDictionary("useful")
-    dictionary <- rbind.fill(current, useful)
+
     idx <- which(dictionary$name %in% core.vars
                  & rowSums(sapply(basename(core.files), function(patt) grepl(patt, dictionary$obj))) > 0
                  & dictionary$path %in% dirname(core.files))
 
-    browser()
     idx <- unique(idx)
-    stopifnot(length(setdiff(core.vars, dictionary$name[idx])) == 0)
+    missing.vars <- setdiff(core.vars, dictionary$name[idx]) 
+    if (length(missing.vars) > 0)
+        stop("Variables required to identify core ALSPAC participants not available from supplied dictionary. ",
+             "Missing variables: ", 
+             paste(missing.vars, collapse=", "))
+        
     all.vars <- rbind.fill(dictionary[idx,], x)
     all.vars <- unique(all.vars)
     dat <- extractVarsFull(all.vars, adult_only=adult_only)
@@ -208,9 +228,7 @@ removeExclusions <- function(x) {
               "in_phase2", "in_phase3", "tripquad", "kz011b",
               "kz021","mz001")
 
-    current <- retrieveDictionary("current")
-    useful <- retrieveDictionary("useful")
-    dictionary <- rbind.fill(current, useful)
+    dictionary <- retrieveDictionary("both")
     
     varnames <- colnames(x)
     dictionary <- dictionary[which(dictionary$name %in% varnames),]
@@ -389,10 +407,13 @@ extractVarsFull <- function(x, adult_only=FALSE)
                                         qlet=NA,
                                         stringsAsFactors=F))
         }
-
+        
         ## merge ids and dat into a single data frame
         dat <- lapply(dat, function(dat) {
-            row.idx <- match(ids$aln, dat$aln)
+            if ("qlet" %in% colnames(dat))
+                row.idx <- match(ids$aln, dat$aln)
+            else
+                row.idx <- match(ids$aln2, dat$aln2)
             col.idx <- which(!(colnames(dat) %in% c("aln","qlet","aln2")))
             dat[row.idx,col.idx,drop=F]
         })
@@ -449,13 +470,9 @@ extractWebOutput <- function(filename)
 	{
 		stop("No variables present in ", filename)
 	}
-        current <- retrieveDictionary("current")
-        useful <- retrieveDictionary("useful")
-
-	l <- rbind.fill(
-		subset(current, name %in% input$Variable),
-		subset(useful, name %in% input$Variable)
-	)
+        
+        l <- retrieveDictionary("both")
+	l <- subset(l, name %in% input$Variable)
 
 	if(nrow(l) != 0)
 	{

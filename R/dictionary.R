@@ -3,6 +3,15 @@ loadDictionaries <- function() {
     assign("globals", new.env(), envir=parent.env(environment()))
     for (file in list.files(path, "rdata$", full.names=T))
         load(file, globals)
+    combineDictionaries()
+}
+
+combineDictionaries <- function() {
+    if (exists("current", envir=globals) && exists("useful", envir=globals))
+        assign("both",
+               rbind.fill(get("current", envir=globals),
+                          get("useful", envir=globals)),
+               globals)
 }
 
 retrieveDictionary <- function(name) {
@@ -14,12 +23,46 @@ retrieveDictionary <- function(name) {
 
 saveDictionary <- function(name, dictionary) {
     assign(name, dictionary, globals)
+    if (name == "current" || name == "useful")
+        combineDictionaries()
+    
     path <- file.path(system.file(package="alspac"), "data")
     if (!file.exists(path))
         dir.create(path)
     save(list=name,
          file=file.path(path, paste(name, "rdata", sep=".")),
          envir=globals)
+}
+
+#' Checks a dictionary
+#'
+#' Checks if all the files referred to in the dictionary
+#' are accessible given the ALSPAC data directory.
+#'
+#' @param dictionary The name of an existing dictionary or the dictionary itself.
+#' @param max.print The maximum number of missing files to list if any are missing
+#' (Default: 10).
+#' @export
+#' @return \code{TRUE} if all files exist, otherwise \code{FALSE} and a warning listing at most
+#' \code{max.print} missing files.
+#' 
+dictionaryGood <- function(dictionary, max.print=10) {
+    if (is.character(dictionary))
+        dictionary <- retrieveDictionary(dictionary)
+    
+    alspacdir <- options()$alspac_data_dir
+
+    filenames <- unique(with(dictionary, file.path(alspacdir, path, obj)))
+    missing.idx <- which(!sapply(filenames, file.exists))
+    num.missing <- length(missing.idx)
+    if (num.missing == 0)
+        TRUE
+    else {
+        missing.idx <- missing.idx[1:min(max.print,num.missing)]
+        warning("Dictionary refers to missing files, e.g. ",
+                paste(filenames[missing.idx], collapse=", "))
+        FALSE
+    }
 }
 
 
@@ -29,7 +72,7 @@ saveDictionary <- function(name, dictionary) {
 #' (Default: "Current").  It could be "Current" or "Useful_data".
 #' @param name If not \code{NULL}, then the resulting dictionary
 #' will be saved to a file in the R package for use next time the package
-#' is loaded. The dictionary will be available with the given name.
+#' is loaded. The dictionary will be available with the given name (Default: NULL).
 #'
 #' The function uses multiple processors using \code{\link{mclapply}()}.
 #' Use multiple processors by setting \code{mc.cores} option using
