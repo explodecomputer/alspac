@@ -1,5 +1,9 @@
 .onLoad <- function(libname = find.package("alspac"), pkgname = "alspac") {
     message("R/alspac version ", packageVersion("alspac"))
+    message("Several changes to how the extractVars function works")
+	message("This may lead to slightly different formatting compared to previously.")
+	message("See also the new createDictionary function")
+
 
     loadDictionaries()
     
