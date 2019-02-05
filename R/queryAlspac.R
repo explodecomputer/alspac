@@ -4,7 +4,7 @@
 # 2. Create dataframe for a list of chosen variables
 
 
-
+whole.word.regex <- function(x) paste("\\b", x, "\\b", sep="")
 
 #' Find variables
 #'
@@ -48,17 +48,16 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	invert <- ifelse("none", TRUE, FALSE)
 	if(whole.word)
 	{
-		l <- lapply(l, function(x) paste("\\b", x, "\\b", sep=""))
+		l <- lapply(l, whole.word.regex)
 	}
 
-	g <- list()
 	n <- 1:nrow(dictionary)
 
 	# Search for patterns in label
-	for(i in 1:length(l))
-	{
-		g[[i]] <- grep(l[[i]], dictionary$lab, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert)
-	}
+  g <- lapply(l, function(l){
+    c(grep(l, dictionary$lab, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert),
+        grep(whole.word.regex(l), dictionary$name, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert))
+  })
 
 	if(logic == "any")
 	{
@@ -69,8 +68,8 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 		a <- unique(unlist(g))
 		g <- n[!n %in% a]
 	}
-	index <- n %in% g
-	out <- dictionary[index, ]
+
+	out <- dictionary[g, ]
 	rownames(out) <- NULL
 
         dictionaryGood(out)
