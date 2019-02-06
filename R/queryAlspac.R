@@ -375,7 +375,6 @@ extractVarsFull <- function(x, adult_only=FALSE)
 {
 	# require(plyr)
 	# require(readstata13)
-browser()
 	message("Starting extraction from ", length(unique(x$obj)), " files in the ALSPAC data directory")
 	dat <- plyr::dlply(x, c("obj"), function(x) {
 		x <- plyr::mutate(x)
