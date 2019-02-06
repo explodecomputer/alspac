@@ -42,7 +42,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
         if (is.character(dictionary))
             dictionary <- retrieveDictionary(dictionary)
         
-	l <- list(...)
+	l <- unlist(list(...))
 	stopifnot(length(l) > 0)
 	stopifnot(logic %in% c("any", "all", "none"))
 	invert <- ifelse("none", TRUE, FALSE)
