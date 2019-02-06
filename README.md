@@ -155,11 +155,6 @@ vars <- filterVars(vars,
 So once you have a list of variables in the required format (i.e. the output from findVars) you can extract those variables:
 
 
-### Browsing variables
-
-
-
-
 ## Extracting variables
 
 For this you need to have mounted the `R:/Data` drive on your computer. When you load the package (`library(alspac)`), if you have the R drive loaded then you should get a message like this:
