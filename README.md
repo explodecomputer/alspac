@@ -116,7 +116,43 @@ To find all variables that have the term "difficulties" from the `useful` data:
 vars <- findVars("difficulties", dictionary="useful")
 ```
 
-Some of these arguments have defaults but just writing them out for illustration. So once you have a list of variables in the required format (i.e. the output from findVars) you can extract those variables:
+Some of these arguments have defaults but just writing them out for illustration.
+
+### Filtering a list of variables
+
+`findVars` may identify multiple
+variables with the same name.  The `filterVars` function can be used
+to select among these duplicates.
+
+For example, searching for variables "kz021", "kz011b" and "c645a"
+will return multiple variables with the same name.
+```r
+varnames <- c("kz021","kz011b","ype9670", "c645a")
+vars <- findVars(varnames)
+```
+
+As a first clean-up step, I remove any variables whose names
+do not exactly match one of the variable names we are looking for.
+```r
+vars <- subset(vars, subset=tolower(name) %in% varnames)
+```
+
+I then require that the "kz021" variable come from a
+STATA file name starting with "kz" ("obj" column in `vars`),
+"kz011b" comes from a file name starting with "cp"
+and the description of the variable ("lab" column in `vars`)
+include the word "Participant",
+and "c645a" comes from a questionnaire ("cat2" column in `vars`).
+
+```r
+vars <- filterVars(vars,
+                   kz021=c(obj="^kz"),
+				   kz011b=c(obj="^cp", lab="Participant"),
+				   c645a=c(cat2="Quest")) 
+```
+
+
+So once you have a list of variables in the required format (i.e. the output from findVars) you can extract those variables:
 
 
 ### Browsing variables
