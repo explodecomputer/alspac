@@ -72,6 +72,9 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	out <- dictionary[g, ]
 	rownames(out) <- NULL
 
+        ## in case two patterns identify exactly the same variable ...
+        out <- unique(out)
+
         dictionaryGood(out)
 
         var.freq <- table(out$name)
@@ -125,7 +128,7 @@ filterVars <- function(x, ...) {
     ## apply each variable filter
     filtered.x <- lapply(names(filter.list), function(varname) {
         ## add the variable name to the filter
-        filter <- c(name=varname, filter.list[[varname]])
+        filter <- c(name=paste0("^", varname, "$"), filter.list[[varname]])
         ## identify which variable(s) satisfy the filter
         matches <- sapply(names(filter), function(column) {
             grepl(filter[[column]], x[[column]])
@@ -226,33 +229,52 @@ extractVarsCore <- function(x,dictionary="both",adult_only=F) {
         dictionary <- retrieveDictionary(dictionary)
     
     ##based on R:\Data\Syntax\syntax_template_12Apr18.do
-    core.vars <- c("mz001","mz010","mz010a","mz013","mz014","mz028b",
-                   "a006","a525","b032","b650","b663","b665","b667",
-                   "c645a","c755","c765",paste0("c80",0:4),"bestgest")
-    child.vars <- c("kz011b","kz021","kz030","tripquad",
-                    "in_core","in_alsp","in_phase2","in_phase3")
-    core.files <- c("Current/Other/Sample Definition/mz_[0-9]+[a-z]+.dta", 
-                    "Current/Quest/Mother/a_[0-9]+[a-z]+.dta",
-                    "Current/Quest/Mother/b_[0-9]+[a-z]+.dta",
-                    "Current/Quest/Mother/c_[0-9]+[a-z]+.dta",
-                    "Useful_data/bestgest/bestgest.dta",
-                    "Current/Other/Cohort Profile/cp_[0-9]+[a-z]+.dta",
-                    "Current/Other/Sample Definition/kz_[0-9]+[a-z]+.dta")
+    core.vars <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
+                      mz010=c(obj="mz_[0-9]+[a-z]+"),
+                      mz010a=c(obj="mz_[0-9]+[a-z]+"),
+                      mz013=c(obj="mz_[0-9]+[a-z]+"),
+                      mz014=c(obj="mz_[0-9]+[a-z]+"),
+                      mz028b=c(obj="mz_[0-9]+[a-z]+"),
+                      a006=c(obj="a_[0-9]+[a-z]+"),
+                      a525=c(obj="a_[0-9]+[a-z]+"),
+                      b032=c(obj="b_[0-9]+[a-z]+"),
+                      b650=c(obj="b_[0-9]+[a-z]+"),
+                      b663=c(obj="b_[0-9]+[a-z]+"),
+                      b665=c(obj="b_[0-9]+[a-z]+"),
+                      b667=c(obj="b_[0-9]+[a-z]+"),
+                      c645a=c(obj="c_[0-9]+[a-z]+"),
+                      c755=c(obj="c_[0-9]+[a-z]+"),
+                      c765=c(obj="c_[0-9]+[a-z]+"),
+                      c800=c(obj="c_[0-9]+[a-z]+"),
+                      c801=c(obj="c_[0-9]+[a-z]+"),
+                      c802=c(obj="c_[0-9]+[a-z]+"),
+                      c803=c(obj="c_[0-9]+[a-z]+"),
+                      c804=c(obj="c_[0-9]+[a-z]+"),
+                      bestgest=c(obj="bestgest"))
+    
+    child.vars <- list(kz011b=c(obj="kz_[0-9]+[a-z]+"),
+                       kz021=c(obj="kz_[0-9]+[a-z]+"),
+                       kz030=c(obj="kz_[0-9]+[a-z]+"),
+                       tripquad=c(obj="cp_[0-9]+[a-z]+"),
+                       in_core=c(obj="cp_[0-9]+[a-z]+"),
+                       in_alsp=c(obj="cp_[0-9]+[a-z]+"),
+                       in_phase2=c(obj="cp_[0-9]+[a-z]+"),
+                       in_phase3=c(obj="cp_[0-9]+[a-z]+"))
+
     if (!adult_only)
         core.vars <- c(core.vars, child.vars)
 
-    idx <- which(dictionary$name %in% core.vars
-                 & rowSums(sapply(basename(core.files), function(patt) grepl(patt, dictionary$obj))) > 0
-                 & dictionary$path %in% dirname(core.files))
+    suppressWarnings(vars <- findVars(names(core.vars), dictionary="both"))
+    vars <- vars[which(vars$name %in% names(core.vars)),]
+    vars <- do.call(filterVars, c(list(x=vars), core.vars))
 
-    idx <- unique(idx)
-    missing.vars <- setdiff(core.vars, dictionary$name[idx]) 
+    missing.vars <- setdiff(names(core.vars), vars$name)
     if (length(missing.vars) > 0)
-        stop("Variables required to identify core ALSPAC participants not available from supplied dictionary. ",
+        stop("Variables required to identify core ALSPAC participants not available. ",
              "Missing variables: ", 
              paste(missing.vars, collapse=", "))
         
-    all.vars <- rbind.fill(dictionary[idx,], x)
+    all.vars <- rbind.fill(vars, x)
     all.vars <- unique(all.vars)
     dat <- extractVarsFull(all.vars, adult_only=adult_only)
 
