@@ -54,10 +54,10 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	n <- 1:nrow(dictionary)
 
 	# Search for patterns in label
-  g <- lapply(l, function(l){
-    c(grep(l, dictionary$lab, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert),
-        grep(whole.word.regex(l), dictionary$name, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert))
-  })
+        g <- lapply(l, function(l){
+            c(grep(l, dictionary$lab, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert),
+              grep(whole.word.regex(l), dictionary$name, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert))
+        })
 
 	if(logic == "any")
 	{
@@ -73,6 +73,11 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	rownames(out) <- NULL
 
         dictionaryGood(out)
+
+        var.freq <- table(out$name)
+        if (any(var.freq > 1))
+            warning("One or more variables have the same name (fix with filterVars()): ",
+                    paste(names(var.freq)[which(var.freq > 1)], collapse=", "))
 	return(out)
 }
 
@@ -100,10 +105,17 @@ filterVars <- function(x, ...) {
     filter.list <- list(...)
 
     ## check that each filter name corresponds to a variable in x
-     none.idx <- which(!names(filter.list) %in% x$name)
+    none.idx <- which(!names(filter.list) %in% x$name)
     if (length(none.idx) != 0)
-        stop("Some filter names do not correspond to a variable name: ",
+        stop("Filter name(s) do not correspond to a variable name: ",
              paste(names(filter.list)[none.idx], collapse=", "))
+
+    ## check that the column names correspond to columns in x
+    columns <- unlist(lapply(filter.list, function(filter) names(filter)))
+    columns <- unique(setdiff(columns, colnames(x)))
+    if (length(columns) > 0)
+        stop("Filter column name(s) (", paste(columns, collapse=", "), ") ", 
+             "do not match columns in x (", paste(colnames(x), collapse=", "), ")")
 
     ## identify variables that are being filtered
     filter.idx <- which(x$name %in% names(filter.list))
