@@ -175,24 +175,15 @@ filterVars <- function(x, ...) {
 #' and how many variables you are extracting at once.
 #'
 #' @param x Output from `findVars`
-#' @param dictionary Data frame or name of a data dictionary.
-#' This dictionary is only used when \code{core_only==TRUE}
-#' to identify core ALSPAC participants.
-#' Dictionaries available by default are
-#' "current" (from the R:/Data/Current folder),
-#' "useful" (from the R:/Data/Useful_data folder)
-#' and "both" (combined "current" and "useful").
-#' New dictionaries can be created using the
-#' \code{\link{createDictionary}()} function. (Default: "both").
 #' @param exclude_withdrawn Whether to automatically exclude withdrawn consent IDs. Default is TRUE.
 #' This is conservative, removing all withdrawn consant ALNs from all datasets. Only use FALSE here
 #' if you have a more specific list of withdrawn consent IDs for your specific variables.
-#' @param core_only Whether to automatically exclude data from participants not in the core ALSPAC dataset.
-#' This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder (Default: TRUE).
-#' @param adult_only Whether the dataset includes data from ALSPAC mothers and partners only.
-#' If \code{TRUE} and \code{core_only == TRUE}, then this should give the same samples
-#' as the STATA/SPSS scripts in the R:/Data/Syntax folder marked "adultonly".
-#' Any requested variables for young people in this case will be omitted (Default: FALSE).
+#' @param core_only Whether to automatically exclude data from participants
+#' not in the core ALSPAC dataset (Default: TRUE).
+#' This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.
+#' If none of the variables comes from a file with a 'qlet',
+#' then 'adult only' core restriction is applied (i.e. 'mz001 == 1'),
+#' otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2').
 #' 
 #' @export
 #' @return A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
@@ -205,13 +196,14 @@ filterVars <- function(x, ...) {
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, dictionary="both", exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE) {
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE) {
     dictionaryGood(x)
-    
+
+    x <- unique(x)
     if (core_only) 
-        x <- extractVarsCore(x,dictionary=dictionary,adult_only=adult_only) 
+        x <- extractVarsCore(x) 
     else
-        x <- extractVarsFull(x, adult_only=adult_only)
+        x <- extractVarsFull(x)
     
     if(exclude_withdrawn) {
         x <- removeExclusions(x)
@@ -224,12 +216,11 @@ extractVars <- function(x, dictionary="both", exclude_withdrawn = TRUE, core_onl
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x,dictionary="both",adult_only=F) {
-    if (is.character(dictionary))
-        dictionary <- retrieveDictionary(dictionary)
-    
+extractVarsCore <- function(x) {
+    dat <- extractVarsFull(x)
+
     ##based on R:\Data\Syntax\syntax_template_12Apr18.do
-    core.vars <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
+    core.filters <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
                       mz010=c(obj="mz_[0-9]+[a-z]+"),
                       mz010a=c(obj="mz_[0-9]+[a-z]+"),
                       mz013=c(obj="mz_[0-9]+[a-z]+"),
@@ -251,8 +242,8 @@ extractVarsCore <- function(x,dictionary="both",adult_only=F) {
                       c803=c(obj="c_[0-9]+[a-z]+"),
                       c804=c(obj="c_[0-9]+[a-z]+"),
                       bestgest=c(obj="bestgest"))
-    
-    child.vars <- list(kz011b=c(obj="kz_[0-9]+[a-z]+"),
+
+    child.filters <- list(kz011b=c(obj="kz_[0-9]+[a-z]+"),
                        kz021=c(obj="kz_[0-9]+[a-z]+"),
                        kz030=c(obj="kz_[0-9]+[a-z]+"),
                        tripquad=c(obj="cp_[0-9]+[a-z]+"),
@@ -261,33 +252,34 @@ extractVarsCore <- function(x,dictionary="both",adult_only=F) {
                        in_phase2=c(obj="cp_[0-9]+[a-z]+"),
                        in_phase3=c(obj="cp_[0-9]+[a-z]+"))
 
-    if (!adult_only)
-        core.vars <- c(core.vars, child.vars)
-
-    suppressWarnings(vars <- findVars(names(core.vars), dictionary="both"))
-    vars <- vars[which(vars$name %in% names(core.vars)),]
-    vars <- do.call(filterVars, c(list(x=vars), core.vars))
-
-    missing.vars <- setdiff(names(core.vars), vars$name)
+    if ("qlet" %in% colnames(dat))
+        core.filters <- c(core.filters, child.filters)
+    
+    suppressWarnings(core.vars <- findVars(names(core.filters), dictionary="both"))
+    core.vars <- core.vars[which(core.vars$name %in% names(core.filters)),]
+    core.vars <- do.call(filterVars, c(list(x=core.vars), core.filters))
+   
+    missing.vars <- setdiff(names(core.filters), core.vars$name)
     if (length(missing.vars) > 0)
         stop("Variables required to identify core ALSPAC participants not available. ",
              "Missing variables: ", 
              paste(missing.vars, collapse=", "))
-        
-    all.vars <- rbind.fill(vars, x)
-    all.vars <- unique(all.vars)
-    dat <- extractVarsFull(all.vars, adult_only=adult_only)
 
-    if (!adult_only) {
-        dat <- dat[which(dat$in_alsp == 1
-                         & dat$tripquad == 2),]
+    core.dat <- extractVarsFull(core.vars)
+
+    if ("qlet" %in% colnames(dat)) {
+        core.dat <- core.dat[which(core.dat$in_alsp == 1 & core.dat$tripquad == 2),]
+        dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
         ## length(unique(dat$alnqlet)) == 15643
     } else { ## adult only dataset
-        dat <- dat[which(grepl("Yes",dat$mz001)),]
+        core.dat <- core.dat[which(core.dat$mz001 == 1),]
+        dat <- dat[match(core.dat$aln, dat$aln),]
         ## length(unique(dat.adult$aln)) == 14541 
     }
-
-    dat
+    id.vars <- c("aln","qlet","alnqlet")
+    cbind(core.dat[,intersect(colnames(core.dat), id.vars)],
+          dat[,setdiff(colnames(dat), id.vars)],
+          core.dat[,setdiff(colnames(core.dat), id.vars)])
 }
 
 
@@ -405,7 +397,7 @@ readExclusions <- function() {
 
 
 
-extractVarsFull <- function(x, adult_only=FALSE)
+extractVarsFull <- function(x)
 {
 	# require(plyr)
 	# require(readstata13)
@@ -437,12 +429,6 @@ extractVarsFull <- function(x, adult_only=FALSE)
 		qletc <- grep("^QLET$", names(obj), ignore.case=TRUE)
 		if(length(qletc) != 0)
 		{
-                        if (adult_only) {
-                               message("adult_only dataset requested but includes variables for ALSPAC young people:")
-                               message(paste(x$name, collapse=", "))
-                               message("Skipping...")
-                               return(NULL)
-                        }
 			names(obj)[qletc] <- "qlet"
 		}
 		# Get aln, mult and qlet variables
