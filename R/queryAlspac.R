@@ -181,9 +181,9 @@ filterVars <- function(x, ...) {
 #' @param core_only Whether to automatically exclude data from participants
 #' not in the core ALSPAC dataset (Default: TRUE).
 #' This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.
-#' If none of the variables comes from a file with a 'qlet',
-#' then 'adult only' core restriction is applied (i.e. 'mz001 == 1'),
-#' otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2').
+#' @param adult_only Apply the 'adult only' core restriction (i.e. 'mz001 == 1') if `adult_only==TRUE`,
+#' otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2'). 
+#' Ignored if `core_only==FALSE`. The default is `FALSE`. 
 #' 
 #' @export
 #' @return A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
@@ -196,12 +196,12 @@ filterVars <- function(x, ...) {
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE) {
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE) {
     dictionaryGood(x)
 
     x <- unique(x)
     if (core_only) 
-        x <- extractVarsCore(x) 
+        x <- extractVarsCore(x, adult_only=adult_only) 
     else
         x <- extractVarsFull(x)
     
@@ -216,7 +216,7 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE) {
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x) {
+extractVarsCore <- function(x, adult_only) {
     dat <- extractVarsFull(x)
 
     ##based on R:\Data\Syntax\syntax_template_12Apr18.do
@@ -252,7 +252,7 @@ extractVarsCore <- function(x) {
                        in_phase2=c(obj="cp_[0-9]+[a-z]+"),
                        in_phase3=c(obj="cp_[0-9]+[a-z]+"))
 
-    if ("qlet" %in% colnames(dat))
+    if (!adult_only)
         core.filters <- c(core.filters, child.filters)
     
     suppressWarnings(core.vars <- findVars(names(core.filters), dictionary="both"))
@@ -267,7 +267,7 @@ extractVarsCore <- function(x) {
 
     core.dat <- extractVarsFull(core.vars)
 
-    if ("qlet" %in% colnames(dat)) {
+    if (!adult_only) {
         core.dat <- core.dat[which(core.dat$in_alsp == 1 & core.dat$tripquad == 2),]
         dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
         ## length(unique(dat$alnqlet)) == 15643

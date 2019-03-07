@@ -4,7 +4,8 @@
 \alias{extractVars}
 \title{Extract variables from data}
 \usage{
-extractVars(x, exclude_withdrawn = TRUE, core_only = TRUE)
+extractVars(x, exclude_withdrawn = TRUE, core_only = TRUE,
+  adult_only = FALSE)
 }
 \arguments{
 \item{x}{Output from `findVars`}
@@ -15,10 +16,11 @@ if you have a more specific list of withdrawn consent IDs for your specific vari
 
 \item{core_only}{Whether to automatically exclude data from participants
 not in the core ALSPAC dataset (Default: TRUE).
-This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.
-If none of the variables comes from a file with a 'qlet',
-then 'adult only' core restriction is applied (i.e. 'mz001 == 1'),
-otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2').}
+This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.}
+
+\item{adult_only}{Apply the 'adult only' core restriction (i.e. 'mz001 == 1') if `adult_only==TRUE`,
+otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2'). 
+Ignored if `core_only==FALSE`. The default is `FALSE`.}
 }
 \value{
 A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
