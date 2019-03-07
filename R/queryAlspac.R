@@ -277,9 +277,9 @@ extractVarsCore <- function(x, adult_only) {
         ## length(unique(dat.adult$aln)) == 14541 
     }
     id.vars <- c("aln","qlet","alnqlet")
-    cbind(core.dat[,intersect(colnames(core.dat), id.vars)],
-          dat[,setdiff(colnames(dat), id.vars)],
-          core.dat[,setdiff(colnames(core.dat), id.vars)])
+    cbind(core.dat[,intersect(colnames(core.dat), id.vars), drop=F],
+          dat[,setdiff(colnames(dat), id.vars), drop=F],
+          core.dat[,setdiff(colnames(core.dat), id.vars), drop=F])
 }
 
 
