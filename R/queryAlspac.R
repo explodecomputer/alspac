@@ -279,7 +279,7 @@ extractVarsCore <- function(x, adult_only) {
     id.vars <- c("aln","qlet","alnqlet")
     cbind(core.dat[,intersect(colnames(core.dat), id.vars), drop=F],
           dat[,setdiff(colnames(dat), id.vars), drop=F],
-          core.dat[,setdiff(colnames(core.dat), id.vars), drop=F])
+          core.dat[,setdiff(colnames(core.dat), c(colnames(dat), id.vars)), drop=F])
 }
 
 
@@ -310,10 +310,14 @@ removeExclusions <- function(x) {
               "in_phase2", "in_phase3", "tripquad", "kz011b",
               "kz021","mz001")
 
-    dictionary <- retrieveDictionary("both")
-    
     varnames <- colnames(x)
-    dictionary <- dictionary[which(dictionary$name %in% varnames),]
+    dictionary <- retrieveDictionary("both")
+
+    ## some variables appear multiple times.
+    ## when it appears in 'Current' and 'Useful_data',
+    ## assume that the variable is 'Current' is implied.
+    dictionary <- dictionary[order(sign(dictionary$cat1 != "Current")),,drop=F]
+    dictionary <- dictionary[match(varnames, dictionary$name),]    
     
     paths <- list(mother_clinic=c("Useful_data",
                       "Other/Cohort Profile",
