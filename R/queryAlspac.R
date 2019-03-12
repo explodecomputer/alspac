@@ -267,15 +267,16 @@ extractVarsCore <- function(x, adult_only) {
 
     core.dat <- extractVarsFull(core.vars)
 
-    if (!adult_only) {
+    if (!adult_only) 
         core.dat <- core.dat[which(core.dat$in_alsp == 1 & core.dat$tripquad == 2),]
-        dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
-        ## length(unique(dat$alnqlet)) == 15643
-    } else { ## adult only dataset
+    else  ## adult only dataset
         core.dat <- core.dat[which(core.dat$mz001 == 1),]
+
+    if ("qlet" %in% colnames(core.dat) && "qlet" %in% colnames(dat))
+        dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
+    else
         dat <- dat[match(core.dat$aln, dat$aln),]
-        ## length(unique(dat.adult$aln)) == 14541 
-    }
+    
     id.vars <- c("aln","qlet","alnqlet")
     cbind(core.dat[,intersect(colnames(core.dat), id.vars), drop=F],
           dat[,setdiff(colnames(dat), id.vars), drop=F],
