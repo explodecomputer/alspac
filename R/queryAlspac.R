@@ -424,7 +424,7 @@ extractVarsFull <- function(x)
 			message("Skipping...")
 			return(NULL)
 		}
-		obj <- suppressWarnings(readstata13::read.dta13(fn))
+    obj <- suppressWarnings(haven::read_dta(fn))
 
 		# Make sure aln and qlet variables are lower case
 		alnc <- grep("^ALN$", names(obj), ignore.case=TRUE)
