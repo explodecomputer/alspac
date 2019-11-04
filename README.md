@@ -36,7 +36,14 @@ To install version 0.6.1:
 
 ```r
 install.packages("devtools")
+library(devtools)
 install_github("explodecomputer/alspac")
+```
+
+You should then be able to load the package:
+
+```r
+library(alspac)
 ```
 
 
