@@ -243,8 +243,8 @@ extractVarsCore <- function(x, adult_only) {
                       c804=c(obj="c_[0-9]+[a-z]+"),
                       bestgest=c(obj="bestgest"))
 
-    child.filters <- list(kz011b=c(obj="kz_[0-9]+[a-z]+"),
-                       kz021=c(obj="kz_[0-9]+[a-z]+"),
+    child.filters <- list(kz011b=c(obj="cp_[0-9]+[a-z]+"),
+                       kz021=c(obj="cp_[0-9]+[a-z]+"),
                        kz030=c(obj="kz_[0-9]+[a-z]+"),
                        tripquad=c(obj="cp_[0-9]+[a-z]+"),
                        in_core=c(obj="cp_[0-9]+[a-z]+"),
