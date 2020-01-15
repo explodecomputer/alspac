@@ -1,0 +1,108 @@
+
+> library(alspac)
+[1] "The data directory ~/.gvfs/data/ has NOT been found. It is normally located on the remote R drive, R:/Data/. You will be able to search for variables from the dictionary but unable to extract them from the data. Please check that the R: drive has been mounted onto your computer through the UoB VPN. Run setDataDir(<directory name>) to try again."
+
+> setDataDir("~/work/alspac/data-20191104")
+
+> if (!dictionaryGood("current")) createDictionary("Current", 
++     "current")
+
+> if (!dictionaryGood("useful")) createDictionary("Useful_data", 
++     "useful")
+
+> vars <- list(partner = c("pb910", "ff1a011"), child = c("ccaa991b", 
++     "ka498", "f7003a"), mother = c("a901", "fm1a011"))
+
+> varnames <- unlist(vars)
+
+> vars <- lapply(vars, findVars)
+
+> dat <- extractVars(do.call(rbind, vars))
+
+> dim(dat)
+[1] 15645    45
+
+> sapply(dat[, varnames], function(x) sum(x > 0, na.rm = T))
+   pb910  ff1a011 ccaa991b    ka498   f7003a     a901  fm1a011 
+    9653     2043     7386    12328     8269    13508     5034 
+
+> sapply(dat[, grep("^withdrawn", colnames(dat))], sum)
+  withdrawn.consent.mother_clinic    withdrawn.consent.mother_quest 
+                               20                                18 
+        withdrawn.consent.partner     withdrawn.consent.child_based 
+                                3                                18 
+withdrawn.consent.child_completed 
+                               23 
+
+> dat.full <- extractVars(do.call(rbind, vars), core_only = F)
+
+> dim(dat.full)
+[1] 15467    15
+
+> sapply(dat.full[, varnames], function(x) sum(x > 0, 
++     na.rm = T))
+   pb910  ff1a011 ccaa991b    ka498   f7003a     a901  fm1a011 
+    9653     2049     7386    12328     8269    13508     5038 
+
+> length(setdiff(dat.full$aln, dat$aln))
+[1] 13
+
+> dat.full <- extractVars(rbind(do.call(rbind, vars), 
++     findVars("mz001")), core_only = F)
+
+> dim(dat.full)
+[1] 20006    16
+
+> table(dat.full$mz001)
+
+    1     2 
+14745  5254 
+
+> length(setdiff(dat.full$aln, dat$aln))
+[1] 4377
+
+> dat <- extractVars(rbind(vars$partner, vars$mother), 
++     adult_only = T)
+
+> dim(dat)
+[1] 14541    33
+
+> sapply(dat[, colnames(dat) %in% varnames], function(x) sum(x > 
++     0, na.rm = T))
+   a901 ff1a011 fm1a011   pb910 
+  13336    1938    4732    9533 
+
+> sapply(dat[, grep("^withdrawn", colnames(dat))], sum)
+  withdrawn.consent.mother_clinic    withdrawn.consent.mother_quest 
+                               17                                15 
+        withdrawn.consent.partner     withdrawn.consent.child_based 
+                                3                                15 
+withdrawn.consent.child_completed 
+                               22 
+
+> vars <- findVars("c645a", whole.word = T, dictionary = "current")
+
+> dat <- extractVars(vars)
+
+> table(dat$c645a)
+
+  -1    1    2    3    4    5 
+  79 2526 1229 4324 2795 1609 
+
+> vars <- findVars("c645a", "h470", "b594", "e424", 
++     "f244", "p2024", "r5024", "f306", "f900", "b721", "b665", 
++     "mz028b", "b032", "b300",  .... [TRUNCATED] 
+
+> dat <- extractVars(vars)
+
+> table(dat$c645a)
+
+  -1    1    2    3    4    5 
+  79 2526 1229 4324 2795 1609 
+
+> dat <- extractVars(vars, adult_only = TRUE)
+
+> table(dat$c645a)
+
+  -1    1    2    3    4    5 
+  78 2493 1215 4268 2764 1586 
