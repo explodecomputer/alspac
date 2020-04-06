@@ -12,23 +12,26 @@ Mount the R drive:
 
 ```
 mkdir -p mnt
-mount -t cifs -o user=gh13047 //central-gpfs.isys.bris.ac.uk/ALSPAC-Data mnt
+sudo mount -t cifs -o user=gh13047 //central-gpfs.isys.bris.ac.uk/ALSPAC-Data mnt
 ```
 
-Run the container
+Update the dictionary within the container
 
 ```
-docker run -d --rm -e PASSWORD=123qwe -p 8787:8787 \
+cd ../
+docker run --rm -e PASSWORD=123qwe -p 8787:8787 \
 -v "$(pwd):/home/rstudio/alspac" \
--v "$(pwd)/mnt:/home/rstudio/mnt \
---name ralspac ralspac:latest 
-```
-
-Update the dictionary
-
-```
-docker exec -it \
+-v "$(pwd)/inst/mnt:/home/rstudio/mnt" \
 -w /home/rstudio/alspac/inst \
-ralspac \
+--name ralspac ralspac:latest \
 Rscript create_dictionary_from_stata.R /home/rstudio/mnt 4
 ```
+
+Unmount the R drive
+
+```
+sudo umount inst/mnt
+```
+
+Commit and update package version
+
