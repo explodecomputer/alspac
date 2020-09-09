@@ -24,7 +24,7 @@ Mount the R drive using a samba share:
 
 ```
 mkdir -p mnt
-sudo mount -t cifs -o user=gh13047 //central-gpfs.isys.bris.ac.uk/ALSPAC-Data mnt
+sudo mount -t cifs -o user=gh13047,vers=3.0 //central-gpfs.isys.bris.ac.uk/ALSPAC-Data mnt
 ```
 
 (Note that on the crashdown server `crashdown.epi.bris.ac.uk` needed to install the `cifs-utils` package in order to mount (e.g. `sudo apt-get install cifs-utils`).)
