@@ -154,8 +154,8 @@ and "c645a" comes from a questionnaire ("cat2" column in `vars`).
 ```r
 vars <- filterVars(vars,
                    kz021=c(obj="^kz"),
-				   kz011b=c(obj="^cp", lab="Participant"),
-				   c645a=c(cat2="Quest")) 
+		   kz011b=c(obj="^cp", lab="Participant"),
+		   c645a=c(cat2="Quest")) 
 ```
 
 
