@@ -1,5 +1,15 @@
 # ALSPAC data interface
 
+**Table of contents**
+* [Motivation](#motivation)
+* [Limitations](#limitations)
+* [Credits etc](#credits-etc)
+* [Installation](#installation)
+* [Finding variables](#finding-variables)
+* [Extracting variables](#extracting-variables)
+* [Using the website to browse variables](#using-the-website-to-browse-variables)
+* [Dictionary Maintenance](#dictionary-maintenance)
+* [Generating datasets for external users](#generating-datasets-for-external-users)
 
 ## Motivation
 
