@@ -255,4 +255,28 @@ These updated dictionaries will be saved within the R package
 for use in later R sessions.  In other words, an update will only
 need to be peformed one time.  
 
+## Generating datasets for external users
 
+The `extractDataset` function can be used to generate datasets with id-swaps for external users
+from the following inputs:
+* a csv file listing variables (`variable_file`, e.g. "variables.csv" with a column "Name" containing variable names)
+* a csv file defining the id-swap (`cid_file`, e.g. "ACEHDBFG.txt", with columns "ALN" and "G" -- the last character in the filename)
+* format of the requested output (`output_format` which can be either "sav", "csv" or "dta")
+* B number of the project proposal (`b_number`, e.g. "B0001")
+* last name of the project lead (`author`, e.g. "Smith")
+
+The function will create the dataset as requested and save it to a file 
+in the current directory with a name like "Smith_B0001_16Jul21.sav" 
+derived from the inputs to the function.
+
+```r
+library(alspac)
+
+setDataDir("R:/SSCM ALSPAC/Data")
+
+dat <- extractDataset(
+    variable_file="inputs/variables.csv",
+    cid_file="inputs/ACEHDBFG.txt",
+    output_format="sav",
+    b_number="B0001",author="Smith")
+```
