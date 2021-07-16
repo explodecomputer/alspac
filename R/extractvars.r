@@ -196,7 +196,9 @@ extractVarsFull <- function(x, haven=F)
 		obj <- subset(obj, select=vars)
                 ## Create in_obj_XX variable
                 objname <- sub("(.*)_.*", "\\1", basename(fn))
-                obj[[paste("in_obj", objname, sep="_")]] <- 1                
+                objname <- sub("\\..*", "", objname)
+                objname <- sub(" ", "_", objname)
+                obj[[paste("in_obj", objname, sep="_")]] <- 1   
 		# Create aln and aln2 variables
 		obj$aln2 <- obj$aln
 		if("qlet" %in% vars)

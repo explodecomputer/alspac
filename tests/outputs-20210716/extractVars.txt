@@ -27,11 +27,11 @@
     9652     2043     7386    12323     8264    13503     5033 
 
 > sapply(dat[, grep("^withdrawn", colnames(dat))], sum)
-  withdrawn.consent.mother_clinic    withdrawn.consent.mother_quest 
+  withdrawn_consent_mother_clinic    withdrawn_consent_mother_quest 
                                26                                23 
-        withdrawn.consent.partner     withdrawn.consent.child_based 
+        withdrawn_consent_partner     withdrawn_consent_child_based 
                                 3                                23 
-withdrawn.consent.child_completed 
+withdrawn_consent_child_completed 
                                25 
 
 > dat.full <- extractVars(do.call(rbind, vars), core_only = F)
@@ -73,11 +73,11 @@ withdrawn.consent.child_completed
   13331    1938    4731    9532 
 
 > sapply(dat[, grep("^withdrawn", colnames(dat))], sum)
-  withdrawn.consent.mother_clinic    withdrawn.consent.mother_quest 
+  withdrawn_consent_mother_clinic    withdrawn_consent_mother_quest 
                                23                                20 
-        withdrawn.consent.partner     withdrawn.consent.child_based 
+        withdrawn_consent_partner     withdrawn_consent_child_based 
                                 3                                20 
-withdrawn.consent.child_completed 
+withdrawn_consent_child_completed 
                                23 
 
 > vars <- findVars("c645a", whole.word = T, dictionary = "current")

@@ -65,3 +65,5 @@ table(dat$c645a)
 
 dat <- extractVars(vars, adult_only = TRUE)
 table(dat$c645a)
+
+

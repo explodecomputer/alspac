@@ -122,7 +122,7 @@ removeExclusions <- function(x) {
         
         var.idx <- which(colnames(x) %in% varnames[[group]])
         x[sample.idx, var.idx] <- NA
-        withdrawal.name <- paste("withdrawn","consent",group,sep=".")
+        withdrawal.name <- paste("withdrawn","consent",group,sep="_")
         x[[withdrawal.name]] <- x$aln %in% withdrawals[[group]]
     }
     x

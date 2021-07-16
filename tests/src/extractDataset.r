@@ -39,3 +39,12 @@ for (var in vars) {
         " ", freq, "\n")
 }
 
+output_filename <- list.files("outputs", "Smith_B0001", full.names=T)[1]
+dta.filename <- sub("sav", "dta", output_filename)
+haven::write_dta(dat, path=dta.filename)
+dat.dta <- haven::read_dta(dta.filename)
+
+csv.filename <- sub("sav", "csv", output_filename)
+write.csv(dat, file=csv.filename, row.names=F)
+dat.csv <- read.csv(csv.filename,stringsAsFactors=F)
+

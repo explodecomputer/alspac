@@ -28,11 +28,11 @@
 > t(sapply(dat[, startsWith(colnames(dat), "withdrawn")], 
 +     table))
                                   FALSE TRUE
-withdrawn.consent.mother_clinic   15619   26
-withdrawn.consent.mother_quest    15622   23
-withdrawn.consent.partner         15642    3
-withdrawn.consent.child_based     15622   23
-withdrawn.consent.child_completed 15620   25
+withdrawn_consent_mother_clinic   15619   26
+withdrawn_consent_mother_quest    15622   23
+withdrawn_consent_partner         15642    3
+withdrawn_consent_child_based     15622   23
+withdrawn_consent_child_completed 15620   25
 
 > vars <- c("a603", "b302", "bestgest", "cck420", "ccc250", 
 +     "ccf127", "cck400", "ccl201", "ccn280", "ccr420", "ccs2600", 
@@ -226,3 +226,18 @@ withdrawn.consent.child_completed 15620   25
  YPB1231_imputeno A22v: Ever been diagnosed with schizophrenia - Silent no's included 
  Labels    Consent withdrawn=-9999  Triplet/Quadruplet=-11  Questionnaire not Completed=-10  Unresolvable=-8  No Answer=-1  Yes, by a Doctor=1  Yes, by Self=2  No=3  Not Sure=4 
  Values    -10=11577  -8=2  -1=17  1=2  2=1  3=3984  4=15 
+
+> output_filename <- list.files("outputs", "Smith_B0001", 
++     full.names = T)[1]
+
+> dta.filename <- sub("sav", "dta", output_filename)
+
+> haven::write_dta(dat, path = dta.filename)
+
+> dat.dta <- haven::read_dta(dta.filename)
+
+> csv.filename <- sub("sav", "csv", output_filename)
+
+> write.csv(dat, file = csv.filename, row.names = F)
+
+> dat.csv <- read.csv(csv.filename, stringsAsFactors = F)
