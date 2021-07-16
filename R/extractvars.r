@@ -1,154 +1,3 @@
-# Functions for querying the ALSPAC variables data dictionary
-# Two main operations:
-# 1. Find all variables for a particular search term
-# 2. Create dataframe for a list of chosen variables
-
-
-whole.word.regex <- function(x) paste("\\b", x, "\\b", sep="")
-
-#' Find variables
-#'
-#' Provide a list of search terms to find variables in the data dictionary. 
-#'
-#' @details The resulting data frame will have the following columns:
-#' \itemize{
-#' 	\item{obj - The name of the data file}
-#' 	\item{name - The name of the variable}
-#' 	\item{type - The type of data for the variable}
-#' 	\item{lab - A description of the label}
-#' 	\item{code - The ALSPAC dictionary code for the variable}
-#' 	\item{counts - The number of non-NA values in the variable}
-#' 	\item{cat1-4 - These columns correspond to the folder names that the objects were found in}
-#' }
-#' 
-#' @param ... Search terms
-#' @param logic Conditions for the search strings, can be "all", "any", or "none". Set to "any" by default.
-#' @param ignore.case Should search terms be case sensitive? Defaults to TRUE.
-#' @param perl logical.  Should perl-compatible regexps be used? Defaults to FALSE.
-#' @param fixed logical.  If 'TRUE', 'pattern' is a string to be matched as is.  Overrides all conflicting arguments. Defaults to FALSE.
-#' @param whole.word If 'TRUE' search term "word" will be changed to "\\bword\\b" to only match whole words. Defaults to FALSE.
-#' @param dictionary Data frame or name of a data dictionary. Dictionaries available by default are
-#' "current" (from the R:/Data/Current folder), "useful" (from the R:/Data/Useful_data folder) and "both" (combined "current" and "useful").
-#' New dictionaries can be created using the \code{\link{createDictionary}()} function. (Default: "both").
-#'
-#' @export
-#' @return A data frame containing a list of the variables, the files they originate from, and some descripton about the files
-#' @examples \dontrun{
-#' # Find variables with BMI or height in the description (this will return a lot of results!)
-#' bmi_variables <- findVars("bmi", "height", logic="any", ignore.case=TRUE)
-#'}
-findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="both")
-{
-        if (is.character(dictionary))
-            dictionary <- retrieveDictionary(dictionary)
-        
-	l <- unlist(list(...))
-	stopifnot(length(l) > 0)
-	stopifnot(logic %in% c("any", "all", "none"))
-	invert <- ifelse("none", TRUE, FALSE)
-	if(whole.word)
-	{
-		l <- lapply(l, whole.word.regex)
-	}
-
-	n <- 1:nrow(dictionary)
-
-	# Search for patterns in label
-        g <- lapply(l, function(l){
-            c(grep(l, dictionary$lab, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert),
-              grep(whole.word.regex(l), dictionary$name, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert))
-        })
-
-	if(logic == "any")
-	{
-		g <- unique(unlist(g))
-	} else if(logic == "all") {
-		g <- Reduce(intersect, g)
-	} else if(logic == "none") {
-		a <- unique(unlist(g))
-		g <- n[!n %in% a]
-	}
-
-	out <- dictionary[g, ]
-	rownames(out) <- NULL
-
-        ## in case two patterns identify exactly the same variable ...
-        out <- unique(out)
-
-        dictionaryGood(out)
-
-        var.freq <- table(out$name)
-        if (any(var.freq > 1))
-            warning("One or more variables have the same name (fix with filterVars()): ",
-                    paste(names(var.freq)[which(var.freq > 1)], collapse=", "))
-	return(out)
-}
-
-#' Filter duplicate variables from findVars
-#'
-#' @details \code{\link{findVars}()} may identify multiple
-#' variables with the same name.  This function can be used
-#' to select among these duplicates.
-#'
-#' @param x Output from \code{\link{findVars}()}.
-#' @param ... Filter terms.  The name corresponds to the variable
-#' name for which to remove duplicates.  Each term is a named vector
-#' whose names correspond to columns in `x`.
-#' The values provide patterns for the given column to match.
-#' @export
-#' @return The subset of `x` that satisfies the supplied filters
-#' or that were not provided a filter.
-#' @examples\dontrun{
-#' varnames <- c("kz021","kz011b","ype9670", "c645a")
-#' vars <- findVars(varnames)
-#' vars <- subset(vars, subset=tolower(name) %in% varnames)
-#' vars <- filterVars(vars, kz021=c(obj="^kz"), kz011b=c(obj="^cp", lab="Participant"), c645a=c(cat2="Quest")) 
-#' }
-filterVars <- function(x, ...) {
-    filter.list <- list(...)
-
-    ## check that each filter name corresponds to a variable in x
-    none.idx <- which(!names(filter.list) %in% x$name)
-    if (length(none.idx) != 0)
-        stop("Filter name(s) do not correspond to a variable name: ",
-             paste(names(filter.list)[none.idx], collapse=", "))
-
-    ## check that the column names correspond to columns in x
-    columns <- unlist(lapply(filter.list, function(filter) names(filter)))
-    columns <- unique(setdiff(columns, colnames(x)))
-    if (length(columns) > 0)
-        stop("Filter column name(s) (", paste(columns, collapse=", "), ") ", 
-             "do not match columns in x (", paste(colnames(x), collapse=", "), ")")
-
-    ## identify variables that are being filtered
-    filter.idx <- which(x$name %in% names(filter.list))
-    if (length(filter.idx) == 0)
-        stop("None of the filter names matches a variable name")
-
-    ## apply each variable filter
-    filtered.x <- lapply(names(filter.list), function(varname) {
-        ## add the variable name to the filter
-        filter <- c(name=paste0("^", varname, "$"), filter.list[[varname]])
-        ## identify which variable(s) satisfy the filter
-        matches <- sapply(names(filter), function(column) {
-            grepl(filter[[column]], x[[column]])
-        })
-        if (length(filter) > 1)
-            matches <- apply(matches, 1, all)
-        satisfies.idx <- which(matches)
-        ## if no variable satisfies the filter, then issue a warning
-        if (length(satisfies.idx) == 0)
-            warning("Filter for ", varname, " does not match any variable")
-        ## if multiple variables satisfy the filter, then issue a warning
-        if (length(satisfies.idx) > 1)
-            warning("Filter for ", varname, " matches multiple variables")
-        ## return matching variable(s)
-        x[which(matches),]
-    })
-    filtered.x <- do.call(rbind, filtered.x)
-    rbind(x[-filter.idx,], filtered.x)
-}
-   
 #' Extract variables from data
 #'
 #' Take the output from `findVars` as a list of variables to extract from ALSPAC data
@@ -196,30 +45,32 @@ filterVars <- function(x, ...) {
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE) {
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, haven=FALSE) {
     dictionaryGood(x)
 
     x <- unique(x)
     if (core_only) 
-        x <- extractVarsCore(x, adult_only=adult_only) 
+        x <- extractVarsCore(x, adult_only=adult_only, haven=haven) 
     else
-        x <- extractVarsFull(x)
+        x <- extractVarsFull(x, haven=haven)
     
     if(exclude_withdrawn) {
+        message("Automatically removing data for individuals who have withdrawn consent.")
         x <- removeExclusions(x)
-        message("Automatically removing all withdrawn consent ALNs from the entire dataset")
-    } else {
-        warning("Withdrawn consent individuals have NOT been removed. Re-run with the default option or remove the relevant IDs manually before proceeding with analysis.")
+    } else {        
+        warning("Withdrawn consent individuals have NOT been removed. ",
+                "Re-run with the default option or remove the relevant ",
+                "IDs manually before proceeding with analysis.")
     }
     x
 }
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x, adult_only) {
-    dat <- extractVarsFull(x)
+extractVarsCore <- function(x, adult_only, haven=FALSE) {
+    dat <- extractVarsFull(x,haven=haven)
 
-    ##based on R:\Data\Syntax\syntax_template_12Apr18.do
+    ##based on R:\Data\Syntax\syntax_template_3June21.do
     core.filters <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
                       mz010=c(obj="mz_[0-9]+[a-z]+"),
                       mz010a=c(obj="mz_[0-9]+[a-z]+"),
@@ -250,7 +101,8 @@ extractVarsCore <- function(x, adult_only) {
                        in_core=c(obj="cp_[0-9]+[a-z]+"),
                        in_alsp=c(obj="cp_[0-9]+[a-z]+"),
                        in_phase2=c(obj="cp_[0-9]+[a-z]+"),
-                       in_phase3=c(obj="cp_[0-9]+[a-z]+"))
+                       in_phase3=c(obj="cp_[0-9]+[a-z]+"),
+                       in_phase4=c(obj="cp_[0-9]+[a-z]+"))
 
     if (!adult_only)
         core.filters <- c(core.filters, child.filters)
@@ -265,7 +117,7 @@ extractVarsCore <- function(x, adult_only) {
              "Missing variables: ", 
              paste(missing.vars, collapse=", "))
 
-    core.dat <- extractVarsFull(core.vars)
+    core.dat <- extractVarsFull(core.vars, haven=haven)
 
     if (!adult_only) 
         core.dat <- core.dat[which(core.dat$in_alsp == 1 & core.dat$tripquad == 2),]
@@ -278,137 +130,20 @@ extractVarsCore <- function(x, adult_only) {
         dat <- dat[match(core.dat$aln, dat$aln),]
     
     id.vars <- c("aln","qlet","alnqlet")
-    cbind(core.dat[,intersect(colnames(core.dat), id.vars), drop=F],
-          dat[,setdiff(colnames(dat), id.vars), drop=F],
-          core.dat[,setdiff(colnames(core.dat), c(colnames(dat), id.vars)), drop=F])
-}
-
-
-#' Remove data for participants who have withdrawn consent.
-#'
-#' The exclusion lists for mothers and children are stored in .do
-#' files in the R: drive. This function obtains ALNs to exclude
-#' from these files and then sets the variable
-#' values to missing for the appropriate participants
-#' and adds indicator variables for these participants ("withdrawn_consent_*").
-#'
-#' @param x Data frame output from \code{\link{extractVars}()}.
-#' 
-#' @export
-#' @return The input data frame but with appropriate values set to missing
-#' with additional variables ("withdrawn_consent_*") identifying participants
-#' who have withdrawn consent.
-removeExclusions <- function(x) {
-    ## colnames(x) <- tolower(colnames(x))
+    remove.vars <- c(names(core.filters)[!grepl("^(mz|best|in_|kz)", names(core.filters))],
+                     "mz010","tripquad","in_alsp")
+    remove.vars <- setdiff(remove.vars, x$name)
+    remove.vars <- c(id.vars, remove.vars)
     
-    stopifnot("aln" %in% names(x))
-    
-    withdrawals <- readExclusions()
-        
-    ##exclude aln and qlet and cohort variables from removal,
-    ##these are used for sample size selection (e.g. subset data)
-    keep <- c("aln","qlet","alnqlet","in_alsp", "in_core",
-              "in_phase2", "in_phase3", "tripquad", "kz011b",
-              "kz021","mz001")
-
-    varnames <- colnames(x)
-    dictionary <- retrieveDictionary("both")
-
-    ## some variables appear multiple times.
-    ## when it appears in 'Current' and 'Useful_data',
-    ## assume that the variable is 'Current' is implied.
-    dictionary <- dictionary[order(sign(dictionary$cat1 != "Current")),,drop=F]
-    dictionary <- dictionary[match(varnames, dictionary$name),]    
-    
-    paths <- list(mother_clinic=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Sample Definition",
-                      "Other/Samples/Mother",
-                      "Other/Obstetric",
-                      "Clinic/Adult"),
-                  mother_quest=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Sample Definition",
-                      "Other/Social_Class",
-                      "Quest/Mother"),
-                  partner_quest=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Social_Class",
-                      "Quest/Father"),
-                  partner_clinic=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Samples/Father",
-                      "Clinic/Adult"),		  
-		  partner=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Social_Class",
-                      "Quest/Father",
-                      "Other/Samples/Father",
-                      "Clinic/Adult"),		  
-                  child_based=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Sample Definition",
-                      "Other/Obstetric",
-                      "Other/Samples/Child",
-                      "Quest/Child Based",
-                      "Quest/Puberty",
-                      "Clinic/Child"),
-                  child_completed=c("Useful_data",
-                      "Other/Cohort Profile",
-                      "Other/Sample Definition",
-                      "Other/Obstetric",
-                      "Other/Samples/Child",
-                      "Quest/Child Completed",
-                      "Quest/Puberty",
-                      "Clinic/Child"))
-    stopifnot(all(names(withdrawals) %in% names(paths)))
-
-    varnames <- lapply(paths, function(paths) {
-        idx <- unlist(lapply(paths, function(path) grep(path, dictionary$path)))
-        setdiff(dictionary$name[unique(idx)], keep)
-    })
-
-    for (group in names(varnames)) {
-        sample.idx <- which(x$aln %in% withdrawals[[group]])
-        if (length(sample.idx) == 0) next
-        
-        var.idx <- which(colnames(x) %in% varnames[[group]])
-        x[sample.idx, var.idx] <- NA
-        x[[paste("withdrawn","consent",group,sep=".")]] <- x$aln %in% withdrawals[[group]]
-    }
-    x
-}
-
-#' Get list of ALNs to exclude
-#'
-#' The exclusion lists for mothers and children are stored in .do
-#' files in the R: drive. This function reads all of these .do files
-#' and then parses out the ALNS for withdrawn consent.
-#' 
-#' @export
-#' @return List of ALNs for each .do file.
-readExclusions <- function() {
-    do.files <- list.files(file.path(options()$alspac_data_dir, "Syntax/Withdrawal of consent"),
-                           pattern=".do$",
-                           full.names=T)
-    if (length(do.files) == 0)
-        stop("do files in Syntax/Withdrawal of consent/ appear to be missing")
-    
-    names(do.files) <- sub("_WoC.do", "", basename(do.files))
-    lapply(do.files, function(file) {
-        scan(file, what=character(), quiet=TRUE) %>%
-        paste(collapse=" ") %>%
-        stringr::str_extract_all("aln *== *[0-9]+") %>%
-        unlist() %>%
-        stringr::str_replace_all(" ", "") %>%
-        stringr::str_replace_all("aln==", "") %>%
-        as.integer %>% unique
-    })
+    bind_cols(core.dat[,intersect(colnames(core.dat), id.vars), drop=F],
+              dat[,setdiff(colnames(dat), remove.vars), drop=F],
+              core.dat[,setdiff(colnames(core.dat), c(colnames(dat), remove.vars)), drop=F])
 }
 
 
 
-extractVarsFull <- function(x)
+
+extractVarsFull <- function(x, haven=F)
 {
 	# require(plyr)
 	# require(readstata13)
@@ -424,7 +159,12 @@ extractVarsFull <- function(x)
 			message("Skipping...")
 			return(NULL)
 		}
-		obj <- suppressWarnings(readstata13::read.dta13(fn))
+                if (haven) {
+                    fn.sav <- sub("dta$", "sav", fn)
+                    obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=T))
+                }
+                else
+                    obj <- suppressWarnings(readstata13::read.dta13(fn))
 
 		# Make sure aln and qlet variables are lower case
 		alnc <- grep("^ALN$", names(obj), ignore.case=TRUE)
@@ -454,6 +194,9 @@ extractVarsFull <- function(x)
 		cvars <- names(obj)[names(obj) %in% x$name]
 		vars <- unique(c(ivars, cvars))
 		obj <- subset(obj, select=vars)
+                ## Create in_obj_XX variable
+                objname <- sub("(.*)_.*", "\\1", basename(fn))
+                obj[[paste("in_obj", objname, sep="_")]] <- 1                
 		# Create aln and aln2 variables
 		obj$aln2 <- obj$aln
 		if("qlet" %in% vars)
@@ -493,6 +236,8 @@ extractVarsFull <- function(x)
                                         qlet=NA,
                                         stringsAsFactors=F))
         }
+        if (haven)
+            ids <- as_tibble(ids)
         
         ## merge ids and dat into a single data frame
         dat <- lapply(dat, function(dat) {
@@ -505,7 +250,15 @@ extractVarsFull <- function(x)
         })
         dat <- c(list(ids), dat)
         names(dat) <- NULL
-        x <- do.call(cbind, dat)
+        x <- do.call(bind_cols, dat)
+
+        ## convert 1/NA to 1/0 for all "in_obj_XX" columns and rename them "in_XX"
+        is_in_obj_column <- grepl("^in_obj_", colnames(x))
+        if (any(is_in_obj_column)) {
+            for (i in which(is_in_obj_column))
+                x[[i]] <- ifelse(is.na(x[[i]]), 0, 1)
+            colnames(x)[is_in_obj_column] <- sub("_obj", "", colnames(x)[is_in_obj_column])
+        }
         
 	names(x)[names(x) == "aln"] <- "alnqlet"
 	names(x)[names(x) == "aln2"] <- "aln"

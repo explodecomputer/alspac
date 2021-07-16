@@ -2,6 +2,7 @@
 
 export(createDictionary)
 export(dictionaryGood)
+export(extractDataset)
 export(extractVars)
 export(extractWebOutput)
 export(filterVars)

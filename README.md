@@ -40,19 +40,18 @@ library(devtools)
 install_github("explodecomputer/alspac")
 ```
 
-You should then be able to load the package:
+The `alspac` package can then be loaded as follows:
 
 ```r
 library(alspac)
 ```
 
 
-
 ## Finding variables
 
 ### Browsing the variables manually
 
-There are two data objects that come with the package - `current` and `useful` - that contain all the variables available in the `R:/Current/` and `R:/Useful_data` directories, respectively. You can search through them manually by loading them directly, e.g. to load the `current` variables:
+There are two data objects that come with the package - `current` and `useful` - that contain all the variables available in the `R:/Current/` and `R:/Useful_data` directories, respectively. They can be searched manually after loading them directly, e.g. to load the `current` variables:
 
 ```r
 data(current)
@@ -128,8 +127,7 @@ Some of these arguments have defaults but just writing them out for illustration
 ### Filtering a list of variables
 
 `findVars` may identify multiple
-variables with the same name.  The `filterVars` function can be used
-to select among these duplicates.
+variables with the same name.
 
 For example, searching for variables "kz021", "kz011b" and "c645a"
 will return multiple variables with the same name.
@@ -138,60 +136,63 @@ varnames <- c("kz021","kz011b","ype9670", "c645a")
 vars <- findVars(varnames)
 ```
 
-As a first clean-up step, I remove any variables whose names
-do not exactly match one of the variable names we are looking for.
+There are two ways to select among these duplicates.
+
+1. **Manually** select rows corresponding to variables that I want, e.g.
 ```r
-vars <- subset(vars, subset=tolower(name) %in% varnames)
+vars <- vars[vars$name=="kz021" & startsWith(vars$obj,"cp")
+             | vars$name=="kz011b" & startsWith(vars$obj,"cp")
+			 | vars$name=="c645a" & vars$cat2=="Quest"
+			 | vars$name=="YPE9670",]
 ```
 
-I then require that the "kz021" variable come from a
+In other words, I require that the "kz021" variable come from a
 STATA file name starting with "kz" ("obj" column in `vars`),
 "kz011b" comes from a file name starting with "cp"
 and the description of the variable ("lab" column in `vars`)
 include the word "Participant",
 and "c645a" comes from a questionnaire ("cat2" column in `vars`).
 
+2. Apply **`filterVars`**.
+
+As a first clean-up step, I remove any variables whose names
+do not exactly match one of the variable names I am looking for.
+```r
+vars <- subset(vars, subset=tolower(name) %in% varnames)
+```
+
+I then use `filterVars` to select variables
+satisfying the criteria described above.
 ```r
 vars <- filterVars(vars,
                    kz021=c(obj="^kz"),
-		   kz011b=c(obj="^cp", lab="Participant"),
-		   c645a=c(cat2="Quest")) 
+        		   kz011b=c(obj="^cp", lab="Participant"),
+		           c645a=c(cat2="Quest")) 
 ```
-
-
-So once you have a list of variables in the required format (i.e. the output from findVars) you can extract those variables:
-
 
 ## Extracting variables
 
-For this you need to have mounted the `R:/Data` drive on your computer. When you load the package (`library(alspac)`), if you have the R drive loaded then you should get a message like this:
+To extract the data corresponding to this selection of variables, I need to have mounted the `R:/Data` drive on my computer. When I load the package (`library(alspac)`), if I have the R drive loaded then I should get a message like this:
 
 ```
 The data directory has been recognised
 ```
 
-Sometimes this might not work - the package tries to guess where the R drive will be mounted but it might guess wrong. If you receive an error message instead and you are already connected to the R drive then run the following command:
+Sometimes this might not work - the package tries to guess where the R drive will be mounted but it might guess wrong. If I receive an error message instead, then I need to specify the location of the R drive manually:
 
 ```r
 setDataDir("/path/to/R drive/data/")
 ```
 
-Once you have received the message `The data directory has been recognised` you are able to extract the variables you need from the R drive.
+Once I have received the message `The data directory has been recognised`, I am able to extract the variables I need from the R drive.
 
 ```r
 results <- extractVars(vars)
 ```
 
-Or you can just extract the row or rows relevant to you:
-
-```r
-results <- extractVars(vars[1:3, ])
-results <- extractVars(subset(vars, some_conditions_here))
-```
-
 ### Important note on IDs
 
-Suppose we extract a variable measured in each of mothers, children, fathers and partners. e.g.
+Suppose I extract a variable measured in each of mothers, children, fathers and partners. e.g.
 
 ```r
 x <- subset(current, name %in% c("cf010", "ff1a005a", "fm1a010a", "pc013"))
@@ -231,16 +232,19 @@ If you have a better way to present these data do contact me.
 
 ## Using the website to browse variables
 
-You can browse the variables at [https://alspac-example.shinyapps.io/alspac-dt/](https://alspac-example.shinyapps.io/alspac-dt/). This contains both the 'Current' and 'Useful_data' variables.
+Variables can be browsed at [https://alspac-example.shinyapps.io/alspac-dt/](https://alspac-example.shinyapps.io/alspac-dt/). This contains both the 'Current' and 'Useful_data' variables.
 
-You can use this to help extract variables also. 
+This site can also be used to select variables for extraction:
 
-1. Select the variables that you want from the table, then click 'Download variable list'. This will download a csv file containing information about the variables chosen. 
-2. Next, you can use the R package to extract those variables. Use the `extractWebOutput` function, specifying the name of the file that you just downloaded. For example
+1. Select the variables of interest from the table, then click 'Download variable list'. This will download a csv file containing information about the variables chosen. 
+2. Next, use the `extractWebOutput` function in the `alspac` package to extract the variables, specifying the name of the file that you just downloaded. For example
 
 ```
 extractWebOutput("data-2017-08-22.csv")
 ```
+
+To code for the shiny variable app is here: [https://github.com/explodecomputer/alspac-shiny](https://github.com/explodecomputer/alspac-shiny)
+
 
 ## Dictionary Maintenance
 
@@ -257,5 +261,4 @@ These updated dictionaries will be saved within the R package
 for use in later R sessions.  In other words, an update will only
 need to be peformed one time.  
 
-To update the shiny variable app see [https://github.com/explodecomputer/alspac-shiny](https://github.com/explodecomputer/alspac-shiny)
 

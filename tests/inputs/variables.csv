@@ -1,0 +1,357 @@
+Name,Label,Type,Study,Dataset
+b_empst_m,B: Employment status (mother),Collected,ALSPAC,mother_social_class
+b_snssec_analytical_m,B: Simplified NSSEC analytical classes (mother),Collected,ALSPAC,mother_social_class
+a500,NO of O 18s in household,Collected,ALSPAC,a
+a501,NO of 16 to 18s in household,Collected,ALSPAC,a
+a502,NO of 0 to 15s in household,Collected,ALSPAC,a
+a600,Mums opinion of neighbourhood,Collected,ALSPAC,a
+a601,Neighbourhood people visiting home,Collected,ALSPAC,a
+a602,Neighbourhood people argue with mum,Collected,ALSPAC,a
+a603,Neighbourhood people look after mums CH,Collected,ALSPAC,a
+a604,Neighbourhood people keep to themselves,Collected,ALSPAC,a
+a605,Mum visits neighbours home,Collected,ALSPAC,a
+a606,Mum argues with neighbours,Collected,ALSPAC,a
+a607,Mum looks after neighbours CH,Collected,ALSPAC,a
+a608,Mum keeps to herself,Collected,ALSPAC,a
+a620,POSS burglary worries mum,Collected,ALSPAC,a
+a621,POSS mugging & robbery worries mum,Collected,ALSPAC,a
+a622,POSS sex assault and pestering worries mum,Collected,ALSPAC,a
+a623,POSS vandalism to home worries mum,Collected,ALSPAC,a
+a636,Neighbourhood quality index,Collected,ALSPAC,a
+a901,Mother's age on completion of questionnaire,Collected,ALSPAC,a
+b300,This PREG intentional,Collected,ALSPAC,b
+b302,Reaction on discovering this PREG,Collected,ALSPAC,b
+b320,PRES feelings about PREG,Collected,ALSPAC,b
+b321,PTNRS feelings about this PREG,Collected,ALSPAC,b
+b613,Weighted life event scores,Collected,ALSPAC,b
+b614,Life event scores,Collected,ALSPAC,b
+b916,Interpersonal awareness,Collected,ALSPAC,b
+b917,Need for approval,Collected,ALSPAC,b
+b918,Separation anxiety,Collected,ALSPAC,b
+b919,Timidity,Collected,ALSPAC,b
+b920,Fragile inner-self,Collected,ALSPAC,b
+b921,Total,Collected,ALSPAC,b
+d167a,"Had drug addiction, Y/N",Collected,ALSPAC,d
+d168a,"Had alcoholism, Y/N",Collected,ALSPAC,d
+d169a,"Had schizophrenia, Y/N",Collected,ALSPAC,d
+d170a,"Had anorexia nervosa, Y/N",Collected,ALSPAC,d
+d171a,"Had severe depression, Y/N",Collected,ALSPAC,d
+d172a,"Had other psychiatric problem, Y/N",Collected,ALSPAC,d
+d380,Legally adopted,Collected,ALSPAC,d
+d385,In local authority care,Collected,ALSPAC,d
+d395,Ever lived in foster parents home,Collected,ALSPAC,d
+d402,Stayed in childrens home,Collected,ALSPAC,d
+d404,Stayed in custody,Collected,ALSPAC,d
+d410,Left home before 18YRS old,Collected,ALSPAC,d
+d755,Home stability,Collected,ALSPAC,d
+d770,No of relatives seen at least twice PYR,Collected,ALSPAC,d
+d771,No of friends,Collected,ALSPAC,d
+d772,Member of close circle of friends,Collected,ALSPAC,d
+d773,No of people to confide in,Collected,ALSPAC,d
+d774,No of people who confide,Collected,ALSPAC,d
+d775,No of people to discuss decisions with,Collected,ALSPAC,d
+d776,No of people to borrow 100 pounds from,Collected,ALSPAC,d
+d777,No of helpers if in trouble,Collected,ALSPAC,d
+d778,Meetings with friends in last MTH,Collected,ALSPAC,d
+d779,Meetings with relatives in last MTH,Collected,ALSPAC,d
+d780,Social network score,Collected,ALSPAC,d
+d790,No one to share feelings with,Collected,ALSPAC,d
+d791,PTNR provides emotional support needed,Collected,ALSPAC,d
+d792,Other PREG women to share experiences,Collected,ALSPAC,d
+d793,Neighbours would help if in difficulties,Collected,ALSPAC,d
+d794,Worried that PTNR might leave,Collected,ALSPAC,d
+d795,Someone to share excitement of PREG,Collected,ALSPAC,d
+d796,When tired can rely on PTNR,Collected,ALSPAC,d
+d797,Family would help with money,Collected,ALSPAC,d
+d798,Friends would help with money,Collected,ALSPAC,d
+d799,State would help with money,Collected,ALSPAC,d
+d800,Social support score,Collected,ALSPAC,d
+c432,Weighted life event scores,Collected,ALSPAC,c
+c433,Life event scores,Collected,ALSPAC,c
+c797,Discrimination score,Collected,ALSPAC,c
+c970,Any abuse,Collected,ALSPAC,c
+e371,Crown Crisp - Anxiety,Collected,ALSPAC,e
+e372a,anxiety subscale of CCEI,Collected,ALSPAC,e
+e373,Crown Crisp - Somatic,Collected,ALSPAC,e
+e374a,somatic subscale of CCEI,Collected,ALSPAC,e
+e375,Crown Crisp - Depression,Collected,ALSPAC,e
+e376a,depression subscale of CCEI,Collected,ALSPAC,e
+e390,Edinburgh Post-natal Depression Score,Collected,ALSPAC,e
+e445,Life events score,Collected,ALSPAC,e
+e610,DV:G1 to G10: Social support score: E file,Collected,ALSPAC,e
+e627,Help Score,Collected,ALSPAC,e
+f111,Maternal enjoyment score,Collected,ALSPAC,f
+f114,Maternal confidence score,Collected,ALSPAC,f
+f117,Maternal bonding score,Collected,ALSPAC,f
+f173,Anxiety subscale of CCEI,Collected,ALSPAC,f
+f174,Anxiety with missing values,Collected,ALSPAC,f
+f176,Somatic subscale of CCEI,Collected,ALSPAC,f
+f177,Somatic with missing values,Collected,ALSPAC,f
+f179,Depression subscale of CCEI,Collected,ALSPAC,f
+f180,Depression with missing values,Collected,ALSPAC,f
+f266,Life event scores,Collected,ALSPAC,f
+f813,Help score,Collected,ALSPAC,f
+f920,Social support score 1,Collected,ALSPAC,f
+g213,Positive parenting experience score,Collected,ALSPAC,g
+g214,Negative parenting experience score,Collected,ALSPAC,g
+g240,Social network score,Collected,ALSPAC,g
+g268,Crown Crisp - Anxiety,Collected,ALSPAC,g
+g269,anxiety subscale of CCEI,Collected,ALSPAC,g
+g271,Crown crisp - Somatic,Collected,ALSPAC,g
+g272,Somatic Subscale of CCEI,Collected,ALSPAC,g
+g274,Crown Crisp - Depression,Collected,ALSPAC,g
+g275,Depression Subscale of CCEI,Collected,ALSPAC,g
+g346,Life events score,Collected,ALSPAC,g
+h138,DV: Parental Relationship Score,Collected,ALSPAC,h
+h151a,DV: Bachman self esteem score (complete cases),Collected,ALSPAC,h
+h178a,DV: CCEI anxiety subscale score (complete cases),Collected,ALSPAC,h
+h181a,DV: CCEI somatic subscale score (complete cases),Collected,ALSPAC,h
+h184a,DV: CCEI depression subscale score (complete cases),Collected,ALSPAC,h
+h256,DV: Life Events Score,Collected,ALSPAC,h
+h760,DV: Maternal enjoyment score,Collected,ALSPAC,h
+h763,DV: Maternal confidence score,Collected,ALSPAC,h
+h766,DV: Maternal bonding score,Collected,ALSPAC,h
+j345,Total Life Events,Collected,ALSPAC,j
+j346,Weighted Life Events,Collected,ALSPAC,j
+l4050,D46a: Other events concerned/required additional effort from respondent to cope in last year,Collected,ALSPAC,l
+n3000,D1a: Mother has a husband or partner,Collected,ALSPAC,n
+n3052,D41: Mother has ever beaten partner up,Collected,ALSPAC,n
+n3053,D42: Partner has ever beaten mother up,Collected,ALSPAC,n
+kd500a,CH Taken Into Care Since 6 MTHS,Collected,ALSPAC,kd
+kd500b,Ch taken into care (adj),Collected,ALSPAC,kd
+kd504a,CH Physically Hurt by Person > 6 MTHS,Collected,ALSPAC,kd
+kd504b,Ch physically hurt by someone (adj),Collected,ALSPAC,kd
+kd505a,CH Sexually Abused > 6 MTHS,Collected,ALSPAC,kd
+kd505b,Ch sexually abused (adj),Collected,ALSPAC,kd
+kd515,Life events score,Collected,ALSPAC,kd
+kf450,Child taken into care > 18 months,Collected,ALSPAC,kf
+kf450a,"Child taken into care > 18 months, Y/N",Collected,ALSPAC,kf
+kf454,Child physically hurt > 18 months,Collected,ALSPAC,kf
+kf454a,"Child physically hurt > 18 months, Y/N",Collected,ALSPAC,kf
+kf455,Child sexually abused > 18 months,Collected,ALSPAC,kf
+kf455a,"Child sexually abused > 18 months, Y/N",Collected,ALSPAC,kf
+kf465,No. of life events to child,Collected,ALSPAC,kf
+kj460,CH was Taken into Care Past 12MTHs,Collected,ALSPAC,kj
+kj464,CH Physically Hurt by Person Past 12MTHs,Collected,ALSPAC,kj
+kj465,CH was Sexually Abused Past 12 MTHs,Collected,ALSPAC,kj
+kj476,Life Events Score,Collected,ALSPAC,kj
+kj460a,Child Taken Into Care Y/N,Collected,ALSPAC,kj
+kj464a,Child Was Physically Hurt By Person Y/N,Collected,ALSPAC,kj
+kj465a,Child Sexually Abused Y/N,Collected,ALSPAC,kj
+kl470,D1: Child taken into care since age 3,Collected,ALSPAC,kl
+kl474,D5: Child was physically hurt by someone since age 3,Collected,ALSPAC,kl
+kl475,D6: Child was sexually abused since age 3,Collected,ALSPAC,kl
+kn4000,D1: Child taken into care in past 15 months,Collected,ALSPAC,kn
+kn4004,D5: Child physically hurt by someone in past 15 months,Collected,ALSPAC,kn
+kn4005,D6: Child sexually abused in past 15 months,Collected,ALSPAC,kn
+kq325,C6: CH Solitary & Played Alone Past 6 Mths,Collected,ALSPAC,kq
+kq330,C11: CH Had At Least One Good Friend Past 6 Mths,Collected,ALSPAC,kq
+kq333,C14: CH Generally Liked By Other Kids Past 6 Mths,Collected,ALSPAC,kq
+kq345a,DV: Prosocial Score,Collected,ALSPAC,kq
+kq345b,DV: Hyperactivity Score,Collected,ALSPAC,kq
+kq345c,DV: Emotional Symptoms Score,Collected,ALSPAC,kq
+kq345d,DV: Conduct Problems Score,Collected,ALSPAC,kq
+kq345e,DV: Peer Problems Score,Collected,ALSPAC,kq
+kq345f,DV: Total Behavioural Difficulties Score,Collected,ALSPAC,kq
+kq360,D1: Child was taken into care since his/her 5th birthday,Collected,ALSPAC,kq
+kq360a,DV: Child was taken into care since his/her 5th birthday (Y/N),Collected,ALSPAC,kq
+kq364,D5: Child was physically hurt by someone since his/her 5th birthday,Collected,ALSPAC,kq
+kq364a,DV: Child was physically hurt by someone since his/her 5th birthday (Y/N),Collected,ALSPAC,kq
+kq365,D6: Child was sexually abused since his/her 5th birthday,Collected,ALSPAC,kq
+kq365a,DV: Child was sexually abused since his/her 5th birthday (Y/N),Collected,ALSPAC,kq
+kq379a,DV: Number of life events since child's 5th birthday,Collected,ALSPAC,kq
+kr813a,DV: DAWBA DSM-IV clinical diagnosis - Any oppositional-conduct disorder,Collected,ALSPAC,kr
+kr827a,DV: DAWBA DSM-IV clinical diagnosis - Any anxiety disorder,Collected,ALSPAC,kr
+kr832a,DV: DAWBA DSM-IV clinical diagnosis - Any depressive disorder,Collected,ALSPAC,kr
+ccc250,A16: Frequency child feels left out of things,Collected,ALSPAC,ccc
+ccc290,A20: Frequency child has been bullied,Collected,ALSPAC,ccc
+sa144,D5: Degree to which child was rather solitary in past 6 months,Collected,ALSPAC,sabc
+sa149,D10: Degree to which child had at least 1 good friend in past 6 months,Collected,ALSPAC,sabc
+sa152,D13: Degree to which child was generally liked by peers in past 6 months,Collected,ALSPAC,sabc
+sa161a,DV: SDQ prosocial score (complete cases),Collected,ALSPAC,sabc
+sa162a,DV: SDQ hyperactivity score (complete cases),Collected,ALSPAC,sabc
+sa163a,DV: SDQ emotional symptoms score (complete cases),Collected,ALSPAC,sabc
+sa164a,DV: SDQ conduct problems score (complete cases),Collected,ALSPAC,sabc
+sa165a,DV: SDQ peer problems score (complete cases),Collected,ALSPAC,sabc
+sa166a,DV: SDQ total difficulties score (complete cases),Collected,ALSPAC,sabc
+sa197a,DV: Age of child at completion in months,Collected,ALSPAC,sabc
+kt5000,E1: Since 7th birthday child has been taken into care,Collected,ALSPAC,kt
+kt5004,E5: Since 7th birthday child has been physically hurt by someone,Collected,ALSPAC,kt
+kt5005,E6: Since 7th birthday child has been sexually abused,Collected,ALSPAC,kt
+ccf106,A7: Study child has lots of friends,Collected,ALSPAC,ccf
+ccf113,A14: Study child makes friends easily,Collected,ALSPAC,ccf
+ccf120,A21: Other kids have more friends than study child,Collected,ALSPAC,ccf
+ccf127,A28: Study child gets along easily with kids,Collected,ALSPAC,ccf
+ccf143,A44: Other kids want study child to be their friend,Collected,ALSPAC,ccf
+ccf151,A52: Study child has more friends than most other kids,Collected,ALSPAC,ccf
+ccf159,A60: Study child is popular with kids of same age,Collected,ALSPAC,ccf
+ccf168,A69: Most other kids like study child,Collected,ALSPAC,ccf
+ku360,B6f: Mother told child has Autism / Aspergers / Autistic Spectrum,Collected,ALSPAC,ku
+ku361,B6f: Age of child at diagnosis in years when mother told has Autism/Aspergers/Autistic Spectrum,Collected,ALSPAC,ku
+ku372,B8c: Child considers relationship with friends important in life,Collected,ALSPAC,ku
+ku375,B8f: Child considers friends important in life,Collected,ALSPAC,ku
+ku420,B13a: Friends child prefers,Collected,ALSPAC,ku
+ku421,B13b: Child has a favourite friend of the other sex,Collected,ALSPAC,ku
+ku423,B14: Child is at ease with children of own age,Collected,ALSPAC,ku
+ku424,B15: Child is influenced by friends or mates,Collected,ALSPAC,ku
+ku685,"F6: Child is rather solitary, tends to play alone in past 6 months",Collected,ALSPAC,ku
+ku690,F11: Child has at least one good friend in past 6 months,Collected,ALSPAC,ku
+ku693,F14: Child is generally liked by other children in past 6 months,Collected,ALSPAC,ku
+ku705a,DV: SDQ - Prosocial score (complete cases),Collected,ALSPAC,ku
+ku706a,DV: SDQ - Hyperactivity score (complete cases),Collected,ALSPAC,ku
+ku707a,DV: SDQ - Emotional symptoms score (complete cases),Collected,ALSPAC,ku
+ku708a,DV: SDQ - Conduct problems score (complete cases),Collected,ALSPAC,ku
+ku709a,DV: SDQ - Peer problems score (complete cases),Collected,ALSPAC,ku
+ku710a,DV: SDQ - Total difficulties score (complete cases),Collected,ALSPAC,ku
+kv5500,G1: Child has ever experienced something traumatic,Collected,ALSPAC,kv
+kv5502,G1b: Age of child when had this experience,Collected,ALSPAC,kv
+cck300,B1: Other people have read child's thoughts,Collected,ALSPAC,cck
+cck320,B2: Child believes they have received special messages just for them though the TV or Radio,Collected,ALSPAC,cck
+cck340,B3: Child has thought they have been spied upon or followed,Collected,ALSPAC,cck
+cck360,B4: Child has heard voices others cannot hear,Collected,ALSPAC,cck
+cck380,B5: Child has felt under the control of some special power,Collected,ALSPAC,cck
+cck400,B6: Child has known what another person is thinking,Collected,ALSPAC,cck
+cck420,B7: Child has seen something or someone that others could not,Collected,ALSPAC,cck
+kw6505,"G6: Child is rather solitary, tends to play alone in the last six months",Collected,ALSPAC,kw
+kw6510,G11: Child has had at least one good friend in the last six months,Collected,ALSPAC,kw
+kw6513,G14: Child has been generally liked by other children in the last six months,Collected,ALSPAC,kw
+kw6600a,DV: SDQ - Prosocial score (complete cases),Collected,ALSPAC,kw
+kw6601a,DV: SDQ - Hyperactivity score (complete cases),Collected,ALSPAC,kw
+kw6602a,DV: SDQ - Emotional symptoms score (complete cases),Collected,ALSPAC,kw
+kw6603a,DV: SDQ - Conduct problems score (complete cases),Collected,ALSPAC,kw
+kw6604a,DV: SDQ - Peer problems score (complete cases),Collected,ALSPAC,kw
+kw6605a,DV: SDQ - Total difficulties score (complete cases),Collected,ALSPAC,kw
+se144,A5: Degree to which child was rather solitary in past 6 months,Collected,ALSPAC,sefg
+se149,A10: Degree to which child had at least 1 good friend in past 6 months,Collected,ALSPAC,sefg
+se152,A13: Degree to which child was generally liked by peers in past 6 months,Collected,ALSPAC,sefg
+se161a,DV: SDQ prosocial score (complete cases),Collected,ALSPAC,sefg
+se162a,DV: SDQ hyperactivity score (complete cases),Collected,ALSPAC,sefg
+se163a,DV: SDQ emotional symptoms score (complete cases),Collected,ALSPAC,sefg
+se164a,DV: SDQ conduct problems score (complete cases),Collected,ALSPAC,sefg
+se165a,DV: SDQ peer problems score (complete cases),Collected,ALSPAC,sefg
+se166a,DV: SDQ total difficulties score (complete cases),Collected,ALSPAC,sefg
+se197a,DV: Age of child at completion in months,Collected,ALSPAC,sefg
+ccl201,B1b: Frequency child is bullied by sibling,Collected,ALSPAC,ccl
+ff5260,Number of 12 interviewer-rated psychosis items coded as missing: psychosis interview: TF1,Collected,ALSPAC,tf1
+ff5261,DV: Interviewer rating of child having at least one psychotic experience: psychosis interview: TF1,Collected,ALSPAC,tf1
+ff5262,DV: Interviewer rating of child having at least one psychotic experience: psychosis interview: TF1,Collected,ALSPAC,tf1
+ff5263,DV: Interviewer rating of child having at least one psychotic experience: psychosis interview: TF1,Collected,ALSPAC,tf1
+ff5264,"DV: Interviewer rating of >=1 psychotic experience attributable to sleep, fever, substance use: psychosis interview: TF1",Collected,ALSPAC,tf1
+ff5265,"DV: Interviewer rating of >=1 psychotic experience attributable to sleep, fever, substance use: psychosis interview: TF1",Collected,ALSPAC,tf1
+ff5266,"DV: Interviewer rating of >=1 psychotic experience attributable to sleep, fever, substance use: psychosis interview: TF1",Collected,ALSPAC,tf1
+ff5267,DV: Interviewer rating of number of psychotic experiences: psychosis interview: TF1,Collected,ALSPAC,tf1
+ff5268,DV: Weighted sum of suspected or definite psychotic experiences: psychosis interview: TF1,Collected,ALSPAC,tf1
+ff5269,"DV: Number of suspected or definite psychotic experiences not attributable to the effects of sleep, fever, or substance use: psychosis interview: TF1",Collected,ALSPAC,tf1
+ff5270,"DV: Weighted sum of suspected/definite psychotic experiences not clearly attributable to effects of sleep, fever, substance use: psychosis interview: TF1",Collected,ALSPAC,tf1
+ccn200,B1: Child believes their thoughts have been read,Collected,ALSPAC,ccn
+ccn220,B2: Child believes they have been sent special messages through TV or radio,Collected,ALSPAC,ccn
+ccn230,B3: Child believes they have been followed or spied on,Collected,ALSPAC,ccn
+ccn240,B4:Child has heard voices others cannot,Collected,ALSPAC,ccn
+ccn250,B5: Child believes they have been under the control of a special power,Collected,ALSPAC,ccn
+ccn260,B6: Child has seen something nobody else could,Collected,ALSPAC,ccn
+ccn270,B7: Child believes their thoughts have been broadcast,Collected,ALSPAC,ccn
+ccn280,B8: Child believes thoughts other than their own have been put into their head,Collected,ALSPAC,ccn
+ccn290,B9: Child believes their thoughts have been taken out of their mind by an external force,Collected,ALSPAC,ccn
+ccn300,B10: Child has believed they are very important or have special powers,Collected,ALSPAC,ccn
+ta5000,G1a: Teenager goes to extremes to prevent those they love from leaving,Collected,ALSPAC,ta
+ta5001,"G1b: Teenager either loves someone or hates them, nothing in between",Collected,ALSPAC,ta
+ta5002,G1c: Teenager often wonders who they really are,Collected,ALSPAC,ta
+ta5003,G1d: Teenager has tried to hurt or kill themselves,Collected,ALSPAC,ta
+ta5004,G1e: Teenager is very moody,Collected,ALSPAC,ta
+ta5005,G1f: Teenager feels life is dull and meaningless,Collected,ALSPAC,ta
+ta5006,G1g: Teenager has difficulty controlling anger/temper,Collected,ALSPAC,ta
+ta5007,"G1h: When teenager stressed out, things happen, feels paranoid, detached from self or things",Collected,ALSPAC,ta
+ta5010,G2a: Teenager gone on eating binges,Collected,ALSPAC,ta
+ta5011,G2b: Teenager drunk too much alcohol,Collected,ALSPAC,ta
+ta5012,G2c: Teenager taken drugs,Collected,ALSPAC,ta
+ta5013,G2d: Teenager spent more money than has,Collected,ALSPAC,ta
+ta5014,G2e: Teenager yelled at people,Collected,ALSPAC,ta
+ta5015,G2f: Teenager broken things,Collected,ALSPAC,ta
+ta5016,G2g: Teenager hit people,Collected,ALSPAC,ta
+ta5017,G2h: Teenager stolen things,Collected,ALSPAC,ta
+ta5020,G3: Teenager feels miserable or unhappy,Collected,ALSPAC,ta
+ta5021,G4: Teenager didn't enjoy anything at all,Collected,ALSPAC,ta
+ta5022,G5: Teenager felt so tired that they sat around and did nothing,Collected,ALSPAC,ta
+ta5023,G6: Teenager was very restless,Collected,ALSPAC,ta
+ta5024,G7: Teenager felt they were no good anymore,Collected,ALSPAC,ta
+ta5025,G8: Teenager cried a lot,Collected,ALSPAC,ta
+ta5026,G9: Teenager found it hard to think properly or concentrate,Collected,ALSPAC,ta
+ta5027,G10: Teenager hated himself/herself,Collected,ALSPAC,ta
+ta5028,G11: Teenager felt he/she was a bad person,Collected,ALSPAC,ta
+ta5029,G12: Teenager felt lonely,Collected,ALSPAC,ta
+ta5030,G13: Teenager thought nobody really loved him/her,Collected,ALSPAC,ta
+ta5031,G14: Teenager thought they could never be as good as other kids,Collected,ALSPAC,ta
+ta5032,G15: Teenager felt they did everything wrong,Collected,ALSPAC,ta
+tb5500,G1: Child involved in exceptionally stressful situation such as terrible accident/being abused/some other disaster during their lifetime,Collected,ALSPAC,tb
+tb5502,G1b: Age of child when involved in exceptionally stressful situation,Collected,ALSPAC,tb
+ccr163,A4d: Comparison between primary school (or equivalent) and now the respondent finds it more and less difficulty to make friends,Collected,ALSPAC,ccr
+ccr300,C1: People have read respondent's thoughts,Collected,ALSPAC,ccr
+ccr320,C2: Respondent believes they have been sent special messages through television or radio,Collected,ALSPAC,ccr
+ccr340,C3: The respondent was thought that they were being followed or spied upon,Collected,ALSPAC,ccr
+ccr360,C4: Respondent has heard voices that other people cannot hear,Collected,ALSPAC,ccr
+ccr370,C5: Respondent has felt they were under the control of a special power,Collected,ALSPAC,ccr
+ccr380,C6: Respondent has seen something other people had not,Collected,ALSPAC,ccr
+ccr390,C7: Respondent felt like their thoughts were broadcast out loud so people could hear what they were thinking,Collected,ALSPAC,ccr
+ccr400,C8: Respondent felt that their thoughts are not their own in their mind,Collected,ALSPAC,ccr
+ccr410,C9: Respondent has had thoughts taken out of their mind by someone or special force,Collected,ALSPAC,ccr
+ccr420,C10: Respondent has felt that they are a very important person or have special powers,Collected,ALSPAC,ccr
+fh6873,"DV: Oppositional defiant (parent 6-band computer prediction, ICD-10 and DSM-IV): TF3",Collected,ALSPAC,tf3
+fh6874,"DV: Conduct disorder (parent 6-band computer prediction, ICD-10 and DSM-IV): TF3",Collected,ALSPAC,tf3
+fh6876,"DV: Depression (self-report 6-band computer prediction, ICD-10 and DSM-IV): TF3",Collected,ALSPAC,tf3
+fh6877,"DV: Any anxiety disorder (self-report 6-band computer prediction, ICD-10 and DSM-IV): TF3",Collected,ALSPAC,tf3
+ccxa210,A9: Frequency during the last school year YP has been upset by name calling/exclusion from groups or bullying,Collected,ALSPAC,ccxa
+ccs2200,C21i: YP has experienced bullying by another person since the age of 12,Collected,ALSPAC,ccs
+ccs2500,D1: YP believes someone else has read their thoughts,Collected,ALSPAC,ccs
+ccs2520,D2: YP believes they have received special messages via TV/radio or programmes were arranged for them alone,Collected,ALSPAC,ccs
+ccs2540,D3: YP believes they have been followed or spied on,Collected,ALSPAC,ccs
+ccs2560,D4: YP has heard voices other people couldn't hear,Collected,ALSPAC,ccs
+ccs2570,D4d1: The voices YP heard called their name,Collected,ALSPAC,ccs
+ccs2571,D4d2: The voices YP heard made a comment about what YP was doing/thinking,Collected,ALSPAC,ccs
+ccs2572,D4d3: The voices YP heard talked to another voice about the YP,Collected,ALSPAC,ccs
+ccs2573,D4d4: The voices YP heard said something nice about them,Collected,ALSPAC,ccs
+ccs2574,D4d5: The voices YP heard said something horrible about them,Collected,ALSPAC,ccs
+ccs2580,D5: YP has ever felt they were under the control of a special power,Collected,ALSPAC,ccs
+ccs2600,D6: YP has ever seen something/someone other people could not see,Collected,ALSPAC,ccs
+ccs2620,D7i: YP has ever felt their thoughts were being taken out of their head against their will,Collected,ALSPAC,ccs
+ccs2621,D7ii: YP has ever felt someone else's thoughts were inserted into their head against their will,Collected,ALSPAC,ccs
+ccs2622,D7iii: YP has ever felt their thoughts were so loud people could hear what they were thinking,Collected,ALSPAC,ccs
+ccs2640,D8: YP has ever felt they were someone really special or had special powers,Collected,ALSPAC,ccs
+tc1200,A18: Number of evenings a week that study teenager sees their friends,Collected,ALSPAC,tc
+tc1210,A19a: Study teenager has a romantic relationship,Collected,ALSPAC,tc
+tc1211,A19b: Number of evenings a week that study teenager sees boy/girl friend,Collected,ALSPAC,tc
+FJPL001,PLIKS done [F17],Collected,ALSPAC,tf4
+FJPL013,"UE1: YP has felt that things looked/sounded/felt abnormal, or had unusual sensations [F17]",Collected,ALSPAC,tf4
+FJPL014,"UE2: YP has ever felt that the world was unreal, that things around them were like a stage set [F17]",Collected,ALSPAC,tf4
+FJPL015,"UE3: YP has ever felt that they were not a real person, not part of the living world [F17]",Collected,ALSPAC,tf4
+FJPL016,"UE4: YP has ever felt that part of their body did not belong to them, or looked unfamiliar or wrong size [F17]",Collected,ALSPAC,tf4
+FJPL017,UE5: YP has ever felt that their appearance seemed to change in a way different to ordinary growing up [F17],Collected,ALSPAC,tf4
+FJPL018,"UE6: YP has ever felt that sometimes they can only see parts of an object, when they should be able to see it all [F17]",Collected,ALSPAC,tf4
+FJPL019,"UE7: YP has ever experienced other unusual sensations, such as things looking/sounding different [F17]",Collected,ALSPAC,tf4
+FJPL027,AH1: YP has ever heard voices that other people could not hear [F17],Collected,ALSPAC,tf4
+FJPL032,AH6: YP felt voices came from inside their head [F17],Collected,ALSPAC,tf4
+FJPL033,AH7: YP felt voices came from outside their head [F17],Collected,ALSPAC,tf4
+FJPL034,"AH8: YP's voices talked directly to them, or told them things [F17]",Collected,ALSPAC,tf4
+FJPL035,AH9: YP's voices told them to do things (commanded) [F17],Collected,ALSPAC,tf4
+FJPL036,AH10: YP's voices talked about what they were doing/feeling/thinking (commentated) [F17],Collected,ALSPAC,tf4
+FJPL037,"AH11: YP ever hears 2 or more voices talking to each other, or about YP [F17]",Collected,ALSPAC,tf4
+FJPL038,"AH12: YP has heard other noises/voices, sporadic (single word) hallucinations [F17]",Collected,ALSPAC,tf4
+FJPL039,"AH13: YP has heard other noises/voices, elementary (noises such as bangs/bells) hallucinations [F17]",Collected,ALSPAC,tf4
+FJPL040,AH14: YP's hearing of voices/noises only happened when they were falling asleep or waking up [F17],Collected,ALSPAC,tf4
+FJPL041,AH15: YP's hearing of voices/noises only happened when ill with a high temperature [F17],Collected,ALSPAC,tf4
+FJPL042,AH16: YP's hearing of voices/noises only happened when within 2 hours of drinking alcohol or taking drugs [F17],Collected,ALSPAC,tf4
+FJPL043,AH17: Drug most commonly attributed to YP's hearing of voices/noises [F17],Collected,ALSPAC,tf4
+FJPL044,VH1: YP has ever seen something or someone that other people could not see [F17],Collected,ALSPAC,tf4
+FJPL056,DL1: YP has ever felt that they were being followed or spied on [F17],Collected,ALSPAC,tf4
+FJPL061,"DL6: YP has ever thought someone was making things hard for them, causing them trouble, trying to hurt them, plotting against them [F17]",Collected,ALSPAC,tf4
+FJPL065,DL10: YP has ever believed that others have read their thoughts [F17],Collected,ALSPAC,tf4
+FJPL069,"DL14: YP has ever thought they were being sent special messages, through TV/Computer/Radio [F17]",Collected,ALSPAC,tf4
+FJPL073,DL18: YP has ever felt that they were under the control of some special power [F17],Collected,ALSPAC,tf4
+FJPL077,DL22: YP has ever felt that they were very important or had special powers/abilities [F17],Collected,ALSPAC,tf4
+FJPL084,TD1: YP has ever felt that their thoughts were broadcast out loud [F17],Collected,ALSPAC,tf4
+FJPL088,TD5: YP has ever felt that thoughts were put in their mind which were not their own [F17],Collected,ALSPAC,tf4
+FJPL092,TD9: YP has ever felt that thoughts were taken out of their mind by someone or some special force [F17],Collected,ALSPAC,tf4
+CCXC109,Q6_j: Frequency of YP being bullied over the Internet,Collected,ALSPAC,ccxc
+cct2500,"A7: Whether respondent feels it is more important to have close friends, close ties with family or both equally important",Collected,ALSPAC,cct
+cct2501,A8: Number of respondent's close friends (i.e. friends respondent could talk to if in some kind of trouble),Collected,ALSPAC,cct
+YPB1231,A22v: Ever been diagnosed with schizophrenia,Collected,ALSPAC,ypb
+YPB1231_imputeno,A22v: Ever been diagnosed with schizophrenia - Silent no's included,Collected,ALSPAC,ypb
