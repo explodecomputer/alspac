@@ -141,9 +141,9 @@ There are two ways to select among these duplicates.
 1. **Manually** select rows corresponding to variables that I want, e.g.
 ```r
 vars <- vars[vars$name=="kz021" & startsWith(vars$obj,"cp")
-             | vars$name=="kz011b" & startsWith(vars$obj,"cp")
-			 | vars$name=="c645a" & vars$cat2=="Quest"
-			 | vars$name=="YPE9670",]
+		| vars$name=="kz011b" & startsWith(vars$obj,"cp")
+		| vars$name=="c645a" & vars$cat2=="Quest"
+		| vars$name=="YPE9670",]
 ```
 
 In other words, I require that the "kz021" variable come from a
@@ -165,9 +165,9 @@ I then use `filterVars` to select variables
 satisfying the criteria described above.
 ```r
 vars <- filterVars(vars,
-                   kz021=c(obj="^kz"),
-        		   kz011b=c(obj="^cp", lab="Participant"),
-		           c645a=c(cat2="Quest")) 
+		kz021=c(obj="^kz"),
+		kz011b=c(obj="^cp", lab="Participant"),
+		c645a=c(cat2="Quest")) 
 ```
 
 ## Extracting variables
@@ -202,18 +202,12 @@ y <- extractVars(x)
 returning e.g.
 
 ```
-> head(y, 10)
+> head(y, 4)
    alnqlet   aln qlet cf010 mult_dad ff1a005a mult_mum fm1a010a pc013
-1    30001 30001 <NA>    NA     <NA>       NA     <NA>       NA     2
-2    30004 30004 <NA>    NA     <NA>       NA     <NA>       NA     2
-3    30006 30006 <NA>    NA     <NA>       NA     <NA>       NA     2
-4    30008 30008 <NA>    NA       No        7       No        4     2
-5    30010 30010 <NA>    NA     <NA>       NA       No        1    NA
-6    30012 30012 <NA>    NA     <NA>       NA       No        7    NA
-7    30013 30013 <NA>    NA     <NA>       NA       No       10     2
-8   30013A 30013    A    18     <NA>       NA     <NA>       NA    NA
-9    30017 30017 <NA>    NA     <NA>       NA       No        7    NA
-10   30019 30019 <NA>    NA       No        7       No        4     1
+1    50013 50013 <NA>    NA     <NA>       NA     <NA>       NA     2
+2    50050 50050 <NA>    NA     <NA>       NA     <NA>       NA     2
+3    60052 60052 <NA>    NA     <NA>       NA     <NA>       NA     2
+4    90020 90020 <NA>    NA       No        7       No        4     2
 ```
 
 This has returned the variables requested, along with some other columns -
