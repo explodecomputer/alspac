@@ -102,8 +102,8 @@ removeExclusions <- function(x) {
     if (!all(is.known.path)
         || !all(names(withdrawals) %in% names(paths))
         || !all(names(withdrawals) %in% names(keep)))
-        stop("Withdrawal code is out of date. ",
-             "Contact package authors to update withdrawal of consent.")
+        warning("Withdrawal code is out of date. ",
+                "Contact package authors to update withdrawal of consent.")
     
     ## make a list of variables for each source of ALSPAC data
     ## that should have values removed
