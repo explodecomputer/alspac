@@ -41,12 +41,12 @@ removeExclusions <- function(x) {
             "Other/Cohort Profile",
             "Other/Sample Definition",
             "Other/Social_Class",
-            "Quest/Mother"),
+            "Quest/Mother","Quest/COVID"),
         partner_quest=c("Useful_data",
             "Other/Cohort Profile",
             "Other/Social_Class",
             "Quest/Father",
-            "Quest/Partner"),
+            "Quest/Partner","Quest/COVID"),
         partner_clinic=c("Useful_data",
             "Other/Cohort Profile",
             "Other/Samples/Father",
@@ -57,7 +57,7 @@ removeExclusions <- function(x) {
             "Quest/Father",
             "Quest/Partner",
             "Other/Samples/Father",
-            "Clinic/Adult"),		  
+            "Clinic/Adult","Quest/COVID"),		  
         child_based=c("Useful_data",
             "Other/Cohort Profile",
             "Other/Sample Definition",
@@ -66,7 +66,7 @@ removeExclusions <- function(x) {
             "Quest/Child Based",
             "Quest/Puberty",
             "Quest/Schools",
-            "Clinic/Child"),
+            "Clinic/Child","Quest/COVID"),
         child_completed=c("Useful_data",
             "Other/Cohort Profile",
             "Other/Sample Definition",
@@ -75,7 +75,7 @@ removeExclusions <- function(x) {
             "Quest/Child Completed",
             "Quest/Puberty",
             "Quest/Schools",
-            "Clinic/Child"))
+            "Clinic/Child","Quest/COVID"))
     
     ##exclude some variables from exclusion removal 
     keep <- list(
