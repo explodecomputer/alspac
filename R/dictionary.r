@@ -98,6 +98,10 @@ createDictionary <- function(datadir="Current", name=NULL) {
               by="obj")
     }) %>% bind_rows
 
+    ## add data sources information so that withdrawn consent can be 
+    ## handled correctly for each variable
+    dictionary <- addSourcesToDictionary(dictionary)
+
     if (!is.null(name))
         saveDictionary(name, dictionary)
     

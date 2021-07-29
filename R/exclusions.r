@@ -17,114 +17,30 @@ removeExclusions <- function(x) {
 
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
-                    
+
+    ## obtain dictionary corresponding the requested dataset
     dictionary <- retrieveDictionary("both")
-    ## some variables appear multiple times.
-    ## when it appears in 'Current' and 'Useful_data',
-    ## assume that the variable is 'Current' is implied.
-    dictionary <- dictionary[order(sign(dictionary$cat1 != "Current")),,drop=F]
-    
-    ## subset dictionary to variables requested
-    varnames <- colnames(x)
-    dictionary <- dictionary[match(varnames, dictionary$name),]    
+    dictionary <- dictionary[match(colnames(x), dictionary$name),]
 
-    ## list variable paths relevant to sources of ALSPAC data
-    paths <- list(
-        mother_clinic=c(
-            "Useful_data",
-            "Other/Cohort Profile",
-            "Other/Sample Definition",
-            "Other/Samples/Mother",
-            "Other/Obstetric",
-            "Clinic/Adult"),
-        mother_quest=c("Useful_data",
-            "Other/Cohort Profile",
-            "Other/Sample Definition",
-            "Other/Social_Class",
-            "Quest/Mother"),
-        partner_quest=c("Useful_data",
-            "Other/Cohort Profile",
-            "Other/Social_Class",
-            "Quest/Father",
-            "Quest/Partner"),
-        partner_clinic=c("Useful_data",
-            "Other/Cohort Profile",
-            "Other/Samples/Father",
-            "Clinic/Adult"),		  
-        partner=c("Useful_data",
-            "Other/Cohort Profile",
-            "Other/Social_Class",
-            "Quest/Father",
-            "Quest/Partner",
-            "Other/Samples/Father",
-            "Clinic/Adult"),		  
-        child_based=c("Useful_data",
-            "Other/Cohort Profile",
-            "Other/Sample Definition",
-            "Other/Obstetric",
-            "Other/Samples/Child",
-            "Quest/Child Based",
-            "Quest/Puberty",
-            "Quest/Schools",
-            "Clinic/Child"),
-        child_completed=c("Useful_data",
-            "Other/Cohort Profile",
-            "Other/Sample Definition",
-            "Other/Obstetric",
-            "Other/Samples/Child",
-            "Quest/Child Completed",
-            "Quest/Puberty",
-            "Quest/Schools",
-            "Clinic/Child"))
-    
-    ##exclude some variables from exclusion removal 
-    keep <- list(
-        mother_clinic=c("aln","mz001"),
-        mother_quest=c("aln","mz001"),
-        partner_quest=c("aln","mz001"),
-        partner_clinic=c("aln","mz001"),
-        partner=c("aln","mz001"),
-        child_based=c("aln","qlet","alnqlet","in_alsp",
-            "tripquad","in_phase4"),
-        child_completed=c("aln","qlet","alnqlet"))
-    
-    ## check if paths in 'dictionary' are covered in the 'paths' list,
-    is.known.path <- sapply(
-        unique(na.omit(dictionary$path)),
-        function(path) {
-            any(sapply(unique(unlist(paths)),grepl,path))
-        })
-    
-    ## any variable path has not been handled (i.e. in 'paths')
-    ## or a withdrawal group is not handled (i.e. in 'paths' or 'keep'
-    ## then fail, the code needs to be updated to handle
-    ## withdrawals.
-    if (!all(is.known.path)
-        || !all(names(withdrawals) %in% names(paths))
-        || !all(names(withdrawals) %in% names(keep)))
-        stop("Withdrawal code is out of date. ",
-             "Contact package authors to update withdrawal of consent.")
-    
-    ## make a list of variables for each source of ALSPAC data
-    ## that should have values removed
-    varnames <- sapply(names(paths), function(group) {
-        idx <- lapply(
-            paths[[group]],
-            function(path) grep(path, dictionary$path))
-        idx <- unique(unlist(idx))
-        setdiff(dictionary$name[idx], keep[[group]])
-    }, simplify=F)
+    ## check that exclusions information in the dictionary is up-to-date
+    if(!all(names(withdrawals) %in% colnames(dictionary))) {
+        stop(
+            "New exclusion file(s) have been created but are not being handled here: ",
+            paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
+    }
 
-    ## remove values for appropriate variables
-    for (group in names(varnames)) {
+    for (group in names(withdrawals)) {
         sample.idx <- which(x$aln %in% withdrawals[[group]])
         if (length(sample.idx) == 0) next
-        
-        var.idx <- which(colnames(x) %in% varnames[[group]])
-        x[sample.idx, var.idx] <- NA
+
+        var.idx <- which(dictionary[[group]])
+        if (length(var.idx) == 0) next
+
+        x[sample.idx,var.idx] <- NA
         withdrawal.name <- paste("withdrawn","consent",group,sep="_")
-        x[[withdrawal.name]] <- x$aln %in% withdrawals[[group]]
-    }
+        x[[withdrawal.name]] <- 1:nrow(x) %in% sample.idx
+    } 
+
     x
 }
 
@@ -153,5 +69,158 @@ readExclusions <- function() {
         stringr::str_replace_all("aln==", "") %>%
         as.integer %>% unique
     })
+}
+
+
+#' Add data sources information to the dictionary
+#' from the data/sources.csv file.
+#' See generateVariableSources() for details about creating this file. 
+#' This information is used when decide which data values
+#' to remove for participants who have withdrawn consent.
+addSourcesToDictionary <- function(dictionary) {
+    ## obtain alns for individuals that have withdrawn consent
+    withdrawals <- readExclusions()
+
+    ## variables that should not have values removed
+    keep <- list(
+        mother_clinic=c("aln","mz001"),
+        mother_quest=c("aln","mz001"),
+        partner_quest=c("aln","mz001"),
+        partner_clinic=c("aln","mz001"),
+        partner=c("aln","mz001"),
+        child_based=c("aln","qlet","alnqlet","in_alsp",
+            "tripquad","in_phase4"),
+        child_completed=c("aln","qlet","alnqlet"))
+    if(!all(names(withdrawals) %in% names(keep))) {
+        stop(
+            "New exclusion file(s) have been created but are not being handled here:",
+            paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
+    }
+
+    sources <- read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
+    stopifnot(all(names(keep) %in% colnames(sources)))
+
+    ## match 'sources' to 'dictionary' using the 'obj' column
+    ## (dictionary$obj is a filename vector and sources$obj contains substrings
+    ## of these filenames minus the version number and file extension, e.g. 
+    ## if dictionary$obj has "c_2e.dat", then sources$obj will have "c_".)
+    dict.obj <- unique(dictionary$obj)
+    obj.idx <- lapply(sources$obj, function(obj) {
+        idx <- grep(paste0("^", obj), dict.obj)
+        if (length(idx) > 0) {
+            matches <- dict.obj[idx]
+            idx <- idx[which.min(nchar(matches))]
+        }
+        idx
+    })
+    n.matches <- sapply(obj.idx, length)
+    if (all(n.matches==0))
+        stop("The dictionary does not match anything in 'alspac::data/sources.csv'.")
+    sources <- sources[n.matches>0,]
+    obj.idx <- unlist(obj.idx[n.matches>0])
+    sources$obj <- dict.obj[obj.idx]
+    for (group in names(keep))
+        dictionary[[group]] <- sources[[group]][match(dictionary$obj, sources$obj)]        
+
+    for (group in names(keep)) {
+        idx <- which(dictionary$name %in% keep[[group]])
+        if (length(idx) > 0)
+            dictionary[[group]][idx] <- FALSE
+    }
+    dictionary
+}
+
+
+#' This function was used to initially create the data/sources.csv
+#' spreadsheet which provides the source of data for each data file ('obj')
+#' in the dictionary. This information is then used to determine 
+#' which bits of data to remove to satisfy exclusion lists. 
+#' Sources include mother_clinic, mother_quest, partner, partner_clinic, partner_quest,
+#' child_based and child_completed.
+#' Sources can for the most part be determined automatically from the 'path'
+#' information provided for each variable in the dictionary.
+#' However, for variables in "Useful_data", the source isn't always clear 
+#' so needs to be identified manually.
+#'
+#' sources <- generateSourcesSpreadsheet()
+#' write.csv(sources, file="data/sources.csv", row.names=F)
+generateSourcesSpreadsheet <- function() {
+    ## obtain alns for individuals that have withdrawn consent
+    withdrawals <- readExclusions()
+                    
+    dictionary <- alspac:::retrieveDictionary("both")
+    
+    ## list variable paths relevant to sources of ALSPAC data
+    paths <- list(
+        mother_clinic=c(
+            "Other/Sample Definition",
+            "Other/Samples/Mother",
+            "Other/Obstetric",
+            "Clinic/Adult"),
+        mother_quest=c(
+            "Other/Sample Definition",
+            "Other/Social_Class",
+            "Quest/Mother"),
+        partner_quest=c(
+            "Other/Social_Class",
+            "Quest/Father",
+            "Quest/Partner"),
+        partner_clinic=c(
+            "Other/Samples/Father",
+            "Clinic/Adult"),          
+        partner=c(
+            "Other/Social_Class",
+            "Quest/Father",
+            "Quest/Partner",
+            "Other/Samples/Father",
+            "Clinic/Adult"),          
+        child_based=c(
+            "Other/Sample Definition",
+            "Other/Obstetric",
+            "Other/Samples/Child",
+            "Quest/Child Based",
+            "Quest/Puberty",
+            "Quest/Schools",
+            "Clinic/Child"),
+        child_completed=c(
+            "Other/Sample Definition",
+            "Other/Obstetric",
+            "Other/Samples/Child",
+            "Quest/Child Completed",
+            "Quest/Puberty",
+            "Quest/Schools",
+            "Clinic/Child"))
+    if(!all(names(withdrawals) %in% names(paths))) {
+        stop(
+            "New exclusion file(s) have been created but are not being handled here":
+            paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
+    }
+
+    paths.for.all <- c(
+        "Other/Cohort Profile",
+        "Current/Other/Geodata")
+    for (src in names(paths))
+        paths[[src]] <- c(paths[[src]], paths.for.all)
+
+    for (src in names(paths)) {
+        dictionary[[src]] <- F
+        for (path in paths[[src]])
+            dictionary[[src]] <- dictionary[[src]] | grepl(path, dictionary$path)
+    }
+
+    is.covid <- grepl("Current/Quest/COVID", dictionary$path) 
+    is.partner <- is.covid & grepl("partner", dictionary$obj, ignore.case=T)
+    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- T
+    is.mother <- is.covid & grepl("_mum_", dictionary$obj, ignore.case=T)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
+    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+
+    is.useful <- grepl("Useful_data", dictionary$path)
+    dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])
+
+    dictionary <- unique(dictionary[,c("obj", "path", names(paths))])
+
+    dictionary[order(dictionary$path),]
 }
 

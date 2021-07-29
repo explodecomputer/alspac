@@ -72,7 +72,7 @@ extractDataset <- function(variable_file, cid_file,
     }
     dictionary <- dictionary[idx,]
     
-    dat <- extractVars(dictionary, haven=TRUE)
+    dat <- extractVars(dictionary, spss=TRUE)
 
     idx <- match(
         as.character(dat$aln),

@@ -45,14 +45,14 @@
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, haven=FALSE) {
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE) {
     dictionaryGood(x)
 
     x <- unique(x)
     if (core_only) 
-        x <- extractVarsCore(x, adult_only=adult_only, haven=haven) 
+        x <- extractVarsCore(x, adult_only=adult_only, spss=spss) 
     else
-        x <- extractVarsFull(x, haven=haven)
+        x <- extractVarsFull(x, spss=spss)
     
     if(exclude_withdrawn) {
         message("Automatically removing data for individuals who have withdrawn consent.")
@@ -67,8 +67,8 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x, adult_only, haven=FALSE) {
-    dat <- extractVarsFull(x,haven=haven)
+extractVarsCore <- function(x, adult_only, spss=FALSE) {
+    dat <- extractVarsFull(x,spss=spss)
 
     ##based on R:\Data\Syntax\syntax_template_3June21.do
     core.filters <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
@@ -117,7 +117,7 @@ extractVarsCore <- function(x, adult_only, haven=FALSE) {
              "Missing variables: ", 
              paste(missing.vars, collapse=", "))
 
-    core.dat <- extractVarsFull(core.vars, haven=haven)
+    core.dat <- extractVarsFull(core.vars, spss=spss)
 
     if (!adult_only) 
         core.dat <- core.dat[which(core.dat$in_alsp == 1 & core.dat$tripquad == 2),]
@@ -143,7 +143,7 @@ extractVarsCore <- function(x, adult_only, haven=FALSE) {
 
 
 
-extractVarsFull <- function(x, haven=F)
+extractVarsFull <- function(x, spss=F)
 {
 	# require(plyr)
 	# require(readstata13)
@@ -159,7 +159,7 @@ extractVarsFull <- function(x, haven=F)
 			message("Skipping...")
 			return(NULL)
 		}
-                if (haven) {
+                if (spss) {
                     fn.sav <- sub("dta$", "sav", fn)
                     obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=T))
                 }
@@ -238,7 +238,7 @@ extractVarsFull <- function(x, haven=F)
                                         qlet=NA,
                                         stringsAsFactors=F))
         }
-        if (haven)
+        if (spss)
             ids <- as_tibble(ids)
         
         ## merge ids and dat into a single data frame
