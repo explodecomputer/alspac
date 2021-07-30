@@ -134,8 +134,9 @@ trimWhitespace <- function(x)
 
 createFileTable <- function(fls, alspacdir)
 {
-	fls_dn <- dirname(fls)
+	#fls_dn <- dirname(fls) ## does some weird things with windows network paths
 	fls_bn <- basename(fls)
+    fls_dn <- sub(fls_bn, "", fls)
 	fls_n <- gsub(".dta", "", fls_bn, ignore.case=T)
 	fls_d <- gsub(alspacdir, "", fls_dn)
 	fls_d <- gsub("^/", "", fls_d)

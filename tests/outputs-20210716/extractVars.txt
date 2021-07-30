@@ -17,6 +17,8 @@
 
 > vars <- lapply(vars, findVars)
 
+> vars$mother <- vars$mother[vars$mother$name != "fm1a011" | grepl("FOM1_3c", vars$mother$obj), ]
+
 > dat <- extractVars(do.call(rbind, vars))
 
 > dim(dat)
