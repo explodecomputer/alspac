@@ -12,7 +12,7 @@ vars <- list(partner=c("pb910","ff1a011"),
 varnames <- unlist(vars)
 
 vars <- lapply(vars, findVars)
-vars$mother <- vars$mother[vars$mother$name != "fm1a011" | grepl("FOM1_3c", vars$mother$obj), ]
+vars$mother <- vars$mother[vars$mother$name != "fm1a011" | grepl("FOM1_", vars$mother$obj), ]
 
 dat <- extractVars(do.call(rbind, vars))
 
