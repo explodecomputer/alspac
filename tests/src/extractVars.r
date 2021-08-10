@@ -1,5 +1,5 @@
 library(alspac)
-setDataDir("~/work/alspac/data-20191104")
+setDataDir("/home/alspac")
 
 if (!dictionaryGood("current"))
     createDictionary("Current", "current")

@@ -1,6 +1,8 @@
 library(alspac)
 
-setDataDir("~/work/alspac/data-20191104")
+setDataDir("/home/alspac")
+example_path <- "."
+output_path <- file.path(example_path, "outputs")
 
 if (!dictionaryGood("current"))
     createDictionary("Current", "current")
@@ -8,10 +10,10 @@ if (!dictionaryGood("useful"))
     createDictionary("Useful_data", "useful")
        
 dat <- extractDataset(
-    variable_file="inputs/variables.csv",
-    cid_file="inputs/ACEHDBFG.txt",
+    variable_file=file.path(example_path, "inputs/variables.csv"),
+    cid_file=file.path(example_path, "inputs/ACEHDBFG.txt"),
     output_format="sav",
-    output_path="outputs",
+    output_path=output_path, 
     b_number="B0001",author="Smith")
 
 dim(dat)
@@ -39,7 +41,7 @@ for (var in vars) {
         " ", freq, "\n")
 }
 
-output_filename <- list.files("outputs", "Smith_B0001", full.names=T)[1]
+output_filename <- list.files(output_path, "Smith_B0001", full.names=T)[1]
 dta.filename <- sub("sav", "dta", output_filename)
 haven::write_dta(dat, path=dta.filename)
 dat.dta <- haven::read_dta(dta.filename)
