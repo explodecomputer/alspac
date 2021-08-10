@@ -119,10 +119,19 @@ extractVarsCore <- function(x, adult_only, spss=FALSE) {
 
     core.dat <- extractVarsFull(core.vars, spss=spss)
 
-    if (!adult_only) 
-        core.dat <- core.dat[which(core.dat$in_alsp == 1 & core.dat$tripquad == 2),]
-    else  ## adult only dataset
-        core.dat <- core.dat[which(core.dat$mz001 == 1),]
+    if (!adult_only) {
+        ## versions of R around 4.0 have a bug with spss_labelled types
+    	in_alsp <- as.numeric(as.character(core.dat$in_alsp))
+	tripquad <- as.numeric(as.character(core.dat$tripquad))
+	
+        core.dat <- core.dat[which(in_alsp == 1 & tripquad == 2),]
+    }
+    else  { ## adult only dataset
+        ## versions of R around 4.0 have a bug with spss_labelled types
+    	mz001 <- as.numeric(as.character(core.dat$mz001))
+	
+        core.dat <- core.dat[which(mz001 == 1),]
+    }
 
     if ("qlet" %in% colnames(core.dat) && "qlet" %in% colnames(dat))
         dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
