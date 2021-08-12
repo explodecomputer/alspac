@@ -40,6 +40,9 @@ extractDataset <- function(variable_file, cid_file,
                                    format(Sys.time(), "%d%b%y"),
                                    ".", output_format)),
                            dictionary="both") {
+    if (!dir.exists(output_path))
+        stop("Path in 'output_path' does not exist: ", output_path)
+  
     stopifnot(output_format %in% c("sav","csv","dta"))
     if (file.exists(output_file))
         stop("Output file already exists: ", output_file)
