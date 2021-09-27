@@ -265,7 +265,7 @@ These updated dictionaries will be saved within the R package
 for use in later R sessions.  In other words, an update will only
 need to be peformed one time.  
 
-## Generating datasets for external users
+## Generating datasets for external users (for ALSPAC data buddies)
 
 The `extractDataset` function can be used to generate datasets with id-swaps for external users
 from the following inputs:
