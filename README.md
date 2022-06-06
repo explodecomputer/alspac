@@ -191,7 +191,7 @@ The data directory has been recognised
 Sometimes this might not work - the package tries to guess where the R drive will be mounted but it might guess wrong. If I receive an error message instead, then I need to specify the location of the R drive manually:
 
 ```r
-setDataDir("/path/to/R drive/data/")
+setDataDir("/path/to/R drive/data/") ## e.g. setDataDir("//ads.bris.ac.uk/filestore/SSCM ALSPAC/Data")
 ```
 
 Once I have received the message `The data directory has been recognised`, I am able to extract the variables I need from the R drive.
@@ -282,7 +282,8 @@ derived from the inputs to the function.
 ```r
 library(alspac)
 
-setDataDir("R:/SSCM ALSPAC/Data")
+setDataDir("R:/SSCM ALSPAC/Data") 
+## or possibly setDataDir("//ads.bris.ac.uk/filestore/SSCM ALSPAC/Data")
 
 dat <- extractDataset(
     variable_file="inputs/variables.csv",
