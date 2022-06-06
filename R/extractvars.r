@@ -45,14 +45,14 @@
 #' # Alternatively just extract the variables for adults
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
-extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE) {
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=F) {
     dictionaryGood(x)
 
     x <- unique(x)
     if (core_only) 
-        x <- extractVarsCore(x, adult_only=adult_only, spss=spss) 
+        x <- extractVarsCore(x, adult_only=adult_only, spss=spss, haven=haven) 
     else
-        x <- extractVarsFull(x, spss=spss)
+        x <- extractVarsFull(x, spss=spss, haven=haven)
     
     if(exclude_withdrawn) {
         message("Automatically removing data for individuals who have withdrawn consent.")
@@ -67,8 +67,8 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x, adult_only, spss=FALSE) {
-    dat <- extractVarsFull(x,spss=spss)
+extractVarsCore <- function(x, adult_only, spss=FALSE, haven=haven) {
+    dat <- extractVarsFull(x,spss=spss, haven=haven)
 
     ##based on R:\Data\Syntax\syntax_template_3June21.do
     core.filters <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
@@ -117,7 +117,7 @@ extractVarsCore <- function(x, adult_only, spss=FALSE) {
              "Missing variables: ", 
              paste(missing.vars, collapse=", "))
 
-    core.dat <- extractVarsFull(core.vars, spss=spss)
+    core.dat <- extractVarsFull(core.vars, spss=spss, haven=haven)
 
     if (!adult_only) {
         ## versions of R around 4.0 have a bug with spss_labelled types
@@ -152,7 +152,7 @@ extractVarsCore <- function(x, adult_only, spss=FALSE) {
 
 
 
-extractVarsFull <- function(x, spss=F)
+extractVarsFull <- function(x, spss=F, haven=F)
 {
 	# require(plyr)
 	# require(readstata13)
@@ -172,8 +172,12 @@ extractVarsFull <- function(x, spss=F)
                     fn.sav <- sub("dta$", "sav", fn)
                     obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=T))
                 }
-                else
-                    obj <- suppressWarnings(readstata13::read.dta13(fn))
+                else {
+                    if (haven)
+                        obj <- suppressWarnings(haven::read_dta(fn))
+                    else
+                        obj <- suppressWarnings(readstata13::read.dta13(fn))
+                }
 
 		# Make sure aln and qlet variables are lower case
 		alnc <- grep("^ALN$", names(obj), ignore.case=TRUE)
