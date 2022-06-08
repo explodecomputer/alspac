@@ -179,8 +179,9 @@ processDTA <- function(fn)
 #' This update will **not** add any new variables that have been added to ALSPAC.
 #' 			
 #' @param dictionary
-#' @return Data frame dictionary but potentially with 'obj' updated to match ALSPAC data files
+#' @return Dictionary but potentially with 'obj' updated to match current ALSPAC data files
 updateObjectVersions <- function(dictionary, max.print=10) {
+  alspacdir <- options()$alspac_data_dir
   files <- with(dictionary, 
     data.frame(
       dir=file.path(alspacdir, path),
