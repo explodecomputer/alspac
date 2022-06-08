@@ -254,13 +254,13 @@ To code for the shiny variable app is here: [https://github.com/explodecomputer/
 
 From time to time the `R:\Data\Current\` directory is updated with new files.
 The variable dictionaries that the package uses can be updated using the
-`createDictionary` function.
+`updateDictionaries()` function.
 
 ```
-current <- createDictionary("Current", name="current")
-useful <- createDictionary("Useful_data", name="useful")
+updateDictionaries()
 ```
 
+This will take a few minutes to run.
 These updated dictionaries will be saved within the R package
 for use in later R sessions.  In other words, an update will only
 need to be peformed one time.  

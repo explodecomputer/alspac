@@ -4,7 +4,7 @@
 \alias{createDictionary}
 \title{Create a dictionary from ALSPAC STATA files}
 \usage{
-createDictionary(datadir = "Current", name = NULL)
+createDictionary(datadir = "Current", name = NULL, quick = F)
 }
 \arguments{
 \item{datadir}{ALSPAC data subdirectory from which to create the index
