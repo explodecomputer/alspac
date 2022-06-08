@@ -171,3 +171,51 @@ processDTA <- function(fn)
 	return(dat)
 }
 
+#' Update object version numbers in dictionary
+#' 
+#' This function performs a minimal dictionary update.
+#' Specifically, it identifies dictionary references to out-of-date files, e.g. "kk_2a.dta",
+#' and updates the version numbers in the file names, e.g. "kk_3a.dta".
+#' This update will **not** add any new variables that have been added to ALSPAC.
+#' 			
+#' @param dictionary
+#' @return Data frame dictionary but potentially with 'obj' updated to match ALSPAC data files
+updateObjectVersions <- function(dictionary, max.print=10) {
+  files <- with(dictionary, 
+    data.frame(
+      dir=file.path(alspacdir, path),
+      obj=obj,
+      pat=sub(
+        "^(.*_r?)[0-9]+[a-z]{1}.dta$",
+        "^\\1[0-9]+[a-z]{1}.dta$",
+        obj),
+      stringsAsFactors=F) %>% 
+    unique)
+  files$filename <- mapply(
+    list.files, 
+    files$dir, 
+    files$pat, 
+    MoreArgs=list(full.names=T))
+  n <- sapply(files$filename, length)
+  if (!all(n==1)) {
+    multi.idx <- which(n>1)
+    multi.idx <- multi.idx[1:min(length(multi.idx,max.print))]
+    warning("Dictionary has some problems but is usable, e.g.",
+      paste(files$pat[multi.idx], collapse=", "))
+    files$filename <- sapply(files$filename, function(x) {
+      if (length(x) > 1) x[1]
+      else files$obj[match(x,files$filename)]
+    })
+  }
+  files$filename <- unlist(files$filename)
+  files$correct <- basename(files$filename)
+  updates.idx <- which(files$obj != files$correct)
+  if (length(updates.idx) > 0) {
+    updates.idx <- updates.idx[1:min(length(updates.idx),max.print)]
+    warning("Dictionary has been updated to refer to data files with new versions, e.g.",
+      paste(paste(files$obj[updates.idx], "->", files$correct[updates.idx]), collapse=", "))
+  }
+  ## function only updates 'obj' in dictionary
+  dictionary$obj <- files$correct[match(dictionary$obj, files$obj)]
+  dictionary
+}
