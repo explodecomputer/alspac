@@ -80,7 +80,7 @@ dictionaryGood <- function(dictionary, max.print=10) {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL) {
+createDictionary <- function(datadir="Current", name=NULL, quick=F) {
     stopifnot(datadir %in% c("Current","Useful_data"))
     
     alspacdir <- options()$alspac_data_dir
@@ -93,7 +93,7 @@ createDictionary <- function(datadir="Current", name=NULL) {
 
     dictionary <- mclapply(files, function(file) {
         cat(date(), "loading", file, "\n")
-        merge(processDTA(file),
+        merge(processDTA(file, quick),
               createFileTable(file, alspacdir),
               by="obj")
     }) %>% bind_rows
@@ -156,18 +156,25 @@ createFileTable <- function(fls, alspacdir)
 	return(dat)
 }
 
-processDTA <- function(fn)
+processDTA <- function(fn, quick=F)
 {
-	temp <- suppressWarnings(readstata13::read.dta13(fn))
+	if (quick)
+		temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))
+	else
+		temp <- suppressWarnings(readstata13::read.dta13(fn))
 	# temp <- haven::read_dta(fn)
 	dat <- data_frame(
 		name = colnames(temp),
 		lab = attributes(temp)$var.labels,
 		# lab = sapply(temp, function(x) attr(x, "label")),
-		counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11)),
 		type = sapply(temp, function(x) class(x)[1]),
 		obj = basename(fn)
 	)
+	if (quick)
+		dat$counts <- NA
+	else
+		dat$counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11)),
+
 	return(dat)
 }
 
