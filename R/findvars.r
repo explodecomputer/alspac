@@ -70,8 +70,9 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
         ## in case two patterns identify exactly the same variable ...
         out <- unique(out)
 
-        dictionaryGood(out)
-
+        if (!dictionaryGood(out)) 
+		out <- updateObjectVersions(out)
+	
         var.freq <- table(out$name)
         if (any(var.freq > 1))
             warning("One or more variables have the same name (fix with filterVars()): ",
