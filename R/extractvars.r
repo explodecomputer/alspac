@@ -46,7 +46,9 @@
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #'}
 extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=F) {
-    dictionaryGood(x)
+    if (!dictionaryGood(x)) 
+	x <- updateObjectVersions(x)
+
 
     x <- unique(x)
     if (core_only) 
