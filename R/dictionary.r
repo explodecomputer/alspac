@@ -173,7 +173,7 @@ processDTA <- function(fn, quick=F)
 	if (quick)
 		dat$counts <- NA
 	else
-		dat$counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11)),
+		dat$counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11))
 
 	return(dat)
 }
