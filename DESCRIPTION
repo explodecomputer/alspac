@@ -1,7 +1,7 @@
 Package: alspac
 Title: Data dictionary for ALSPAC
 Description: Functions to search and extract variables based on keywords from the ALSPAC data dictionary
-Version: 0.36.0
+Version: 0.36.1
 Authors@R: c(person("Gibran", "Hemani", email = "g.hemani@bristol.ac.uk",
                   role = c("aut", "cre")),
              person("Matthew", "Suderman", email = "matt.suderman@bristol.ac.uk",

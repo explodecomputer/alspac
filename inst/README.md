@@ -15,7 +15,7 @@ Solution is to run the script on the `crashdown.epi.bris.ac.uk` docker cluster. 
 This can be done by running the following (from `/path/to/alspac/inst`). Build the docker image that installs the `alspac` R package
 
 ```
-docker build -t ralspac:latest .
+sudo docker build -t ralspac:latest .
 ```
 
 ## 2. Update the package
@@ -24,7 +24,7 @@ Mount the R drive using a samba share:
 
 ```
 mkdir -p mnt
-sudo mount -t cifs -o user=gh13047,vers=3.0 //central-gpfs.isys.bris.ac.uk/ALSPAC-Data mnt
+sudo mount -t cifs -o user=$USER,vers=3.0 //central-gpfs.isys.bris.ac.uk/ALSPAC-Data mnt
 ```
 
 (Note that on the crashdown server `crashdown.epi.bris.ac.uk` needed to install the `cifs-utils` package in order to mount (e.g. `sudo apt-get install cifs-utils`).)
@@ -33,7 +33,7 @@ Update the dictionary within the container
 
 ```
 cd ../
-docker run --rm -e PASSWORD=123qwe -p 8787:8787 \
+sudo docker run --rm -e PASSWORD=123qwe -p 8787:8787 \
 -v "$(pwd):/home/rstudio/alspac" \
 -v "$(pwd)/inst/mnt:/home/rstudio/mnt" \
 -w /home/rstudio/alspac/inst \
