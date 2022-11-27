@@ -1,5 +1,3 @@
-
-
 #' Extract variables from data
 #'
 #' Take the output from `findVars` as a list of variables to extract from ALSPAC data
@@ -32,13 +30,12 @@
 #' @param core_only Whether to automatically exclude data from participants
 #' not in the core ALSPAC dataset (Default: TRUE).
 #' This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.
-#' @param adult_only Apply the 'adult only' core restriction (i.e. 'mz001 == 1') if `adult_only==TRUE`,
-#' otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2'). 
-#' Ignored if `core_only==FALSE`. The default is `FALSE`. 
-#'
+#' @param adult_only No longer supported. Parent-specific restrictions are applied
+#' automatically when child-based or child-completed variables are not requested.
+#' 
 #' @export
 #' @return A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
-#' named \code{withdrawn_consent_*} indicate which samples were excluded.
+#' named \code{woc_*} indicate which samples were excluded.
 #' @examples \dontrun{
 #' # Find all variables with BMI in the description
 #' bmi_variables <- findVars("bmi", ignore.case=TRUE)
@@ -51,9 +48,12 @@
 extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=F) {
     dictionaryGood(x)
 
+    if (adult_only) 
+        warning("'adult_only' is no longer supported. Parent-specific restrictions are applied automatically when child-based or child-completed variables are not requested.")
+
     x <- unique(x)
     if (core_only) 
-        x <- extractVarsCore(x, adult_only=adult_only, spss=spss, haven=haven) 
+        x <- extractVarsCore(x, spss=spss, haven=haven) 
     else
         x <- extractVarsFull(x, spss=spss, haven=haven)
     
@@ -70,44 +70,76 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=
 
 ## restrict data extracted as in the SPSS/STATA
 ## scripts in R:\Data\Syntax\
-extractVarsCore <- function(x, adult_only, spss=FALSE, haven=haven) {
+extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     dat <- extractVarsFull(x,spss=spss, haven=haven)
 
-    ##based on R:\Data\Syntax\syntax_template_3June21.do
-    core.filters <- list(mz001=c(obj="mz_[0-9]+[a-z]+"),
-                      mz010=c(obj="mz_[0-9]+[a-z]+"),
-                      mz010a=c(obj="mz_[0-9]+[a-z]+"),
-                      mz013=c(obj="mz_[0-9]+[a-z]+"),
-                      mz014=c(obj="mz_[0-9]+[a-z]+"),
-                      mz028b=c(obj="mz_[0-9]+[a-z]+"),
-                      a006=c(obj="a_[0-9]+[a-z]+"),
-                      a525=c(obj="a_[0-9]+[a-z]+"),
-                      b032=c(obj="b_[0-9]+[a-z]+"),
-                      b650=c(obj="b_[0-9]+[a-z]+"),
-                      b663=c(obj="b_[0-9]+[a-z]+"),
-                      b665=c(obj="b_[0-9]+[a-z]+"),
-                      b667=c(obj="b_[0-9]+[a-z]+"),
-                      c645a=c(obj="c_[0-9]+[a-z]+"),
-                      c755=c(obj="c_[0-9]+[a-z]+"),
-                      c765=c(obj="c_[0-9]+[a-z]+"),
-                      c800=c(obj="c_[0-9]+[a-z]+"),
-                      c801=c(obj="c_[0-9]+[a-z]+"),
-                      c802=c(obj="c_[0-9]+[a-z]+"),
-                      c803=c(obj="c_[0-9]+[a-z]+"),
-                      c804=c(obj="c_[0-9]+[a-z]+"),
-                      bestgest=c(obj="bestgest"))
+    ## return TRUE for each row in x iff that row contains at least one TRUE
+    any.row <- function(x) {
+        rowSums(as.matrix(x),na.rm=T) > 0
+    }    
+    var.has.mother.data <- any.row(x[,grepl("^mother",colnames(x))])
+    var.has.partner.data <- any.row(x[,grepl("^partner",colnames(x))])
+    var.has.child.data <- any.row(x[,grepl("^child",colnames(x))])
+    
+    ##based on R:\Data\Syntax\syntax_template_04Nov22.do
+    mz.obj.pat <- c(obj="mz_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
+    core.filters <- list(
+        mz010a=mz.obj.pat,
+        preg_in_alsp=mz.obj.pat,
+        preg_in_core=mz.obj.pat,
+        preg_enrol_status=mz.obj.pat,
+        mum_enrol_status=mz.obj.pat,
+        mum_and_preg_enrolled=mz.obj.pat,
+        mz005l=mz.obj.pat,
+        mz005m=mz.obj.pat,
+        mz013=mz.obj.pat,
+        mz014=mz.obj.pat,
+        mz028b=mz.obj.pat,
+        a006=c(obj="a_[0-9]+[a-z]+"),
+        a525=c(obj="a_[0-9]+[a-z]+"),
+        b032=c(obj="b_[0-9]+[a-z]+"),
+        b650=c(obj="b_[0-9]+[a-z]+"),
+        b663=c(obj="b_[0-9]+[a-z]+"),
+        b665=c(obj="b_[0-9]+[a-z]+"),
+        b667=c(obj="b_[0-9]+[a-z]+"),
+        c645a=c(obj="c_[0-9]+[a-z]+"),
+        c755=c(obj="c_[0-9]+[a-z]+"),
+        c765=c(obj="c_[0-9]+[a-z]+"),
+        bestgest=mz.obj.pat)
 
-    child.filters <- list(kz011b=c(obj="cp_[0-9]+[a-z]+"),
-                       kz021=c(obj="cp_[0-9]+[a-z]+"),
-                       kz030=c(obj="kz_[0-9]+[a-z]+"),
-                       tripquad=c(obj="cp_[0-9]+[a-z]+"),
-                       in_core=c(obj="cp_[0-9]+[a-z]+"),
-                       in_alsp=c(obj="cp_[0-9]+[a-z]+"),
-                       in_phase2=c(obj="cp_[0-9]+[a-z]+"),
-                       in_phase3=c(obj="cp_[0-9]+[a-z]+"),
-                       in_phase4=c(obj="cp_[0-9]+[a-z]+"))
+    mother.filters <- list(
+        mum_in_alsp=mz.obj.pat,
+        mum_in_core=mz.obj.pat)
+    if (any(var.has.mother.data))
+        core.filters <- c(core.filters, mother.filters)
 
-    if (!adult_only)
+    pz.obj.pat <- c(obj="pz_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
+    partner.filters <- list(
+        partner_in_alspac=pz.obj.pat,
+        partner_data=pz.obj.pat,
+        partner_enrolled=pz.obj.pat,
+        partner_in_core=pz.obj.pat,
+        pz_mult=pz.obj.pat,
+        pz_multid=pz.obj.pat,
+        partner_changed=pz.obj.pat,
+        partner_changed_when=pz.obj.pat,
+        partner_age=pz.obj.pat,
+        second_partner_age=pz.obj.pat)
+    if (any(var.has.partner.data))
+        core.filters <- c(core.filters, partner.filters)
+    
+    cp.obj.pat <- c(obj="cp_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
+    child.filters <- list(
+        kz011b=cp.obj.pat,
+        kz021=cp.obj.pat,
+        kz030=cp.obj.pat,
+        in_core=cp.obj.pat,
+        in_alsp=cp.obj.pat,
+        in_phase2=cp.obj.pat,
+        in_phase3=cp.obj.pat,
+        in_phase4=cp.obj.pat,
+        tripquad=cp.obj.pat)
+    if (any(var.has.child.data))
         core.filters <- c(core.filters, child.filters)
     
     suppressWarnings(core.vars <- findVars(names(core.filters), dictionary="both"))
@@ -121,35 +153,38 @@ extractVarsCore <- function(x, adult_only, spss=FALSE, haven=haven) {
              paste(missing.vars, collapse=", "))
 
     core.dat <- extractVarsFull(core.vars, spss=spss, haven=haven)
-
-    if (!adult_only) {
-        ## versions of R around 4.0 have a bug with spss_labelled types
-    	in_alsp <- as.numeric(as.character(core.dat$in_alsp))
-	tripquad <- as.numeric(as.character(core.dat$tripquad))
-	
+    
+    if (any(var.has.child.data)) {
+    	in_alsp <- as.numeric(as.character(core.dat$in_alsp))   
+	tripquad <- as.numeric(as.character(core.dat$tripquad)) 
         core.dat <- core.dat[which(in_alsp == 1 & tripquad == 2),]
-    }
-    else  { ## adult only dataset
-        ## versions of R around 4.0 have a bug with spss_labelled types
-    	mz001 <- as.numeric(as.character(core.dat$mz001))
-	
-        core.dat <- core.dat[which(mz001 == 1),]
+    } else {
+        mum_enrol_status <- as.numeric(as.character(core.dat$mum_enrol_status))
+        mum_and_preg_enrolled <- as.numeric(as.character(core.dat$mum_and_preg_enrolled)) 
+        core.dat <- core.dat[which(mum_enrol_status %in% 1:2 & mum_and_preg_enrolled == 1),]
     }
 
     if ("qlet" %in% colnames(core.dat) && "qlet" %in% colnames(dat))
         dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
     else
         dat <- dat[match(core.dat$aln, dat$aln),]
+
+    if (any(var.has.partner.data)) {
+        partner_in_alspac <- as.numeric(as.character(core.dat$partner_in_alspac)) 
+        remove.idx <- which(partner_in_alspac==0)
+        for (varname in x$name[var.has.partner.data])
+            dat[remove.idx,varname] <- NA
+    }
     
-    id.vars <- c("aln","qlet","alnqlet")
-    remove.vars <- c(names(core.filters)[!grepl("^(mz|best|in_|kz)", names(core.filters))],
-                     "mz010","tripquad","in_alsp")
-    remove.vars <- setdiff(remove.vars, x$name)
-    remove.vars <- c(id.vars, remove.vars)
-    
-    bind_cols(core.dat[,intersect(colnames(core.dat), id.vars), drop=F],
-              dat[,setdiff(colnames(dat), remove.vars), drop=F],
-              core.dat[,setdiff(colnames(core.dat), c(colnames(dat), remove.vars)), drop=F])
+    id.vars <- intersect(c("aln","qlet","alnqlet"),colnames(core.dat))
+    remove.vars <- c("kz021","tripquad","in_alsp")
+    data.vars <- setdiff(colnames(dat),c(colnames(core.dat),remove.vars))
+    admin.vars <- setdiff(colnames(core.dat),c(id.vars, remove.vars))
+
+    bind_cols(
+        core.dat[,id.vars],
+        dat[,data.vars],
+        core.dat[,admin.vars])
 }
 
 
@@ -284,7 +319,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
 	names(x)[names(x) == "aln"] <- "alnqlet"
 	names(x)[names(x) == "aln2"] <- "aln"
         rownames(x) <- NULL
-	return(x)
+	return(as.data.frame(x))
 }
 
 

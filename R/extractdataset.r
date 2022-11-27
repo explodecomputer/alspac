@@ -61,14 +61,30 @@ extractDataset <- function(variable_file, cid_file,
         stop("Variable name column 'name' is missing from ", variables_file)
     
     dictionary <- alspac:::retrieveDictionary(dictionary)
-    idx <- match(tolower(variables$name), tolower(dictionary$name))
-    
+
+    idx <- which(tolower(dictionary$name) %in% tolower(variables$name))
+    freq <- table(dictionary$name[idx])
+    if (any(freq > 1)) {
+        duplicates <- names(freq)[freq > 1]
+        idx <- which(dictionary$name %in% duplicates)       
+        print(
+            with(dictionary[idx,],
+                 data.frame(name=name,file=paste0(path,obj))))
+        msg <- paste(
+            "Some variables have multiple sources:",
+            paste(duplicates,collapse=", "))
+        warning(msg)
+    }
+
+    dictionary <- dictionary[order(dictionary$counts,decreasing=T),]
+    idx <- match(tolower(variables$name), tolower(dictionary$name))    
     if (any(is.na(idx))) {
         if (all(is.na(idx)))
             stop("None of the requested variables could be found.")
         else {
-            msg <- paste("Several requested variables could not be found:",
-                         paste(variables$name[is.na(idx)],collapse=", "))            
+            msg <- paste(
+                "Several requested variables could not be found:",
+                paste(variables$name[is.na(idx)],collapse=", "))
             warning(msg)
         }
         idx <- na.omit(idx)

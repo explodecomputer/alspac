@@ -74,7 +74,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	
         var.freq <- table(out$name)
         if (any(var.freq > 1))
-            warning("One or more variables have the same name (fix with filterVars()): ",
+            warning("One or more variables has multiple sources (fix with filterVars()): ",
                     paste(names(var.freq)[which(var.freq > 1)], collapse=", "))
 	return(out)
 }

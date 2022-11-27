@@ -4,13 +4,13 @@
 #' files in the R: drive. This function obtains ALNs to exclude
 #' from these files and then sets the variable
 #' values to missing for the appropriate participants
-#' and adds indicator variables for these participants ("withdrawn_consent_*").
+#' and adds indicator variables for these participants ("woc_*").
 #'
 #' @param x Data frame output from \code{\link{extractVars}()}.
 #' 
 #' @export
 #' @return The input data frame but with appropriate values set to missing
-#' with additional variables ("withdrawn_consent_*") identifying participants
+#' with additional variables ("woc_*") identifying participants
 #' who have withdrawn consent.
 removeExclusions <- function(x) {
     stopifnot("aln" %in% names(x))
@@ -37,7 +37,7 @@ removeExclusions <- function(x) {
         if (length(var.idx) == 0) next
 
         x[sample.idx,var.idx] <- NA
-        withdrawal.name <- paste("withdrawn","consent",group,sep="_")
+        withdrawal.name <- paste("woc",group,sep="_")
         x[[withdrawal.name]] <- 1:nrow(x) %in% sample.idx
     } 
 
@@ -74,7 +74,7 @@ readExclusions <- function() {
 
 #' Add data sources information to the dictionary
 #' from the data/sources.csv file.
-#' See generateVariableSources() for details about creating this file. 
+#' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
 addSourcesToDictionary <- function(dictionary) {
@@ -83,14 +83,14 @@ addSourcesToDictionary <- function(dictionary) {
 
     ## variables that should not have values removed
     keep <- list(
-        mother_clinic=c("aln","mz001"),
-        mother_quest=c("aln","mz001"),
-        partner_quest=c("aln","mz001"),
-        partner_clinic=c("aln","mz001"),
-        partner=c("aln","mz001"),
-        child_based=c("aln","qlet","alnqlet","in_alsp",
-            "tripquad","in_phase4"),
-        child_completed=c("aln","qlet","alnqlet"))
+        mother=c("aln","mum_and_preg_enrolled","mum_enrol_status","preg_enrol_status"),
+        mother_clinic=c("aln","mum_and_preg_enrolled","mum_enrol_status","preg_enrol_status"),
+        mother_quest=c("aln","mum_and_preg_enrolled","mum_enrol_status","preg_enrol_status"),
+        partner_quest=c("aln","partner_in_alspac"),
+        partner_clinic=c("aln","partner_in_alspac"),
+        partner=c("aln","partner_in_alspac"),
+        child_based=c("aln","qlet","alnqlet","in_alsp","tripquad"),
+        child_completed=c("aln","qlet","alnqlet","in_alsp","tripquad"))
     if(!all(names(withdrawals) %in% names(keep))) {
         stop(
             "New exclusion file(s) have been created but are not being handled here:",
@@ -135,7 +135,8 @@ addSourcesToDictionary <- function(dictionary) {
 #' spreadsheet which provides the source of data for each data file ('obj')
 #' in the dictionary. This information is then used to determine 
 #' which bits of data to remove to satisfy exclusion lists. 
-#' Sources include mother_clinic, mother_quest, partner, partner_clinic, partner_quest,
+#' Sources include mother, mother_clinic, mother_quest,
+#' partner, partner_clinic, partner_quest,
 #' child_based and child_completed.
 #' Sources can for the most part be determined automatically from the 'path'
 #' information provided for each variable in the dictionary.
@@ -153,29 +154,48 @@ generateSourcesSpreadsheet <- function() {
     ## list variable paths relevant to sources of ALSPAC data
     paths <- list(
         mother_clinic=c(
-            "Other/Sample Definition",
+            "Other/Cohort Profile/mz",
+            "Current/Other/Geodata/G0",
+            "Other/Sample Definition/mz",
             "Other/Samples/Mother",
             "Other/Obstetric",
-            "Clinic/Adult"),
+            "Clinic/Adult/FOM"),
         mother_quest=c(
-            "Other/Sample Definition",
+            "Other/Cohort Profile/mz",
+            "Current/Other/Geodata/G0",
+            "Other/Sample Definition/mz",
             "Other/Social_Class",
             "Quest/Mother"),
+        mother=c(
+            "Other/Cohort Profile/mz",
+            "Current/Other/Geodata/G0",
+            "Other/Sample Definition/mz",
+            "Other/Samples/Mother",
+            "Other/Obstetric",
+            "Clinic/Adult/FOM",
+            "Other/Social_Class",
+            "Quest/Mother"),        
         partner_quest=c(
+            "Other/Cohort Profile/pz",
             "Other/Social_Class",
             "Quest/Father",
             "Quest/Partner"),
         partner_clinic=c(
+            "Other/Cohort Profile/pz",
             "Other/Samples/Father",
-            "Clinic/Adult"),          
+            "Clinic/Adult/FOF"),          
         partner=c(
+            "Other/Cohort Profile/pz",
             "Other/Social_Class",
             "Quest/Father",
             "Quest/Partner",
             "Other/Samples/Father",
-            "Clinic/Adult"),          
+            "Clinic/Adult/FOF"),          
         child_based=c(
-            "Other/Sample Definition",
+            "Other/Cohort Profile/cp",
+            "Current/Other/Geodata/G1",
+            "Other/Sample Definition/cp",
+            "Other/Sample Definition/kz",
             "Other/Obstetric",
             "Other/Samples/Child",
             "Quest/Child Based",
@@ -183,7 +203,10 @@ generateSourcesSpreadsheet <- function() {
             "Quest/Schools",
             "Clinic/Child"),
         child_completed=c(
-            "Other/Sample Definition",
+            "Other/Cohort Profile/cp",
+            "Current/Other/Geodata/G1",
+            "Other/Sample Definition/cp",
+            "Other/Sample Definition/kz",
             "Other/Obstetric",
             "Other/Samples/Child",
             "Quest/Child Completed",
@@ -196,26 +219,28 @@ generateSourcesSpreadsheet <- function() {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    paths.for.all <- c(
-        "Other/Cohort Profile",
-        "Current/Other/Geodata")
-    for (src in names(paths))
-        paths[[src]] <- c(paths[[src]], paths.for.all)
-
     for (src in names(paths)) {
         dictionary[[src]] <- F
         for (path in paths[[src]])
-            dictionary[[src]] <- dictionary[[src]] | grepl(path, dictionary$path)
+            dictionary[[src]] <- dictionary[[src]] | grepl(path, paste0(dictionary$path,dictionary$obj))
     }
 
+    ## more complicated cases below
+    ## 1. Longitudinal data
+    is.longitudinal <- grepl("Other/Longitudinal", dictionary$path)
+    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=T)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
+    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=T) | grepl("_yp_", dictionary$obj, ignore.case=T))
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    ## 2. Covid data    
     is.covid <- grepl("Current/Quest/COVID", dictionary$path) 
-    is.partner <- is.covid & grepl("partner", dictionary$obj, ignore.case=T)
+    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=T)
     dictionary[is.partner, grepl("partner", colnames(dictionary))] <- T
-    is.mother <- is.covid & grepl("_mum_", dictionary$obj, ignore.case=T)
+    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=T)
     dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
     is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
     dictionary[is.child, grepl("child", colnames(dictionary))] <- T
-
+    ## 3. Useful data
     is.useful <- grepl("Useful_data", dictionary$path)
     dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])
 

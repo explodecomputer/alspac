@@ -1,8 +1,9 @@
 library(alspac)
-#setDataDir("/home/alspac")
+setDataDir("/home/alspac")
 
 if (!dictionaryGood("current"))
     createDictionary("Current", "current")
+
 if (!dictionaryGood("useful"))
     createDictionary("Useful_data", "useful")
 
@@ -14,15 +15,39 @@ varnames <- unlist(vars)
 vars <- lapply(vars, findVars)
 vars$mother <- vars$mother[vars$mother$name != "fm1a011" | grepl("FOM1_", vars$mother$obj), ]
 
+dat <- extractVars(vars$child)
+
+stopifnot(length(unique(dat$alnqlet)) == 15645)
+stopifnot(sum(dat$woc_child_based) == 31)
+stopifnot(sum(dat$woc_child_completed) == 29)
+stopifnot(all(is.na(dat$f7003a[dat$woc_child_based])))
+stopifnot(all(is.na(dat$ka498[dat$woc_child_based])))
+stopifnot(all(is.na(dat$ccaa991b[dat$woc_child_completed])))
+
+dat <- extractVars(vars$mother)
+
+stopifnot(length(unique(dat$aln)) == 15236)
+stopifnot(sum(dat$mz005l==2,na.rm=T) == 14833-29)
+stopifnot(sum(dat$woc_mother) == 29)
+stopifnot(all(is.na(dat$a901[dat$woc_mother])))
+stopifnot(all(is.na(dat$fm1a011[dat$woc_mother])))
+          
+dat <- extractVars(vars$partner)
+
+stopifnot(length(unique(dat$aln)) == 15236)
+stopifnot(sum(dat$partner_in_alspac>0) == 12112)
+stopifnot(sum(dat$woc_partner) == 5)
+stopifnot(all(is.na(dat$pb910[dat$woc_partner | dat$partner_in_alspac==0])))
+stopifnot(all(is.na(dat$ff1a011[dat$woc_partner | dat$partner_in_alspac==0])))
+
+
 dat <- extractVars(do.call(rbind, vars))
 
 dim(dat)
 
 sapply(dat[,varnames], function(x) sum(x > 0, na.rm=T))
 
-sapply(dat[,grep("^withdrawn", colnames(dat))], sum)
-
-
+sapply(dat[,grep("^woc_", colnames(dat))], sum)
 
 dat.full <- extractVars(do.call(rbind, vars), core_only=F)
 dim(dat.full)
@@ -40,15 +65,12 @@ table(dat.full$mz001)
 
 length(setdiff(dat.full$aln, dat$aln))
 
-dat <- extractVars(rbind(vars$partner, vars$mother), adult_only=T)
+dat <- extractVars(rbind(vars$partner, vars$mother))
 dim(dat)
 
 sapply(dat[,colnames(dat) %in% varnames], function(x) sum(x > 0, na.rm=T))
 
-sapply(dat[,grep("^withdrawn", colnames(dat))], sum)
-
-
-
+sapply(dat[,grep("^woc_", colnames(dat))], sum)
 
 vars <- findVars("c645a", whole.word=T,dictionary="current")
 dat <- extractVars(vars)
@@ -58,13 +80,16 @@ table(dat$c645a)
 vars <- findVars("c645a", "h470", "b594", "e424", "f244", "p2024",
                  "r5024", "f306", "f900", "b721", "b665", "mz028b",
                  "b032", "b300", "c064", "f242a", "g322a", "h232",
-                 "h232a", "d536a", "f593",
+                 "h232a", "d536a", "f593","kz010","fm1a011",
                  dictionary="current", whole.word=T)
+
+vars <- filterVars(
+    vars,
+    mz028b=list(obj="^mz_", cat3="Cohort Profile"),
+    kz010=list(obj="^cp_", cat3="Cohort Profile"))
+                   
 dat <- extractVars(vars)
-table(dat$c645a)
 
-
-dat <- extractVars(vars, adult_only = TRUE)
 table(dat$c645a)
 
 

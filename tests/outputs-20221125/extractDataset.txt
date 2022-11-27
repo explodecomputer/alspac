@@ -1,0 +1,701 @@
+
+> library(alspac)
+[1] "The data directory ~/.gvfs/data/ has NOT been found. It is normally located on the remote R drive, R:/Data/. You will be able to search for variables from the dictionary but unable to extract them from the data. Please check that the R: drive has been mounted onto your computer through the UoB VPN. Run setDataDir(<directory name>) to try again."
+
+> setDataDir("~/work/alspac/data-20221125")
+
+> example_path <- "."
+
+> output_path <- file.path(example_path, "outputs")
+
+> if (!dictionaryGood("current")) createDictionary("Current", 
++     "current")
+
+> if (!dictionaryGood("useful")) createDictionary("Useful_data", 
++     "useful")
+
+> dat <- extractDataset(variable_file = file.path(example_path, 
++     "inputs/variables.csv"), cid_file = file.path(example_path, 
++     "inputs/ACEH ..." ... [TRUNCATED] 
+
+> dim(dat)
+[1] 15645   447
+
+> stopifnot(nrow(dat) == 15645)
+
+> stopifnot(sum(dat$woc_child_based) == 31)
+
+> stopifnot(sum(dat$woc_child_completed) == 29)
+
+> stopifnot(sum(dat$woc_mother) == 31)
+
+> stopifnot(sum(dat$woc_partner) == 5)
+
+> requested.vars <- read.csv(file.path(example_path, 
++     "inputs/variables.csv"))
+
+> requested.vars <- findVars(requested.vars$Name, whole.word = T)
+
+> for (group in c("mother", "partner", "child_based", 
++     "child_completed")) {
++     for (varname in requested.vars$name[requested.vars[[group]]]) .... [TRUNCATED] 
+mother b_empst_m 
+mother b_snssec_analytical_m 
+mother a500 
+mother a501 
+mother a502 
+mother a600 
+mother a601 
+mother a602 
+mother a603 
+mother a604 
+mother a605 
+mother a606 
+mother a607 
+mother a608 
+mother a620 
+mother a621 
+mother a622 
+mother a623 
+mother a636 
+mother a901 
+mother b300 
+mother b302 
+mother b320 
+mother b321 
+mother b613 
+mother b614 
+mother b916m 
+mother b916 
+mother b917m 
+mother b917 
+mother b918m 
+mother b918 
+mother b919m 
+mother b919 
+mother b920m 
+mother b920 
+mother b921m 
+mother b921 
+mother d167a 
+mother d168a 
+mother d169a 
+mother d170a 
+mother d171a 
+mother d172a 
+mother d380 
+mother d385 
+mother d395 
+mother d402 
+mother d404 
+mother d410 
+mother d755 
+mother d770 
+mother d771 
+mother d772 
+mother d773 
+mother d774 
+mother d775 
+mother d776 
+mother d777 
+mother d778 
+mother d779 
+mother d780 
+mother d790 
+mother d791 
+mother d792 
+mother d793 
+mother d794 
+mother d795 
+mother d796 
+mother d797 
+mother d798 
+mother d799 
+mother d800 
+mother c432 
+mother c433 
+mother c797 
+mother c970 
+mother e371 
+mother e372a 
+mother e373 
+mother e374a 
+mother e375 
+mother e376a 
+mother e390 
+mother e445 
+mother e610 
+mother e627 
+mother f113 
+mother f111 
+mother f116 
+mother f114 
+mother f119 
+mother f117 
+mother f173 
+mother f174 
+mother f176 
+mother f177 
+mother f179 
+mother f180 
+mother f266 
+mother f813 
+mother f920 
+mother g213 
+mother g214 
+mother g240 
+mother g268 
+mother g269 
+mother g271 
+mother g272 
+mother g274 
+mother g275 
+mother g346 
+mother h138 
+mother h151a 
+mother h178a 
+mother h181a 
+mother h184a 
+mother h256 
+mother h760 
+mother h763 
+mother h766 
+mother j345 
+mother j346 
+mother l4050 
+mother n3000 
+mother n3052 
+mother n3053 
+partner b_empst_m 
+partner b_snssec_analytical_m 
+child_based kd500a 
+child_based kd500b 
+child_based kd504a 
+child_based kd504b 
+child_based kd505a 
+child_based kd505b 
+child_based kd515 
+child_based kf450 
+child_based kf450a 
+child_based kf454 
+child_based kf454a 
+child_based kf455 
+child_based kf455a 
+child_based kf465 
+child_based kj460 
+child_based kj464 
+child_based kj465 
+child_based kj476 
+child_based kj460a 
+child_based kj464a 
+child_based kj465a 
+child_based kl470 
+child_based kl474 
+child_based kl475 
+child_based kn4000 
+child_based kn4004 
+child_based kn4005 
+child_based kq325 
+child_based kq330 
+child_based kq333 
+child_based kq345a 
+child_based kq345b 
+child_based kq345c 
+child_based kq345d 
+child_based kq345e 
+child_based kq345f 
+child_based kq360 
+child_based kq360a 
+child_based kq364 
+child_based kq364a 
+child_based kq365 
+child_based kq365a 
+child_based kq379a 
+child_based kr813a 
+child_based kr827a 
+child_based kr832a 
+child_based sa144 
+child_based sa149 
+child_based sa152 
+child_based sa161a 
+child_based sa162a 
+child_based sa163a 
+child_based sa164a 
+child_based sa165a 
+child_based sa166a 
+child_based sa197a 
+child_based kt5000 
+child_based kt5004 
+child_based kt5005 
+child_based ku360 
+child_based ku361 
+child_based ku372 
+child_based ku375 
+child_based ku420 
+child_based ku421 
+child_based ku423 
+child_based ku424 
+child_based ku685 
+child_based ku690 
+child_based ku693 
+child_based ku705a 
+child_based ku706a 
+child_based ku707a 
+child_based ku708a 
+child_based ku709a 
+child_based ku710a 
+child_based kv5500 
+child_based kv5502 
+child_based kw6505 
+child_based kw6510 
+child_based kw6513 
+child_based kw6600a 
+child_based kw6601a 
+child_based kw6602a 
+child_based kw6603a 
+child_based kw6604a 
+child_based kw6605a 
+child_based se144 
+child_based se149 
+child_based se152 
+child_based se161a 
+child_based se162a 
+child_based se163a 
+child_based se164a 
+child_based se165a 
+child_based se166a 
+child_based se197a 
+child_based ff5260 
+child_based ff5261 
+child_based ff5262 
+child_based ff5263 
+child_based ff5264 
+child_based ff5265 
+child_based ff5266 
+child_based ff5267 
+child_based ff5268 
+child_based ff5269 
+child_based ff5270 
+child_based ta5000 
+child_based ta5001 
+child_based ta5002 
+child_based ta5003 
+child_based ta5004 
+child_based ta5005 
+child_based ta5006 
+child_based ta5007 
+child_based ta5010 
+child_based ta5011 
+child_based ta5012 
+child_based ta5013 
+child_based ta5014 
+child_based ta5015 
+child_based ta5016 
+child_based ta5017 
+child_based ta5020 
+child_based ta5021 
+child_based ta5022 
+child_based ta5023 
+child_based ta5024 
+child_based ta5025 
+child_based ta5026 
+child_based ta5027 
+child_based ta5028 
+child_based ta5029 
+child_based ta5030 
+child_based ta5031 
+child_based ta5032 
+child_based tb5500 
+child_based tb5502 
+child_based fh6873 
+child_based fh6874 
+child_based fh6876 
+child_based fh6877 
+child_based tc1200 
+child_based tc1210 
+child_based tc1211 
+child_based FJPL001 
+child_based FJPL013 
+child_based FJPL014 
+child_based FJPL015 
+child_based FJPL016 
+child_based FJPL017 
+child_based FJPL018 
+child_based FJPL019 
+child_based FJPL027 
+child_based FJPL032 
+child_based FJPL033 
+child_based FJPL034 
+child_based FJPL035 
+child_based FJPL036 
+child_based FJPL037 
+child_based FJPL038 
+child_based FJPL039 
+child_based FJPL040 
+child_based FJPL041 
+child_based FJPL042 
+child_based FJPL043 
+child_based FJPL044 
+child_based FJPL056 
+child_based FJPL061 
+child_based FJPL065 
+child_based FJPL069 
+child_based FJPL073 
+child_based FJPL077 
+child_based FJPL084 
+child_based FJPL088 
+child_based FJPL092 
+child_completed ccc250 
+child_completed ccc290 
+child_completed sa144 
+child_completed sa149 
+child_completed sa152 
+child_completed sa161a 
+child_completed sa162a 
+child_completed sa163a 
+child_completed sa164a 
+child_completed sa165a 
+child_completed sa166a 
+child_completed sa197a 
+child_completed ccf106 
+child_completed ccf113 
+child_completed ccf120 
+child_completed ccf127 
+child_completed ccf143 
+child_completed ccf151 
+child_completed ccf159 
+child_completed ccf168 
+child_completed cck300 
+child_completed cck320 
+child_completed cck340 
+child_completed cck360 
+child_completed cck380 
+child_completed cck400 
+child_completed cck420 
+child_completed se144 
+child_completed se149 
+child_completed se152 
+child_completed se161a 
+child_completed se162a 
+child_completed se163a 
+child_completed se164a 
+child_completed se165a 
+child_completed se166a 
+child_completed se197a 
+child_completed ccl201 
+child_completed ff5260 
+child_completed ff5261 
+child_completed ff5262 
+child_completed ff5263 
+child_completed ff5264 
+child_completed ff5265 
+child_completed ff5266 
+child_completed ff5267 
+child_completed ff5268 
+child_completed ff5269 
+child_completed ff5270 
+child_completed ccn200 
+child_completed ccn220 
+child_completed ccn230 
+child_completed ccn240 
+child_completed ccn250 
+child_completed ccn260 
+child_completed ccn270 
+child_completed ccn280 
+child_completed ccn290 
+child_completed ccn300 
+child_completed ccr163 
+child_completed ccr300 
+child_completed ccr320 
+child_completed ccr340 
+child_completed ccr360 
+child_completed ccr370 
+child_completed ccr380 
+child_completed ccr390 
+child_completed ccr400 
+child_completed ccr410 
+child_completed ccr420 
+child_completed fh6873 
+child_completed fh6874 
+child_completed fh6876 
+child_completed fh6877 
+child_completed ccxa210 
+child_completed ccs2200 
+child_completed ccs2500 
+child_completed ccs2520 
+child_completed ccs2540 
+child_completed ccs2560 
+child_completed ccs2570 
+child_completed ccs2571 
+child_completed ccs2572 
+child_completed ccs2573 
+child_completed ccs2574 
+child_completed ccs2580 
+child_completed ccs2600 
+child_completed ccs2620 
+child_completed ccs2621 
+child_completed ccs2622 
+child_completed ccs2640 
+child_completed FJPL001 
+child_completed FJPL013 
+child_completed FJPL014 
+child_completed FJPL015 
+child_completed FJPL016 
+child_completed FJPL017 
+child_completed FJPL018 
+child_completed FJPL019 
+child_completed FJPL027 
+child_completed FJPL032 
+child_completed FJPL033 
+child_completed FJPL034 
+child_completed FJPL035 
+child_completed FJPL036 
+child_completed FJPL037 
+child_completed FJPL038 
+child_completed FJPL039 
+child_completed FJPL040 
+child_completed FJPL041 
+child_completed FJPL042 
+child_completed FJPL043 
+child_completed FJPL044 
+child_completed FJPL056 
+child_completed FJPL061 
+child_completed FJPL065 
+child_completed FJPL069 
+child_completed FJPL073 
+child_completed FJPL077 
+child_completed FJPL084 
+child_completed FJPL088 
+child_completed FJPL092 
+child_completed CCXC109 
+child_completed cct2500 
+child_completed cct2501 
+child_completed YPB1231 
+child_completed YPB1231_imputeno 
+
+> length(unique(dat$cidB0001))
+[1] 15443
+
+> table(dat$qlet)
+
+    A     B 
+15442   203 
+
+> t(sapply(dat[, startsWith(colnames(dat), "withdrawn")], 
++     table))
+    
+[1,]
+
+> vars <- c("a603", "b302", "bestgest", "cck420", "ccc250", 
++     "ccf127", "cck400", "ccl201", "ccn280", "ccr420", "ccs2600", 
++     "cct2501", "ccx ..." ... [TRUNCATED] 
+
+> for (var in vars) {
++     label <- attributes(dat[[var]])$label
++     labels <- attributes(dat[[var]])$labels
++     labels <- paste(paste(names(labe .... [TRUNCATED] 
+-----------------------------------
+ a603 Neighbourhood people look after mums CH 
+ Labels    Consent withdrawn=-9999  YE short=-7  Missing=-1  Unspecified=0  Never=1  Rarely=2  Sometimes=3  Often=4  Always=5  DK=9 
+ Values    -7=103  1=9643  2=1266  3=2262  4=390  5=27 
+-----------------------------------
+ b302 Reaction on discovering this PREG 
+ Labels    Consent withdrawn=-9999  Missing=-1  Overjoyed=1  Pleased=2  Mixed feelings=3  Not happy=4  V unhappy=5  Indifferent=6  DK=9 
+ Values    -1=110  1=5228  2=3970  3=3393  4=366  5=214  6=55 
+-----------------------------------
+ bestgest The best gestation we can get - Length of pregnancy (weeks) 
+ Labels    Consent withdrawn=-9999  Triplet/quadruplet=-11  Not in core sample=-10  Early miscarriage - Gestation not known=-3  No delivery details=-2  Missing=-1 
+ Values    0%=-10  25%=38  50%=40  75%=40  100%=47 
+-----------------------------------
+ cck420 B7: Child has seen something or someone that others could not 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  No, never=1  Yes, maybe=2  Yes, definitely=3  NK=9 
+ Values    -10=7615  -1=157  1=5786  2=1105  3=504 
+-----------------------------------
+ ccc250 A16: Frequency child feels left out of things 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Other text answer=0  Never=1  Sometimes=2  Often=3  Always=4  DK=9 
+ Values    -10=7383  -1=58  1=3122  2=3856  3=474  4=156 
+-----------------------------------
+ ccf127 A28: Study child gets along easily with kids 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Not true=1  Mostly untrue=2  Partly true=3  Mostly true=4  True=5  Don't know=9 
+ Values    -10=7088  -1=62  1=199  2=222  3=1019  4=2284  5=4262 
+-----------------------------------
+ cck400 B6: Child has known what another person is thinking 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  No, never=1  Yes, maybe=2  Yes, definitely=3  NK=9 
+ Values    -10=7615  -1=232  1=4319  2=2291  3=710 
+-----------------------------------
+ ccl201 B1b: Frequency child is bullied by sibling 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Several times a week=1  About once a week=2  2 or 3 times a month=3  Only ever once or twice=4  Never=5 
+ Values    -10=7686  -1=571  1=783  2=663  3=645  4=1190  5=3634 
+-----------------------------------
+ ccn280 B8: Child believes thoughts other than their own have been put into their head 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  No, never=1  Yes, maybe=2  Yes, definitely=3  Not answered=4 
+ Values    -10=8046  -1=176  1=6250  2=578  3=110 
+-----------------------------------
+ ccr420 C10: Respondent has felt that they are a very important person or have special powers 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  No, never=1  Yes, maybe=2  Yes, definitely=3 
+ Values    -10=9107  -1=266  1=5083  2=551  3=123 
+-----------------------------------
+ ccs2600 D6: YP has ever seen something/someone other people could not see 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Yes, definitely=1  Yes, maybe=2  No, never=3 
+ Values    -10=9978  -1=71  1=222  2=310  3=4516 
+-----------------------------------
+ cct2501 A8: Number of respondent's close friends (i.e. friends respondent could talk to if in some kind of trouble) 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  None=1  One=2  2-3=3  4-5=4  6-9=5  10 or more=6  Don't know=7  Don't want to answer=8 
+ Values    -10=12047  -1=17  1=31  2=81  3=1056  4=1070  5=739  6=328  7=40  8=7 
+-----------------------------------
+ ccxa210 A9: Frequency during the last school year YP has been upset by name calling/exclusion from groups or bullying 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Most days=1  Sometimes=2  Rarely=3  Never=4  Don't know=9 
+ Values    -10=9693  -1=132  1=148  2=778  3=1294  4=3076 
+-----------------------------------
+ CCXC109 Q6_j: Frequency of YP being bullied over the Internet 
+ Labels    Consent withdrawn=-9999  Not completed=-10  NS/NA=-1  Never=1  Always=5 
+ Values    -10=13126  -1=6  1=1349  2=139  3=67  4=15  5=4 
+-----------------------------------
+ cidB0001 
+ Labels     
+ Values    0%=1  25%=5345  50%=10742  75%=16036  100%=21499 
+-----------------------------------
+ d795 Someone to share excitement of PREG 
+ Labels    Consent withdrawn=-9999  Other=0  Exactly feel=1  Often feel=2  SMTS feel=3  Never feel=4  DK=9 
+ Values    -1=346  1=6964  2=3024  3=1786  4=461 
+-----------------------------------
+ e390 Edinburgh Post-natal Depression Score 
+ Labels    Consent withdrawn=-9999  Missing=-1  not depressed=0  very depressed=30 
+ Values    0%=-1  25%=2  50%=5  75%=9  100%=28 
+-----------------------------------
+ fh6876 DV: Depression (self-report 6-band computer prediction, ICD-10 and DSM-IV): TF3 
+ Labels    Consent withdrawn=-9999  Triplets/Quadruplets=-11  Did not attend TF3=-10  Missing underlying values=-1  <0.1%=0  ~0.5%=1  ~3%=2  ~15%=3  ~50%=4  >70%=5 
+ Values    -10=9612  0=1821  1=3035  3=406  4=70  5=19 
+-----------------------------------
+ ff5270 DV: Weighted sum of suspected/definite psychotic experiences not clearly attributable to effects of sleep, fever, substance use: psychosis interview: TF1 
+ Labels    Consent withdrawn=-9999  Triplet/Quadruplet=-11  Did not attend=-10  Missing=-1 
+ Values    -10=8360  -1=36  0=5990  1=363  2=238  3=76  4=43  5=22  6=21  7=6  8=4  9=1  10=3  11=1  12=2  16=1 
+-----------------------------------
+ fh6877 DV: Any anxiety disorder (self-report 6-band computer prediction, ICD-10 and DSM-IV): TF3 
+ Labels    Consent withdrawn=-9999  Triplets/Quadruplets=-11  Did not attend TF3=-10  Missing underlying values=-1  <0.1%=0  ~0.5%=1  ~3%=2  ~15%=3  ~50%=4  >70%=5 
+ Values    -10=9612  0=3  1=2021  2=2736  3=487  4=106 
+-----------------------------------
+ FJPL001 PLIKS done: TF4 
+ Labels    Consent withdrawn=-9999  Triplets/quadruplets=-11  Did not attend=-10  Session not done=-4  NS/NA=-1  Done=1  Not done=2 
+ Values    -10=10183  1=4711  2=495 
+-----------------------------------
+ g268 Crown Crisp - Anxiety 
+ Labels    Consent withdrawn=-9999  not anxious=0  very anxious=16 
+ Values    -1=311  0=1021  1=1898  2=1721  3=1224  4=969  5=814  6=650  7=420  8=329  9=212  10=213  11=171  12=169  13=107  14=90  15=59  16=22 
+-----------------------------------
+ h181a DV: CCEI somatic subscale score (complete cases) 
+ Labels    Consent withdrawn=-9999  Section D omitted=-6  1+ components omitted=-5 
+ Values    -6=29  -5=113  0=148  1=2272  2=3140  3=1309  4=1113  5=565  6=415  7=225  8=149  9=81  10=80  11=38  12=32  13=7  14=9 
+-----------------------------------
+ in_ku 
+ Labels     
+ Values    0=510  1=15125 
+-----------------------------------
+ j346 Weighted Life Events 
+ Labels    Consent withdrawn=-9999 
+ Values    0%=0  25%=4  50%=9  75%=17  100%=79 
+-----------------------------------
+ kd505a CH Sexually Abused > 6 MTHS 
+ Labels    Consent withdrawn=-9999  Missing=-1  Other=0  Yes & CH Very Upset=1  Yes & CH Quite Upset=2  Yes & CH Bit Upset=3  Yes & CH Not Upset=4  Did Not Happen=5  DK=9 
+ Values    -1=44  1=2  2=1  3=1  5=11042 
+-----------------------------------
+ kf455 Child sexually abused > 18 months 
+ Labels    Consent withdrawn=-9999  Missing=-1  other=0  yes child very upset=1  yes quite upset=2  yes bit upset=3  yes not upset=4  no didnt happen=5  dk=9 
+ Values    -1=89  1=1  3=2  4=1  5=10218 
+-----------------------------------
+ kj460a Child Taken Into Care Y/N 
+ Labels    Consent withdrawn=-9999  Yes=1  No=2 
+ Values    1=13  2=10014 
+-----------------------------------
+ kl475 D6: Child was sexually abused since age 3 
+ Labels    Consent withdrawn=-9999  Triplet/Quadruplet=-11  Not completed=-10  No response=-1  Yes, child was very upset=1  Yes, child was quite upset=2  Yes, child was a bit upset=3  Yes, child was not upset=4  No, did not happen=5 
+ Values    -10=5151  -1=47  1=4  2=4  3=1  5=9440 
+-----------------------------------
+ kn4004 D5: Child physically hurt by someone in past 15 months 
+ Labels    Consent withdrawn=-9999  Triplet/Quadruplet=-11  Not completed=-10  Don't know=-9  No response=-1  Relevant text, but no box ticked=0  Yes And Was Very Upset=1  Yes And Was Quite Upset=2  Yes And Was A Bit Upset=3  Yes But Was Not Upset=4  No Did Not Happen=5  DK=9 
+ Values    -10=5971  -9=1  -1=44  0=1  1=48  2=75  3=116  4=46  5=8336 
+-----------------------------------
+ kq365a DV: Child was sexually abused since his/her 5th birthday (Y/N) 
+ Labels    Consent withdrawn=-9999  Section D omitted=-6  Not stated=-1  Yes=1  No=2 
+ Values    -6=33  -1=11  1=13  2=8424 
+-----------------------------------
+ kr813a DV: DAWBA DSM-IV clinical diagnosis - Any oppositional-conduct disorder 
+ Labels    Consent withdrawn=-9999  PDD=-3  Not sent=-2  Not returned=-1  Yes=1  No=2 
+ Values    -3=30  -1=6  1=261  2=7938 
+-----------------------------------
+ kt5000 E1: Since 7th birthday child has been taken into care 
+ Labels    Consent withdrawn=-9999  Triplet/Quadruplet=-11  Not completed=-10  No response=-1  Other text answer=0  Yes, very upset=1  Yes, quite upset=2  Yes, bit upset=3  Yes, not upset=4  No=5  DK=9 
+ Values    -10=6821  -1=73  1=1  4=5  5=8192 
+-----------------------------------
+ ku693 F14: Child is generally liked by other children in past 6 months 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  Section F omitted=-6  No response=-1  Other text answer=0  Not true=1  Somewhat true=2  Certainly true=3  Don't know=4 
+ Values    -10=6897  -6=99  -1=108  1=62  2=1236  3=6692 
+-----------------------------------
+ kv5500 G1: Child has ever experienced something traumatic 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Text answer written=0  Yes=1  No=2  Don't know=9 
+ Values    -10=7280  -1=101  1=1229  2=6498 
+-----------------------------------
+ kw6513 G14: Child has been generally liked by other children in the last six months 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  Section G omitted=-6  No response=-1  Other=0  Not true=1  Somewhat true=2  Certainly true=3  Don't know=9 
+ Values    -10=7649  -6=72  -1=92  1=78  2=1190  3=6024 
+-----------------------------------
+ kz011b Participant was alive at 1 year of age 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not enrolled=-1  Yes=1  No=2 
+ Values    1=14835  2=754 
+-----------------------------------
+ l4050 D46a: Other events concerned/required additional effort from respondent to cope in last year 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Other=0  Yes=1  No=2  DK=9 
+ Values    -10=6101  -1=1765  1=1487  2=5354 
+-----------------------------------
+ n3053 D42: Partner has ever beaten mother up 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  Unresolvable=-2  No response=-1  No=1  Yes, sometimes=2  Yes, often=3  DK=9 
+ Values    -10=7095  -1=715  1=7182  2=75  3=2 
+-----------------------------------
+ sa164a DV: SDQ conduct problems score (complete cases) 
+ Labels    Consent withdrawn=-9999  No SA record=-10  1+ components omitted=-5 
+ Values    -10=87  -5=51  0=4217  1=858  2=587  3=259  4=141  5=112  6=60  7=45  8=23  9=7  10=8 
+-----------------------------------
+ se152 A13: Degree to which child was generally liked by peers in past 6 months 
+ Labels    Consent withdrawn=-9999  No SE record=-10  Section A omitted=-6  Questions A1 to A21 omitted=-5  Not stated=-1  Not true=1  Somewhat true=2  Certainly true=3 
+ Values    -10=55  -6=1  -1=4  1=365  2=2053  3=5214 
+-----------------------------------
+ ta5003 G1d: Teenager has tried to hurt or kill themselves 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Other text=0  Is often like this=1  Is sometimes like this=2  Is never like this=3 
+ Values    -10=7967  -1=69  1=5  2=169  3=6894 
+-----------------------------------
+ tb5502 G1b: Age of child when involved in exceptionally stressful situation 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  Don't know=-9  No response=-1  DK=99 
+ Values    -10=8003  -9=1  -1=5952  0=5  1=15  2=32  3=37  4=49  5=62  6=60  7=69  8=82  9=93  10=128  11=125  12=138  13=224  14=16 
+-----------------------------------
+ tc1211 A19b: Number of evenings a week that study teenager sees boy/girl friend 
+ Labels    Consent withdrawn=-9999  Triplet / quadruplet=-11  Not completed=-10  No response=-1  Less than one=0  One=1  Two=2  Three=3  Four=4  Five=5  Six=6  Seven=7 
+ Values    -10=9355  -1=3620  0=240  1=249  2=497  3=418  4=253  5=202  6=90  7=134 
+-----------------------------------
+ YPB1231_imputeno A22v: Ever been diagnosed with schizophrenia - Silent no's included 
+ Labels    Consent withdrawn=-9999  Triplet/Quadruplet=-11  Questionnaire not Completed=-10  Unresolvable=-8  No Answer=-1  Yes, by a Doctor=1  Yes, by Self=2  No=3  Not Sure=4 
+ Values    -10=11574  -8=2  -1=17  1=2  2=1  3=3983  4=15 
+
+> output_filename <- list.files(output_path, "Smith_B0001", 
++     full.names = T)[1]
+
+> dta.filename <- sub("sav", "dta", output_filename)
+
+> haven::write_dta(dat, path = dta.filename)
+
+> dat.dta <- haven::read_dta(dta.filename)
+
+> csv.filename <- sub("sav", "csv", output_filename)
+
+> write.csv(dat, file = csv.filename, row.names = F)
+
+> dat.csv <- read.csv(csv.filename, stringsAsFactors = F)
+
+> similar <- function(x, y) {
++     harmonize <- function(x) ifelse(any(c("integer", "double", 
++         "logical") %in% class(x)), as.numeric(x), x) .... [TRUNCATED] 
+
+> stopifnot(all(sapply(colnames(dat.csv), function(col) similar(dat.csv[[col]], 
++     dat[[col]]))))
+
+> stopifnot(all(sapply(colnames(dat.dta), function(col) similar(dat.dta[[col]], 
++     dat[[col]]))))
