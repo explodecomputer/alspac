@@ -7,11 +7,10 @@ loadDictionaries <- function() {
 }
 
 combineDictionaries <- function() {
-    if (exists("current", envir=globals) && exists("useful", envir=globals))
-        assign("both",
-               rbind.fill(get("current", envir=globals),
-                          get("useful", envir=globals)),
-               globals)
+    both <- retrieveDictionary("current")
+    if (exists("useful", envir=globals))
+        both <- rbind.fill(both, retrieveDictionary("useful"))
+    assign("both", both, globals)
 }
 
 retrieveDictionary <- function(name) {

@@ -1,4 +1,5 @@
 library(alspac)
+
 setDataDir("/home/alspac")
 
 example_path <- "."
@@ -6,8 +7,8 @@ output_path <- file.path(example_path, "outputs")
 
 if (!dictionaryGood("current"))
     createDictionary("Current", "current")
-if (!dictionaryGood("useful"))
-    createDictionary("Useful_data", "useful")
+#if (!dictionaryGood("useful"))
+#    createDictionary("Useful_data", "useful")
        
 dat <- extractDataset(
     variable_file=file.path(example_path, "inputs/variables.csv"),
