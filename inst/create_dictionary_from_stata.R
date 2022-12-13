@@ -13,8 +13,8 @@ setDataDir(alspac.dir)
 current <- createDictionary("Current", name="current")
 ## 40s with 10 cores
 
-useful <- createDictionary("Useful_data", name="useful")
+# useful <- createDictionary("Useful_data", name="useful")
 ## 5s with 10 cores
 
 save(current, file="../data/current.rdata")
-save(useful, file="../data/useful.rdata")
+# save(useful, file="../data/useful.rdata")
