@@ -80,7 +80,7 @@ readExclusions <- function() {
 addSourcesToDictionary <- function(dictionary) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
-
+    paths <- getPaths()
     ## variables that should not have values removed
     keep <- list(
         mother=c("aln","mum_and_preg_enrolled","mum_enrol_status","preg_enrol_status"),
@@ -152,7 +152,46 @@ generateSourcesSpreadsheet <- function() {
     dictionary <- alspac:::retrieveDictionary("both")
     
     ## list variable paths relevant to sources of ALSPAC data
-    paths <- list(
+    paths <- getPaths()
+    if(!all(names(withdrawals) %in% names(paths))) {
+        stop(
+            "New exclusion file(s) have been created but are not being handled here":
+            paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
+    }
+
+    for (src in names(paths)) {
+        dictionary[[src]] <- F
+        for (path in paths[[src]])
+            dictionary[[src]] <- dictionary[[src]] | grepl(path, paste0(dictionary$path,dictionary$obj))
+    }
+
+    ## more complicated cases below
+    ## 1. Longitudinal data
+    is.longitudinal <- grepl("Other/Longitudinal", dictionary$path)
+    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=T)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
+    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=T) | grepl("_yp_", dictionary$obj, ignore.case=T))
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    ## 2. Covid data    
+    is.covid <- grepl("Current/Quest/COVID", dictionary$path) 
+    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=T)
+    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- T
+    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=T)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
+    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    ## 3. Useful data
+    is.useful <- grepl("Useful_data", dictionary$path)
+    dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])
+
+    dictionary <- unique(dictionary[,c("obj", "path", names(paths))])
+
+    dictionary[order(dictionary$path),]
+}
+
+getPaths <- function()
+{
+    list(
         mother_clinic=c(
             "Other/Cohort Profile/mz",
             "Current/Other/Geodata/G0",
@@ -213,39 +252,4 @@ generateSourcesSpreadsheet <- function() {
             "Quest/Puberty",
             "Quest/Schools",
             "Clinic/Child"))
-    if(!all(names(withdrawals) %in% names(paths))) {
-        stop(
-            "New exclusion file(s) have been created but are not being handled here":
-            paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
-    }
-
-    for (src in names(paths)) {
-        dictionary[[src]] <- F
-        for (path in paths[[src]])
-            dictionary[[src]] <- dictionary[[src]] | grepl(path, paste0(dictionary$path,dictionary$obj))
-    }
-
-    ## more complicated cases below
-    ## 1. Longitudinal data
-    is.longitudinal <- grepl("Other/Longitudinal", dictionary$path)
-    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=T)
-    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
-    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=T) | grepl("_yp_", dictionary$obj, ignore.case=T))
-    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
-    ## 2. Covid data    
-    is.covid <- grepl("Current/Quest/COVID", dictionary$path) 
-    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=T)
-    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- T
-    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=T)
-    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
-    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
-    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
-    ## 3. Useful data
-    is.useful <- grepl("Useful_data", dictionary$path)
-    dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])
-
-    dictionary <- unique(dictionary[,c("obj", "path", names(paths))])
-
-    dictionary[order(dictionary$path),]
 }
-
