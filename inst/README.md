@@ -47,6 +47,18 @@ Unmount the R drive
 sudo umount inst/mnt
 ```
 
+Note if that doesn't work then find which process is using it
+
+```
+sudo lsof inst/mnt
+```
+
+Then kill that process and unmount
+
+```
+sudo kill -9 <pid>; sudo umount inst/mnt
+```
+
 This should have edited one or both of the following files:
 
 ```
