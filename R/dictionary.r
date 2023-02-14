@@ -74,8 +74,8 @@ dictionaryGood <- function(dictionary, max.print=10) {
 #' 
 #' @export
 updateDictionaries <- function() {
-    createDictionary("Current", name="current", quick=T)
-    #createDictionary("Useful_data", name="useful", quick=T)
+    createDictionary("Current", name="current", quick=F)
+    #createDictionary("Useful_data", name="useful", quick=F)
     return(T)
 }
 
