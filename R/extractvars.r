@@ -177,9 +177,9 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     }
     
     id.vars <- intersect(c("aln","qlet","alnqlet"),colnames(core.dat))
-    remove.vars <- c("kz021","tripquad","in_alsp")
+    remove.vars <- c("tripquad","in_alsp")
     data.vars <- setdiff(colnames(dat),c(colnames(core.dat),remove.vars))
-    admin.vars <- setdiff(colnames(core.dat),c(id.vars, remove.vars))
+    admin.vars <- setdiff(colnames(core.dat),c(id.vars, "kz021", remove.vars))
 
     bind_cols(
         core.dat[,id.vars],
