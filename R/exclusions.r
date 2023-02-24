@@ -19,7 +19,7 @@ removeExclusions <- function(x) {
     withdrawals <- readExclusions()
 
     ## obtain dictionary corresponding the requested dataset
-    dictionary <- retrieveDictionary("both")
+    dictionary <- retrieveDictionary("current")
     dictionary <- dictionary[match(colnames(x), dictionary$name),]
 
     ## check that exclusions information in the dictionary is up-to-date
@@ -140,8 +140,6 @@ addSourcesToDictionary <- function(dictionary) {
 #' child_based and child_completed.
 #' Sources can for the most part be determined automatically from the 'path'
 #' information provided for each variable in the dictionary.
-#' However, for variables in "Useful_data", the source isn't always clear 
-#' so needs to be identified manually.
 #'
 #' sources <- generateSourcesSpreadsheet()
 #' write.csv(sources, file="data/sources.csv", row.names=F)
@@ -149,7 +147,7 @@ generateSourcesSpreadsheet <- function() {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
                     
-    dictionary <- alspac:::retrieveDictionary("both")
+    dictionary <- alspac:::retrieveDictionary("current")
     
     ## list variable paths relevant to sources of ALSPAC data
     paths <- getPaths()
@@ -181,8 +179,8 @@ generateSourcesSpreadsheet <- function() {
     is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
     dictionary[is.child, grepl("child", colnames(dictionary))] <- T
     ## 3. Useful data
-    is.useful <- grepl("Useful_data", dictionary$path)
-    dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])
+    #is.useful <- grepl("Useful_data", dictionary$path)
+    #dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])
 
     dictionary <- unique(dictionary[,c("obj", "path", names(paths))])
 

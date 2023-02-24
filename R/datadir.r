@@ -29,9 +29,9 @@ getDefaultDataDir <- function()
 #' function to locate the alspac data files.
 #' This function guesses the path to be used as default in setDataDir. The defaults are:
 #' \itemize{
-#' \item{Windows: R:/Data/Useful_data/current_R/}
-#' \item{Mac: /Volumes/data/Useful_data/current_R/}
-#' \item{Linux: ~/.gvfs/data/Useful_data/current_R/}
+#' \item{Windows: R:/Data/}
+#' \item{Mac: /Volumes/data/}
+#' \item{Linux: ~/.gvfs/data/}
 #' }
 #' 
 #' @param datadir The directory where the ALSPAC data can be found
@@ -51,11 +51,11 @@ setDataDir <- function(datadir=getDefaultDataDir())
 checkDataDir <- function(datadir) {
     test <- file.exists(datadir)
     if(test) {
-        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current", "/Useful_data")))))
+        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current")))))
             TRUE
         else {
             stop("The specified data directory exists but it is not the correct directory. ",
-                 "It should have the directories 'Syntax', 'Current' and 'Useful_data' contained within. ",
+                 "It should have the directories 'Syntax' and 'Current' contained within. ",
                  "It is normally located on the remote R drive, R:/Data/")
         }
     } else {

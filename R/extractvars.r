@@ -142,7 +142,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     if (any(var.has.child.data))
         core.filters <- c(core.filters, child.filters)
     
-    suppressWarnings(core.vars <- findVars(names(core.filters), dictionary="both"))
+    suppressWarnings(core.vars <- findVars(names(core.filters), dictionary="current"))
     core.vars <- core.vars[which(core.vars$name %in% names(core.filters)),]
     core.vars <- do.call(filterVars, c(list(x=core.vars), core.filters))
    
@@ -367,7 +367,7 @@ extractWebOutput <- function(filename)
 		stop("No variables present in ", filename)
 	}
         
-        l <- retrieveDictionary("both")
+        l <- retrieveDictionary("current")
 	l <- subset(l, name %in% input$Variable)
 
 	if(nrow(l) != 0)
@@ -375,7 +375,7 @@ extractWebOutput <- function(filename)
 		out <- extractVars(l)
 		return(out)
 	} else {
-		stop("None of the variables in ", filename, " were in either the current or useful_data dictionaries")
+		stop("None of the variables in ", filename, " were in the 'current' dictionary")
 	}
 	return(l)
 }

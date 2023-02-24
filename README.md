@@ -19,7 +19,7 @@ To obtain ALSPAC variables, the general procedure is:
 2. search through STATA files to extract
 3. load into R files to use
 
-This package combines the search and extraction procedure into two functions, this makes the work a bit more reproducible. It works for the curated data in the `R:/Current/` and `R:/Useful_data` directories.
+This package combines the search and extraction procedure into two functions, this makes the work a bit more reproducible. It works for the curated data in the `R:/Current/` directory.
 
 The extracted data has withdrawn consent individuals removed automatically.
 
@@ -29,7 +29,6 @@ You can browse the variables here: [http://variables.alspac.bris.ac.uk/](http://
 ## Limitations
 
 - The data is not curated further than what is present already in the STATA `.dta` files
-- The `Useful_data` folder contains only some of the known user derived variables. As these variables continue to be processed the directory will be updated, but contact the ALSPAC team if there is something you need which cannot be found here.
 - This is a beta version of the package, please report errors or suggestions to [g.hemani@bristol.ac.uk](mailto:g.hemani@bristol.ac.uk)
 - Variable look-ups can be performed off-line and without any restrictions, but variable extraction requires access to the R drive where the data is residing.
 - ALN IDs refer to pregnancies. The same ALN is shared between mothers, their children, partners and fathers. Children can be distinguished from the others by virtue of having a QLET code. But distinguishing between mothers, fathers and partners is not straightforward. See note below on how data that includes different individuals with the same ALN is presented.
@@ -61,16 +60,10 @@ library(alspac)
 
 ### Browsing the variables manually
 
-There are two data objects that come with the package - `current` and `useful` - that contain all the variables available in the `R:/Current/` and `R:/Useful_data` directories, respectively. They can be searched manually after loading them directly, e.g. to load the `current` variables:
+There is one data object that comes with the package - `current` - that contains all the variables available in the `R:/Current/` directory. It can be searched manually after loading it directly:
 
 ```r
 data(current)
-```
-
-and to load the `useful` variables:
-
-```r
-data(useful)
 ```
 
 The top 6 rows of `current` look like this:
@@ -96,7 +89,7 @@ The top 6 rows of `current` look like this:
 
 ### Using the search function
 
-A simple search function `findVars` is a simple helper for searching `current` (default) or `useful`. Documentation can be retrieved using:
+A simple search function `findVars` is a simple helper for searching `current` (default). Documentation can be retrieved using:
 
 ```r
 ?findVars
@@ -124,12 +117,6 @@ If I want to find anything with sleep somewhere (not necessarily a whole word) I
 
 ```r
 vars <- findVars("sleep", "slept", logic="any", whole.word=FALSE, ignore.case=TRUE)
-```
-
-To find all variables that have the term "difficulties" from the `useful` data:
-
-```r
-vars <- findVars("difficulties", dictionary="useful")
 ```
 
 Some of these arguments have defaults but just writing them out for illustration.
@@ -236,7 +223,7 @@ If you have a better way to present these data do contact me.
 
 ## Using the website to browse variables
 
-Variables can be browsed at [https://alspac-example.shinyapps.io/alspac-dt/](https://alspac-example.shinyapps.io/alspac-dt/). This contains both the 'Current' and 'Useful_data' variables.
+Variables can be browsed at [https://alspac-example.shinyapps.io/alspac-dt/](https://alspac-example.shinyapps.io/alspac-dt/). This contains the 'Current' variables.
 
 This site can also be used to select variables for extraction:
 

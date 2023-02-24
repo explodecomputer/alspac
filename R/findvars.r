@@ -22,9 +22,9 @@ whole.word.regex <- function(x) paste("\\b", x, "\\b", sep="")
 #' @param perl logical.  Should perl-compatible regexps be used? Defaults to FALSE.
 #' @param fixed logical.  If 'TRUE', 'pattern' is a string to be matched as is.  Overrides all conflicting arguments. Defaults to FALSE.
 #' @param whole.word If 'TRUE' search term "word" will be changed to "\\bword\\b" to only match whole words. Defaults to FALSE.
-#' @param dictionary Data frame or name of a data dictionary. Dictionaries available by default are
-#' "current" (from the R:/Data/Current folder), "useful" (from the R:/Data/Useful_data folder) and "both" (combined "current" and "useful").
-#' New dictionaries can be created using the \code{\link{createDictionary}()} function. (Default: "both").
+#' @param dictionary Data frame or name of a data dictionary. Dictionary available by default is
+#' "current" (from the R:/Data/Current folder).
+#' New dictionaries can be created using the \code{\link{createDictionary}()} function. (Default: "current").
 #'
 #' @export
 #' @return A data frame containing a list of the variables, the files they originate from, and some descripton about the files
@@ -32,7 +32,7 @@ whole.word.regex <- function(x) paste("\\b", x, "\\b", sep="")
 #' # Find variables with BMI or height in the description (this will return a lot of results!)
 #' bmi_variables <- findVars("bmi", "height", logic="any", ignore.case=TRUE)
 #'}
-findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="both")
+findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="current")
 {
         if (is.character(dictionary))
             dictionary <- retrieveDictionary(dictionary)

@@ -3,13 +3,13 @@ loadDictionaries <- function() {
     assign("globals", new.env(), envir=parent.env(environment()))
     for (file in list.files(path, "rdata$", full.names=T))
         load(file, globals)
-    combineDictionaries()
+    #combineDictionaries()
 }
 
 combineDictionaries <- function() {
     both <- retrieveDictionary("current")
-    if (exists("useful", envir=globals))
-        both <- rbind.fill(both, retrieveDictionary("useful"))
+    #if (exists("useful", envir=globals))
+    #    both <- rbind.fill(both, retrieveDictionary("useful"))
     assign("both", both, globals)
 }
 
@@ -22,8 +22,8 @@ retrieveDictionary <- function(name) {
 
 saveDictionary <- function(name, dictionary) {
     assign(name, dictionary, globals)
-    if (name == "current" || name == "useful")
-        combineDictionaries()
+    #if (name == "current" || name == "useful")
+    #    combineDictionaries()
     
     path <- file.path(system.file(package="alspac"), "data")
     if (!file.exists(path))
@@ -83,7 +83,7 @@ updateDictionaries <- function() {
 #' Create a dictionary from ALSPAC STATA files
 #'
 #' @param datadir ALSPAC data subdirectory from which to create the index
-#' (Default: "Current").  It could be "Current" or "Useful_data".
+#' (Default: "Current"). .
 #' @param name If not \code{NULL}, then the resulting dictionary
 #' will be saved to a file in the R package for use next time the package
 #' is loaded. The dictionary will be available with the given name (Default: NULL).
@@ -95,7 +95,7 @@ updateDictionaries <- function() {
 #' @export
 #' @return Data frame dictionary listing available variables.
 createDictionary <- function(datadir="Current", name=NULL, quick=F) {
-    stopifnot(datadir %in% c("Current","Useful_data"))
+    stopifnot(datadir != "Current")
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)

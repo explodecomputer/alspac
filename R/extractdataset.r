@@ -11,8 +11,8 @@
 #' @param output_file Dataset file (should not already exist). Default is
 #' derived from function arguments as follows:
 #' <output_path>/<author>_<b_number>_<date>.<output_format>.
-#' @param dictionary ALSPAC dictionary to use "current", "useful" or "both"
-#' (Default: "both").
+#' @param dictionary ALSPAC dictionary to use "current" 
+#' (Default: "current").
 #' @return Saves the output dataset to `output_file` and returns it. 
 #'
 #' @examples\dontrun{
@@ -39,7 +39,7 @@ extractDataset <- function(variable_file, cid_file,
                                    b_number, "_",
                                    format(Sys.time(), "%d%b%y"),
                                    ".", output_format)),
-                           dictionary="both") {
+                           dictionary="current") {
     if (!dir.exists(output_path))
         stop("Path in 'output_path' does not exist: ", output_path)
   
