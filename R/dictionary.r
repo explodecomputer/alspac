@@ -179,7 +179,7 @@ processDTA <- function(fn, quick=F)
 	else
 		temp <- suppressWarnings(readstata13::read.dta13(fn))
 	# temp <- haven::read_dta(fn)
-	dat <- data_frame(
+	dat <- dplyr::tibble(
 		name = colnames(temp),
 		lab = attributes(temp)$var.labels,
 		# lab = sapply(temp, function(x) attr(x, "label")),
