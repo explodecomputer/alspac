@@ -1,12 +1,9 @@
 library(alspac)
 
-setDataDir("/home/alspac")
+#setDataDir("/home/alspac")
 
 if (!dictionaryGood("current"))
     createDictionary("Current", "current")
-
-#if (!dictionaryGood("useful"))
-#    createDictionary("Useful_data", "useful")
 
 vars <- list(partner=c("pb910","ff1a011"),
              child=c("ccaa991b","ka498","f7003a"),
@@ -20,7 +17,7 @@ dat <- extractVars(vars$child)
 
 stopifnot(length(unique(dat$alnqlet)) == 15645)
 stopifnot(sum(dat$woc_child_based) == 31)
-stopifnot(sum(dat$woc_child_completed) == 29)
+stopifnot(sum(dat$woc_child_completed) == 30)
 stopifnot(all(is.na(dat$f7003a[dat$woc_child_based])))
 stopifnot(all(is.na(dat$ka498[dat$woc_child_based])))
 stopifnot(all(is.na(dat$ccaa991b[dat$woc_child_completed])))

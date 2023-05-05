@@ -1,6 +1,6 @@
 # Update ALSPAC dictionary
 
-Each time the R drive files are updated (e.g. in the `Current` or `Useful_data` folders) we need to collate all the meta data from each of the stata files. The `create_dictionary_from_stata.R` automates this process. But the script needs access to the R drive, and ideally runs in parallel and not through the VPN (which is very slow).
+Each time the R drive files are update, we need to collate all the meta data from each of the stata files. The `create_dictionary_from_stata.R` automates this process. But the script needs access to the R drive, and ideally runs in parallel and not through the VPN (which is very slow).
 
 Solution is to run the script on the `crashdown.epi.bris.ac.uk` docker cluster. Steps are:
 
@@ -59,11 +59,10 @@ Then kill that process and unmount
 sudo kill -9 <pid>; sudo umount inst/mnt
 ```
 
-This should have edited one or both of the following files:
+This should have edited the following file:
 
 ```
 data/current.rdata
-data/useful.rdata
 ```
 
 ## 3. Commit and update package version
