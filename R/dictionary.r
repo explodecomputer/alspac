@@ -107,9 +107,15 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F) {
 
     dictionary <- mclapply(files, function(file) {
         cat(date(), "loading", file, "\n")
-        merge(processDTA(file, quick),
-              createFileTable(file, alspacdir),
-              by="obj")
+        tryCatch({
+            merge(
+                alspac:::processDTA(file, quick),
+                alspac:::createFileTable(file, alspacdir), by = "obj")
+        }, error=function(e) {
+            warning("Error loading", file, "\n")
+            print(e)
+            NULL
+        })
     }) %>% bind_rows
 
     dictionary <- dictionary[which(dictionary$counts > 0),]
