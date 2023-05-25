@@ -110,7 +110,7 @@ vars <- findVars("height", "length", logic="any", whole.word=TRUE, ignore.case=T
 If I want any with height AND length:
 
 ```r
-vars <- findVars("height", "length", logic="and", whole.word=TRUE, ignore.case=TRUE)
+vars <- findVars("height", "length", logic="all", whole.word=TRUE, ignore.case=TRUE)
 ```
 
 If I want to find anything with sleep somewhere (not necessarily a whole word) I might do:
