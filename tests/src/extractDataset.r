@@ -1,6 +1,7 @@
 library(alspac)
 
 setDataDir("/home/alspac")
+#setDataDir("alspac")
 
 example_path <- "."
 output_path <- file.path(example_path, "outputs")
@@ -19,9 +20,9 @@ dim(dat)
 stopifnot(nrow(dat) == 15645)
 
 ## check number of WoCs
-stopifnot(sum(dat$woc_child_based) == 31)
-stopifnot(sum(dat$woc_child_completed) == 29)
-stopifnot(sum(dat$woc_mother) == 31)
+stopifnot(sum(dat$woc_child_based) == 32)
+stopifnot(sum(dat$woc_child_completed) == 30)
+stopifnot(sum(dat$woc_mother) == 32)
 stopifnot(sum(dat$woc_partner) == 5)
 
 ## check that all variable values for WoCs have been removed
