@@ -1,3 +1,94 @@
+# 16/11/2023
+
+1. Updated version release of G0 Mothers (Z) - Parents Questionnaire 2022 
+ 
+Changes – correction to mult-mum cases included and cohort case selection criteria
+ 
+- Z data filename: Z_1b in R:\Data\Current\Quest\Mother
+- Z data documentation: D1196_Z.pdf in R:\Data\documentation\built_pdf\Quest\Mother
+
+# 06/09/2023
+
+1. Fathers (FD) files (Parents 2022 Questionnaire) 
+
+- FD data filename: FD_1a in R:\Data\Current\Quest\Father
+- FD data documentation: D1297_FD in R:\Data\documentation\built_pdf\Quest\Partner
+
+# 01/09/2023
+
+1. First version release of G0 Mothers (Z) and Partners (FD) files (Parents 2022 Questionnaire) 
+
+- Z data filename: Z_1a in R:\Data\Current\Quest\Mother
+- Z data documentation: D1196_Z in R:\Data\documentation\built_pdf\Quest\Mother
+- FD data filename: FD_1a in R:\Data\Current\Quest\Partner
+- FD data documentation: D1297_FD in R:\Data\documentation\built_pdf\Quest\Partner 
+ 
+2. Documentation only update to G0 MZ Cohort Profile – addition of the weblink for the published data note
+ 
+- G0 MZ data documentation: D4101_MZ in R:\Data\documentation\built_pdf\Other\Cohort Profile
+ 
+3. Documentation only update to G1 KL data file (Development & Health of my Sons/Daughters).
+
+Contents page updated with explanation of legacy issue regarding error in formatted page numbers
+ 
+- KL data documentation: D1310_KL in R:\Data\documentation\built_pdf\Quest\Child Based
+ 
+
+# 12/07/2023
+
+1. First version release of G1 YPK file (Summer 2022 Questionnaire) 
+ 
+- YPK data filename: YPK_1a in R:\Data\Current\Quest\Child Completed 
+- YPK data documentation: D1493_YPK in R:\Data\documentation\built_pdf\Quest\Child Completed  
+ 
+2. Documentation only update to G1 F07 (Focus at 7 Clinic) – correction of error in documentation text with reference to 
+
+Energy intake derived variables, ff7dd400 to f7dd404.
+
+- Incorrectly stated f7dd408 to f7dd412.
+- F07 data documentation: D2102_F07 in R:\Data\documentation\built_pdf\Clinic\Child
+ 
+3. Variable label correction to YPF8280 in G1 YPF data file (Life at 26).
+
+Incorrectly labelled as j3b instead of j3a, data file and documentation corrected.
+ 
+- YPF data filename: YPF_3b in R:\Data\Current\Quest\Child Completed
+- YPF data documentation: D1430_YPF in R:\Data\documentation\built_pdf\Quest\Child Completed
+ 
+ 
+4. Erroneous variable removed from FOM2 (Focus on Mothers Clinic 2) data file along with documentation update to incorrect text reference for pQCT variables 
+           
+Fm1a011 erroneously included (from FOM1 clinic) in FOM2 data file. Text in documentation incorrectly referred to FOM1 hip dxa data in the pQCT derived variable section. The DV's (fm2pq013a to fm2pq280b) are derived from fm2pq007 to fm2pq012.
+
+- FOM2 data filename: FOM2_5b in R:\Data\Current\Clinic\Adult
+- FOM2 data documentation: D2202_FOM2 in R:\Data\documentation\built_pdf\Clinic\Mother
+
+# 04/04/2023
+
+We are pleased to announce that the following new data is now available on general release:
+ 
+1. Updated derived G1 MRI scan data  
+  
+- MRI _YP data filename: MRI_YP_2b in R:\Data\Current\Other\Longitudinal 
+- MRI _YP data documentation: D2434_MRI_YP in R:\Data\documentation\built_pdf\Other\Longitudinal 
+  
+2. Addition of section H question H1 and derived variables – YPH file (Life@28+) 
+ 
+Mental health treatment derived data: antidepessant/antipsychotic/anxiolytic medications and medication behaviours. 
+ 
+- YPH data filename: YPH_2a in R:\Data\Current\Quest\Child Completed 
+- YPH data documentation: D1491_YPH in R:\Data\documentation\built_pdf\Quest\Child Completed 
+  
+3. First version release of YPJ file (Life@29+) 
+ 
+- YPJ data filename: YPJ_1a in R:\Data\Current\Quest\Child Completed 
+- YPJ data documentation: D1440_YPJ in R:\Data\documentation\built_pdf\Quest\Child Completed  
+  
+4. Removal of mult_mum variables from the following files: V, Y, COVID1-6, SERO, SERO2, FOM2-4. 
+ 
+The mult_mum variable is used to detect those mothers who have had multiple G1 pregnancies. This variable is now located within the mothers cohort profile file (MZ). 
+ 
+
 # 22/08/2022
 
 MRI_YP 
