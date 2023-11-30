@@ -1,6 +1,7 @@
 library(alspac)
 
-#setDataDir("/home/alspac")
+setDataDir("/home/alspac")
+#setDataDir("alspac")
 
 if (!dictionaryGood("current"))
     createDictionary("Current", "current")
@@ -16,7 +17,7 @@ vars$mother <- vars$mother[vars$mother$name != "fm1a011" | grepl("FOM1_", vars$m
 dat <- extractVars(vars$child)
 
 stopifnot(length(unique(dat$alnqlet)) == 15645)
-stopifnot(sum(dat$woc_child_based) == 31)
+stopifnot(sum(dat$woc_child_based) == 32)
 stopifnot(sum(dat$woc_child_completed) == 30)
 stopifnot(all(is.na(dat$f7003a[dat$woc_child_based])))
 stopifnot(all(is.na(dat$ka498[dat$woc_child_based])))
@@ -25,8 +26,8 @@ stopifnot(all(is.na(dat$ccaa991b[dat$woc_child_completed])))
 dat <- extractVars(vars$mother)
 
 stopifnot(length(unique(dat$aln)) == 15236)
-stopifnot(sum(dat$mz005l==2,na.rm=T) == 14833-29)
-stopifnot(sum(dat$woc_mother) == 29)
+stopifnot(sum(dat$mz005l==2,na.rm=T) == 14833-30)
+stopifnot(sum(dat$woc_mother) == 30)
 stopifnot(all(is.na(dat$a901[dat$woc_mother])))
 stopifnot(all(is.na(dat$fm1a011[dat$woc_mother])))
           
@@ -54,12 +55,9 @@ sapply(dat.full[,varnames], function(x) sum(x > 0, na.rm=T))
 
 length(setdiff(dat.full$aln, dat$aln))
 
-dat.full <- extractVars(rbind(do.call(rbind, vars),
-                              findVars("mz001")),
+dat.full <- extractVars(rbind(do.call(rbind, vars)),
                         core_only=F)
 dim(dat.full)
-
-table(dat.full$mz001)
 
 length(setdiff(dat.full$aln, dat$aln))
 
