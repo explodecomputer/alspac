@@ -41,6 +41,7 @@ sudo docker run --rm -e PASSWORD=123qwe -p 8787:8787 \
 Rscript create_dictionary_from_stata.R /home/rstudio/mnt 4
 ```
 
+
 Unmount the R drive
 
 ```
@@ -76,4 +77,27 @@ data/current.rdata
 ## 4. Update Shiny app
 
 See info here https://github.com/explodecomputer/alspac-shiny
+
+
+## Mac
+
+
+or on mac
+
+```
+docker build --platform linux/amd64 -t ralspac:latest .
+```
+
+and run
+
+```
+cd ../
+
+docker run --platform linux/amd64 --rm -e PASSWORD=123qwe -p 8787:8787 \
+-v "$(pwd):/home/rstudio/alspac" \
+-v "/Volumes/ALSPAC-DATA:/home/rstudio/mnt" \
+-w /home/rstudio/alspac/inst \
+--name ralspac ralspac:latest \
+Rscript create_dictionary_from_stata.R /home/rstudio/mnt 1
+```
 
