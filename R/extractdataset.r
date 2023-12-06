@@ -98,10 +98,13 @@ extractDataset <- function(variable_file, cid_file,
         as.character(cid_map$aln))
 
     dat$aln <- cid_map[[cid_column]][idx]
-    colnames(dat)[colnames(dat)=="aln"] <- paste0("cid",b_number)
+    new_column <- paste0("cid",b_number)
+    colnames(dat)[colnames(dat)=="aln"] <- new_column
     
     if ("alnqlet" %in% colnames(dat))
         dat[["alnqlet"]] <- NULL
+
+    dat <- dat[order(dat[[new_column]]),]
 
     message("Saving output to ", output_file, "\n")
     if (output_format=="dta")
