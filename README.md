@@ -44,9 +44,8 @@ Please report issues or suggestions to [Gibran Hemani](mailto:g.hemani@bristol.a
 To install version 0.6.1:
 
 ```r
-install.packages("devtools")
-library(devtools)
-install_github("explodecomputer/alspac")
+install.packages("remotes")
+remotes::install_github("explodecomputer/alspac")
 ```
 
 The `alspac` package can then be loaded as follows:
