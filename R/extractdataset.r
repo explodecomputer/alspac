@@ -97,7 +97,7 @@ extractDataset <- function(variable_file, cid_file,
         as.character(dat$aln),
         as.character(cid_map$aln))
 
-    dat$aln <- cid_map$g[idx]
+    dat$aln <- cid_map[[cid_column]][idx]
     colnames(dat)[colnames(dat)=="aln"] <- paste0("cid",b_number)
     
     if ("alnqlet" %in% colnames(dat))
