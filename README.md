@@ -41,7 +41,7 @@ Please report issues or suggestions to [Gibran Hemani](mailto:g.hemani@bristol.a
 
 ## Installation
 
-To install version 0.6.1:
+To install the latest version:
 
 ```r
 install.packages("remotes")
