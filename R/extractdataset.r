@@ -1,4 +1,4 @@
-#' Extract a dataset for external ALSPAC users
+##' Extract a dataset for external ALSPAC users
 #'
 #' @param variable_file CSV file with column "Name" containing
 #' ALSPAC variable names.
@@ -106,6 +106,13 @@ extractDataset <- function(variable_file, cid_file,
 
     dat <- dat[order(dat[[new_column]]),]
 
+    attributes(dat$cidB0001)$label <- paste0(
+        "Unique pregnancy identifier for ",
+        author,
+        " (", sub("\\.[^.]+$", "", basename(cid_file)), ")")
+    if ("qlet" %in% colnames(dat))
+        attributes(dat$qlet)$label <- "Birth order (within pregnancy)"
+    
     message("Saving output to ", output_file, "\n")
     if (output_format=="dta")
         haven::write_dta(dat, path=output_file)

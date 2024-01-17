@@ -95,16 +95,17 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         mz013=mz.obj.pat,
         mz014=mz.obj.pat,
         mz028b=mz.obj.pat,
-        a006=c(obj="a_[0-9]+[a-z]+"),
-        a525=c(obj="a_[0-9]+[a-z]+"),
-        b032=c(obj="b_[0-9]+[a-z]+"),
-        b650=c(obj="b_[0-9]+[a-z]+"),
-        b663=c(obj="b_[0-9]+[a-z]+"),
-        b665=c(obj="b_[0-9]+[a-z]+"),
-        b667=c(obj="b_[0-9]+[a-z]+"),
-        c645a=c(obj="c_[0-9]+[a-z]+"),
-        c755=c(obj="c_[0-9]+[a-z]+"),
-        c765=c(obj="c_[0-9]+[a-z]+"),
+        ## the following no longer included by default 
+        #a006=c(obj="a_[0-9]+[a-z]+"),
+        #a525=c(obj="a_[0-9]+[a-z]+"),
+        #b032=c(obj="b_[0-9]+[a-z]+"),
+        #b650=c(obj="b_[0-9]+[a-z]+"),
+        #b663=c(obj="b_[0-9]+[a-z]+"),
+        #b665=c(obj="b_[0-9]+[a-z]+"),
+        #b667=c(obj="b_[0-9]+[a-z]+"),
+        #c645a=c(obj="c_[0-9]+[a-z]+"),
+        #c755=c(obj="c_[0-9]+[a-z]+"),
+        #c765=c(obj="c_[0-9]+[a-z]+"),
         bestgest=mz.obj.pat)
 
     mother.filters <- list(
