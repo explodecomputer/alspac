@@ -94,8 +94,8 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=F) {
-    stopifnot(datadir == "Current")
+createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile = "sources.csv") {
+    stopifnot(datadir %in% c("Current","../DataBuddy/DataRequests/Waiting Room"))
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
@@ -122,7 +122,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F) {
     
     ## add data sources information so that withdrawn consent can be 
     ## handled correctly for each variable
-    dictionary <- addSourcesToDictionary(dictionary)
+    dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
     
     if (!is.null(name))
         saveDictionary(name, dictionary)

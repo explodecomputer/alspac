@@ -77,7 +77,7 @@ readExclusions <- function() {
 #' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
-addSourcesToDictionary <- function(dictionary) {
+addSourcesToDictionary <- function(dictionary, sourcesFile = "sources.csv") {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
     paths <- getPaths()
@@ -97,7 +97,7 @@ addSourcesToDictionary <- function(dictionary) {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    sources <- read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
+    sources <- read.csv(system.file("data", sourcesFile, package = "alspac"), stringsAsFactors=F)
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column
