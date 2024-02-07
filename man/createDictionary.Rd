@@ -4,11 +4,16 @@
 \alias{createDictionary}
 \title{Create a dictionary from ALSPAC STATA files}
 \usage{
-createDictionary(datadir = "Current", name = NULL, quick = F)
+createDictionary(
+  datadir = "Current",
+  name = NULL,
+  quick = F,
+  sourcesFile = "sources.csv"
+)
 }
 \arguments{
 \item{datadir}{ALSPAC data subdirectory from which to create the index
-(Default: "Current").  It could be "Current" or "Useful_data".}
+(Default: "Current"). .}
 
 \item{name}{If not \code{NULL}, then the resulting dictionary
 will be saved to a file in the R package for use next time the package

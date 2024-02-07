@@ -18,9 +18,9 @@ It creates a global option called `alspac_data_dir` which is used by the \code{e
 function to locate the alspac data files.
 This function guesses the path to be used as default in setDataDir. The defaults are:
 \itemize{
-\item{Windows: R:/Data/Useful_data/current_R/}
-\item{Mac: /Volumes/data/Useful_data/current_R/}
-\item{Linux: ~/.gvfs/data/Useful_data/current_R/}
+\item{Windows: R:/Data/}
+\item{Mac: /Volumes/data/}
+\item{Linux: ~/.gvfs/data/}
 }
 }
 \examples{

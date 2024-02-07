@@ -24,13 +24,12 @@ if you have a more specific list of withdrawn consent IDs for your specific vari
 not in the core ALSPAC dataset (Default: TRUE).
 This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.}
 
-\item{adult_only}{Apply the 'adult only' core restriction (i.e. 'mz001 == 1') if `adult_only==TRUE`,
-otherwise the child core restriction is applied (i.e. 'in_alsp==1' and 'tripquad==2'). 
-Ignored if `core_only==FALSE`. The default is `FALSE`.}
+\item{adult_only}{No longer supported. Parent-specific restrictions are applied
+automatically when child-based or child-completed variables are not requested.}
 }
 \value{
 A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
-named \code{withdrawn_consent_*} indicate which samples were excluded.
+named \code{woc_*} indicate which samples were excluded.
 }
 \description{
 Take the output from `findVars` as a list of variables to extract from ALSPAC data

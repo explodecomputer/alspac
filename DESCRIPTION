@@ -17,4 +17,4 @@ Depends:
 	parallel
 License: Artistic-2.0
 LazyData: no
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.1
