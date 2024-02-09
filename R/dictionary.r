@@ -116,7 +116,7 @@ updateDictionaries <- function() {
 #' @export
 #' @return Data frame dictionary listing available variables.
 createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile = "sources.csv") {
-  stopifnot(datadir %in% c("Current","../DataBuddy/DataRequests/Waiting Room"))
+  stopifnot(datadir %in% c("Current"))
   
   alspacdir <- options()$alspac_data_dir
   datadir <- file.path(alspacdir, datadir)
