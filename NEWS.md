@@ -1,17 +1,33 @@
+# 05/01/2024
+
+1. G1 (YPL) files (Life@30 Winter 2022 Questionnaire) 
+
+- YPL data filename: YPL_1a in R:\Data\Current\Quest\Child Completed 
+- YPL data documentation: D1498_YPL in R:\Data\documentation\built_pdf\Quest\Child Completed
+
+# 15/12/2023
+
+1. First version release of G0 Mothers (MA) and Partners (FPE) files (Parents Summer 2022 Questionnaire) 
+
+- MA data filename: MA_1a in R:\Data\Current\Quest\Mother
+- MA data documentation: D1194_MA in R:\Data\documentation\built_pdf\Quest\Mother
+- FPE data filename: FPE_1a in R:\Data\Current\Quest\Partner
+- FPE data documentation: D1295_FPE in R:\Data\documentation\built_pdf\Quest\Partner 
+
 # 16/11/2023
 
 1. Updated version release of G0 Mothers (Z) - Parents Questionnaire 2022 
  
-Changes – correction to mult-mum cases included and cohort case selection criteria
+Changes - correction to mult-mum cases included and cohort case selection criteria
  
 - Z data filename: Z_1b in R:\Data\Current\Quest\Mother
 - Z data documentation: D1196_Z.pdf in R:\Data\documentation\built_pdf\Quest\Mother
 
 # 06/09/2023
 
-1. Fathers (FD) files (Parents 2022 Questionnaire) 
+1. G0 Partners (FD) files (Parents 2022 Questionnaire) 
 
-- FD data filename: FD_1a in R:\Data\Current\Quest\Father
+- FD data filename: FD_1a in R:\Data\Current\Quest\Partner
 - FD data documentation: D1297_FD in R:\Data\documentation\built_pdf\Quest\Partner
 
 # 01/09/2023
