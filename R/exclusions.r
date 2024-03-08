@@ -27,7 +27,7 @@ removeExclusions <- function(x, dictionary) {
       "preg_in_core",                 "preg_enrol_status",            "mum_enrol_status",            
       "mum_and_preg_enrolled",        "mz005l",                       "mz005m",                      
       "mz010a",                       "mz013",   "mz014",                       
-      "bestgest",                     "mz028b",  "mum_in_alsp", "mum_in_core"
+      "bestgest",                     "mz028b",  "mum_in_alsp", "mum_in_core",
       colnames(x)[grepl("^in_obj_", colnames(x))]
     )
     
