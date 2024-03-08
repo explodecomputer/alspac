@@ -37,7 +37,7 @@ removeExclusions <- function(x, dictionary) {
       "partner_changed",
       "partner_changed_when",
       "partner_age",
-      "second_partner_age")
+      "second_partner_age",)
       "kz011b",
       "kz021",
       "kz030",
