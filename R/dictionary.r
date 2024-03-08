@@ -1,3 +1,10 @@
+#' Loads dictionaries
+#'
+#' Load dictionaries, required for creating custom dictionary
+#' 
+#'
+#' @export
+#' 
 loadDictionaries <- function() {        
   path <- file.path(system.file(package = "alspac"), "data")
   
@@ -11,6 +18,13 @@ loadDictionaries <- function() {
   combineDictionaries()
 }
 
+#' combineDictionaries
+#'
+#' Combine dictionaries, required for creating custom dictionary
+#' 
+#'
+#' @export
+#' 
 combineDictionaries <- function() {
   both <- NULL
 
@@ -34,6 +48,13 @@ combineDictionaries <- function() {
   }
 }
 
+#' Retrieve Dictionaries
+#'
+#' Retrieve dictionaries, required for creating custom dictionary
+#' 
+#'
+#' @export
+#' 
 retrieveDictionary <- function(name) {
   if (name %in% ls(envir=globals))
     get(name, envir=globals)
@@ -41,6 +62,13 @@ retrieveDictionary <- function(name) {
     stop("dictionary '", name, "' does not exist")
 }
 
+#' Save Dictionaries
+#'
+#' Save dictionaries, required for creating custom dictionary
+#' 
+#'
+#' @export
+#' 
 saveDictionary <- function(name, dictionary) {
   assign(name, dictionary, globals)
   #if (name == "current" || name == "useful")
@@ -115,8 +143,11 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile = "sources.csv") {
+createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
+  if(is.null(sourcesFile))
+    sourcesFile <- system.file("data", "sources.csv", package = "alspac")
+
   
   alspacdir <- options()$alspac_data_dir
   datadir <- file.path(alspacdir, datadir)
@@ -143,7 +174,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile 
   
   ## add data sources information so that withdrawn consent can be 
   ## handled correctly for each variable
-  dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
+  dictionary <- addSourcesToDictionary(dictionary, file.path(alspacdir,sourcesFile))
   
   if (!is.null(name))
     saveDictionary(name, dictionary)

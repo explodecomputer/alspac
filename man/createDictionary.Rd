@@ -8,7 +8,7 @@ createDictionary(
   datadir = "Current",
   name = NULL,
   quick = F,
-  sourcesFile = "sources.csv"
+  sourcesFile = NULL
 )
 }
 \arguments{

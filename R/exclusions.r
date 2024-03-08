@@ -12,14 +12,29 @@
 #' @return The input data frame but with appropriate values set to missing
 #' with additional variables ("woc_*") identifying participants
 #' who have withdrawn consent.
-removeExclusions <- function(x) {
+removeExclusions <- function(x, dictionary) {
     stopifnot("aln" %in% names(x))
 
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
-
-    ## obtain dictionary corresponding the requested dataset
-    dictionary <- retrieveDictionary("current")
+    #Below list from extractvars.R but better off in list 
+    # coreFilters <- function(return list c(x,y,z))
+    # motherFilters <- etc/
+    # childFilters <- etc/ 
+    
+    exceptions <- c(
+      "aln", "qlet", "alnqlet","preg_in_alsp",                
+      "preg_in_core",                 "preg_enrol_status",            "mum_enrol_status",            
+      "mum_and_preg_enrolled",        "mz005l",                       "mz005m",                      
+      "mz010a",                       "mz013",   "mz014",                       
+      "bestgest",                     "mz028b",  "mum_in_alsp", "mum_in_core"
+      colnames(x)[grepl("^in_obj_", colnames(x))]
+    )
+    
+    #check that all variables in x are also in dictionary
+    if (!all(colnames(x) %in% dictionary$name))
+      stop("Dictionary does not include all variables requested.")
+    
     dictionary <- dictionary[match(colnames(x), dictionary$name),]
 
     ## check that exclusions information in the dictionary is up-to-date
@@ -97,7 +112,7 @@ addSourcesToDictionary <- function(dictionary, sourcesFile = "sources.csv") {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    sources <- read.csv(system.file("data", sourcesFile, package = "alspac"), stringsAsFactors=F)
+    sources <- read.csv(sourcesFile, stringsAsFactors=F)
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column

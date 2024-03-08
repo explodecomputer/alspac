@@ -46,20 +46,21 @@
 #' }
 #' 
 extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=F) {
-    dictionaryGood(x)
+  vars <- x  
+  dictionaryGood(vars)
 
     if (adult_only) 
         warning("'adult_only' is no longer supported. Parent-specific restrictions are applied automatically when child-based or child-completed variables are not requested.")
 
-    x <- unique(x)
+    vars <- unique(vars)
     if (core_only) 
-        x <- extractVarsCore(x, spss=spss, haven=haven) 
+        x <- extractVarsCore(vars, spss=spss, haven=haven) 
     else
-        x <- extractVarsFull(x, spss=spss, haven=haven)
+        x <- extractVarsFull(vars, spss=spss, haven=haven)
     
     if(exclude_withdrawn) {
         message("Automatically removing data for individuals who have withdrawn consent.")
-        x <- removeExclusions(x)
+        x <- removeExclusions(x, vars)
     } else {        
         warning("Withdrawn consent individuals have NOT been removed. ",
                 "Re-run with the default option or remove the relevant ",
@@ -314,7 +315,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
         if (any(is_in_obj_column)) {
             for (i in which(is_in_obj_column))
                 x[[i]] <- ifelse(is.na(x[[i]]), 0, 1)
-            colnames(x)[is_in_obj_column] <- sub("_obj", "", colnames(x)[is_in_obj_column])
+  #          colnames(x)[is_in_obj_column] <- sub("_obj", "", colnames(x)[is_in_obj_column])
         }
         
 	names(x)[names(x) == "aln"] <- "alnqlet"
