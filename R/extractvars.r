@@ -60,7 +60,7 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=
     
     if(exclude_withdrawn) {
         message("Automatically removing data for individuals who have withdrawn consent.")
-        x <- removeExclusions(x, vars)
+        x <- removeExclusions(x, dictionary)
     } else {        
         warning("Withdrawn consent individuals have NOT been removed. ",
                 "Re-run with the default option or remove the relevant ",
