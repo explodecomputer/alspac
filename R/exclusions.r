@@ -46,9 +46,8 @@ removeExclusions <- function(x, dictionary) {
       "in_phase2",
       "in_phase3",
       "in_phase4",
-      "tripquad")
-      colnames(x)[grepl("^in_obj_", colnames(x))]
-    )
+      "tripquad",
+      colnames(x)[grepl("^in_obj_", colnames(x))])
     
     #check that all variables in x are also in dictionary
      allowed_names <- c(exceptions, dictionary$name)
