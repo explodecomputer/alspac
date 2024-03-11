@@ -26,7 +26,7 @@ stopifnot(sum(dat$woc_mother) == 32)
 stopifnot(sum(dat$woc_partner) == 5)
 
 ## check that all variable values for WoCs have been removed
-requested.vars <- read.csv(file.path(example_path, "inputs/variables.csv"))
+requested.vars <- utils::read.csv(file.path(example_path, "inputs/variables.csv"))
 requested.vars <- findVars(requested.vars$Name, whole.word=T)
 for (group in c("mother","partner","child_based","child_completed")) {
     for (varname in requested.vars$name[requested.vars[[group]]]) {
@@ -67,7 +67,7 @@ dat.dta <- haven::read_dta(dta.filename)
 
 csv.filename <- sub("sav", "csv", output_filename)
 write.csv(dat, file=csv.filename, row.names=F)
-dat.csv <- read.csv(csv.filename,stringsAsFactors=F)
+dat.csv <- utils::read.csv(csv.filename,stringsAsFactors=F)
 
 similar <- function(x,y) {
     harmonize <- function(x) 

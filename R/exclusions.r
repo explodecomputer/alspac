@@ -97,7 +97,7 @@ addSourcesToDictionary <- function(dictionary) {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    sources <- read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
+    sources <- utils::read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column

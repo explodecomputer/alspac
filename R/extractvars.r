@@ -358,7 +358,7 @@ convertQlet <- function(qlet)
 #' 
 extractWebOutput <- function(filename)
 {
-	input <- read.csv(filename)
+	input <- utils::read.csv(filename)
 	if(names(input)[1] != "Variable")
 	{
 		stop("The first column in ", filename, " should be names 'Variable'. Make sure this file has been exported from the ALSPAC variable lookup webapp.")

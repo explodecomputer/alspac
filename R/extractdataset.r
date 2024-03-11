@@ -47,7 +47,7 @@ extractDataset <- function(variable_file, cid_file,
     if (file.exists(output_file))
         stop("Output file already exists: ", output_file)
         
-    cid_map <- read.csv(cid_file,stringsAsFactors=F)
+    cid_map <- utils::read.csv(cid_file,stringsAsFactors=F)
     cid_column <- tolower(sub(".*(.{1})\\.[^.]*","\\1",cid_file))
     colnames(cid_map) <- tolower(colnames(cid_map))
     if (!"aln" %in% colnames(cid_map))
@@ -55,7 +55,7 @@ extractDataset <- function(variable_file, cid_file,
     if (!cid_column %in% colnames(cid_map))
         stop("CID column ", cid_column, " is missing from ", cid_file)
 
-    variables <- read.csv(variable_file,stringsAsFactors=F)
+    variables <- utils::read.csv(variable_file,stringsAsFactors=F)
     colnames(variables) <- tolower(colnames(variables))
     if (!"name" %in% colnames(variables))
         stop("Variable name column 'name' is missing from ", variables_file)
