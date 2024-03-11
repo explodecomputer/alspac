@@ -147,7 +147,7 @@ generateSourcesSpreadsheet <- function() {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
                     
-    dictionary <- alspac:::retrieveDictionary("current")
+    dictionary <- retrieveDictionary("current")
     
     ## list variable paths relevant to sources of ALSPAC data
     paths <- getPaths()

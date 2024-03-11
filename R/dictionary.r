@@ -109,8 +109,8 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F) {
         cat(date(), "loading", file, "\n")
         tryCatch({
             merge(
-                alspac:::processDTA(file, quick),
-                alspac:::createFileTable(file, alspacdir), by = "obj")
+                processDTA(file, quick),
+                createFileTable(file, alspacdir), by = "obj")
         }, error=function(e) {
             warning("Error loading", file, "\n")
             print(e)

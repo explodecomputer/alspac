@@ -60,7 +60,7 @@ extractDataset <- function(variable_file, cid_file,
     if (!"name" %in% colnames(variables))
         stop("Variable name column 'name' is missing from ", variables_file)
     
-    dictionary <- alspac:::retrieveDictionary(dictionary)
+    dictionary <- retrieveDictionary(dictionary)
 
     idx <- which(tolower(dictionary$name) %in% tolower(variables$name))
     freq <- table(dictionary$name[idx])

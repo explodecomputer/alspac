@@ -258,7 +258,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
 		obj$aln2 <- obj$aln
 		if("qlet" %in% vars)
 		{
-			obj$qlet <- alspac:::convertQlet(obj$qlet)
+			obj$qlet <- convertQlet(obj$qlet)
 			obj$aln <- paste(obj$aln, obj$qlet, sep="")
 		}
 		return(obj)
