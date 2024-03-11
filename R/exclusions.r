@@ -142,7 +142,7 @@ addSourcesToDictionary <- function(dictionary) {
 #' information provided for each variable in the dictionary.
 #'
 #' sources <- generateSourcesSpreadsheet()
-#' write.csv(sources, file="data/sources.csv", row.names=F)
+#' utils::write.csv(sources, file="data/sources.csv", row.names=F)
 generateSourcesSpreadsheet <- function() {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()

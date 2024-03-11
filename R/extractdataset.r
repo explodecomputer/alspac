@@ -117,7 +117,7 @@ extractDataset <- function(variable_file, cid_file,
     if (output_format=="dta")
         haven::write_dta(dat, path=output_file)
     else if (output_format=="csv")
-        write.csv(dat, file=output_file, row.names=F)
+        utils::write.csv(dat, file=output_file, row.names=F)
     else if (output_format=="sav")
         haven::write_sav(dat, path=output_file, compress=T)
     
