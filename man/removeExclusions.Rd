@@ -11,7 +11,7 @@ removeExclusions(x)
 }
 \value{
 The input data frame but with appropriate values set to missing
-with additional variables ("withdrawn_consent_*") identifying participants
+with additional variables ("woc_*") identifying participants
 who have withdrawn consent.
 }
 \description{
@@ -19,5 +19,5 @@ The exclusion lists for mothers and children are stored in .do
 files in the R: drive. This function obtains ALNs to exclude
 from these files and then sets the variable
 values to missing for the appropriate participants
-and adds indicator variables for these participants ("withdrawn_consent_*").
+and adds indicator variables for these participants ("woc_*").
 }

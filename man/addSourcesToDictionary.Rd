@@ -4,7 +4,7 @@
 \alias{addSourcesToDictionary}
 \title{Add data sources information to the dictionary
 from the data/sources.csv file.
-See generateVariableSources() for details about creating this file. 
+See generateSourcesSpreadsheet() for details about creating this file. 
 This information is used when decide which data values
 to remove for participants who have withdrawn consent.}
 \usage{
@@ -13,7 +13,7 @@ addSourcesToDictionary(dictionary)
 \description{
 Add data sources information to the dictionary
 from the data/sources.csv file.
-See generateVariableSources() for details about creating this file. 
+See generateSourcesSpreadsheet() for details about creating this file. 
 This information is used when decide which data values
 to remove for participants who have withdrawn consent.
 }
