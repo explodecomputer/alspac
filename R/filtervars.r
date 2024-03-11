@@ -17,7 +17,9 @@
 #' varnames <- c("kz021","kz011b","ype9670", "c645a")
 #' vars <- findVars(varnames)
 #' vars <- subset(vars, subset=tolower(name) %in% varnames)
-#' vars <- filterVars(vars, kz021=c(obj="^kz"), kz011b=c(obj="^cp", lab="Participant"), c645a=c(cat2="Quest")) 
+#' vars <- filterVars(vars, kz021=c(obj="^kz"), 
+#'                    kz011b=c(obj="^cp", lab="Participant"), 
+#'                    c645a=c(cat2="Quest"))
 #' }
 filterVars <- function(x, ...) {
     filter.list <- list(...)
