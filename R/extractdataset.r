@@ -87,7 +87,7 @@ extractDataset <- function(variable_file, cid_file,
                 paste(variables$name[is.na(idx)],collapse=", "))
             warning(msg)
         }
-        idx <- na.omit(idx)
+        idx <- stats::na.omit(idx)
     }
     dictionary <- dictionary[idx,]
     
