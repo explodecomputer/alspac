@@ -7,9 +7,6 @@
 #' 
 #' @export
 #' @return NULL
-#' @examples \dontrun{
-#'
-#'}
 getDefaultDataDir <- function()
 {
 
