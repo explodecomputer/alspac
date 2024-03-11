@@ -80,7 +80,7 @@ updateDictionaries <- function() {
 }
 
 
-#' Create a dictionary from ALSPAC STATA files
+#' Create a dictionary from ALSPAC Stata files
 #'
 #' @param datadir ALSPAC data subdirectory from which to create the index
 #' (Default: "Current"). .

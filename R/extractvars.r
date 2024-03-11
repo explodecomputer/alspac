@@ -29,7 +29,7 @@
 #' if you have a more specific list of withdrawn consent IDs for your specific variables.
 #' @param core_only Whether to automatically exclude data from participants
 #' not in the core ALSPAC dataset (Default: TRUE).
-#' This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.
+#' This should give the same samples as the Stata/SPSS scripts in the R:/Data/Syntax folder.
 #' @param adult_only No longer supported. Parent-specific restrictions are applied
 #' automatically when child-based or child-completed variables are not requested.
 #' 
@@ -68,7 +68,7 @@ extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=
     x
 }
 
-## restrict data extracted as in the SPSS/STATA
+## restrict data extracted as in the SPSS/Stata
 ## scripts in R:\Data\Syntax\
 extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     dat <- extractVarsFull(x,spss=spss, haven=haven)
