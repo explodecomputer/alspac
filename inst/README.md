@@ -1,6 +1,6 @@
 # Update ALSPAC dictionary
 
-Each time the R drive files are update, we need to collate all the meta data from each of the stata files. The `create_dictionary_from_stata.R` automates this process. But the script needs access to the R drive, and ideally runs in parallel and not through the VPN (which is very slow).
+Each time the R drive files are update, we need to collate all the meta data from each of the Stata files. The `create_dictionary_from_stata.R` automates this process. But the script needs access to the R drive, and ideally runs in parallel and not through the VPN (which is very slow).
 
 Solution is to run the script on the `crashdown.epi.bris.ac.uk` docker cluster. Steps are:
 
