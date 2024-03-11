@@ -8,7 +8,7 @@ Authors@R: c(person("Gibran", "Hemani", email = "g.hemani@bristol.ac.uk",
                   role = c("aut"))
             )
 Depends:
-	R (>= 3.0.0)
+	R (>= 3.5.0)
 Imports:
 	readstata13,
 	haven,
