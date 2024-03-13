@@ -17,7 +17,8 @@ Imports:
     parallel,
     plyr,
     readstata13,
-    stringr
+    stringr,
+    tibble
 Encoding: UTF-8
 LazyData: no
 RoxygenNote: 7.3.1

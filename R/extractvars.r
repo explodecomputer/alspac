@@ -294,7 +294,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
                                         stringsAsFactors=F))
         }
         if (spss)
-            ids <- as_tibble(ids)
+            ids <- tibble::as_tibble(ids)
         
         ## merge ids and dat into a single data frame
         dat <- lapply(dat, function(dat) {
