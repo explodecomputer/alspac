@@ -86,7 +86,7 @@ updateDictionaries <- function() {
 #' (Default: "Current"). .
 #' @param name If not \code{NULL}, then the resulting dictionary
 #' will be saved to a file in the R package for use next time the package
-#' is loaded. The dictionary will be available with the given name (Default: NULL).
+#' is loaded. The dictionary will be available with the given name (Default: \code{NULL}).
 #'
 #' The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 #' Use multiple processors by setting \code{mc.cores} option using
