@@ -32,7 +32,8 @@
 #' This should give the same samples as the Stata/SPSS scripts in the R:/Data/Syntax folder.
 #' @param adult_only No longer supported. Parent-specific restrictions are applied
 #' automatically when child-based or child-completed variables are not requested.
-#' 
+#' @param spss Logical. Default \code{FALSE}.
+#' @param haven Logical. Default \code{FALSE}.
 #' @export
 #' @return A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
 #' named \code{woc_*} indicate which samples were excluded.
