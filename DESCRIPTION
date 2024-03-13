@@ -16,5 +16,6 @@ Imports:
 	plyr,
 	dplyr
 License: Artistic-2.0
+Encoding: UTF-8
 LazyData: no
 RoxygenNote: 7.3.1
