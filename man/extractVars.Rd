@@ -26,6 +26,10 @@ This should give the same samples as the Stata/SPSS scripts in the R:/Data/Synta
 
 \item{adult_only}{No longer supported. Parent-specific restrictions are applied
 automatically when child-based or child-completed variables are not requested.}
+
+\item{spss}{Logical. Default \code{FALSE}.}
+
+\item{haven}{Logical. Default \code{FALSE}.}
 }
 \value{
 A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns
