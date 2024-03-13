@@ -12,7 +12,9 @@ createDictionary(datadir = "Current", name = NULL, quick = F)
 
 \item{name}{If not \code{NULL}, then the resulting dictionary
 will be saved to a file in the R package for use next time the package
-is loaded. The dictionary will be available with the given name (Default: \code{NULL}).
+is loaded. The dictionary will be available with the given name (Default: \code{NULL}).}
+
+\item{quick}{Logical. Default \code{FALSE}.
 
 The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 Use multiple processors by setting \code{mc.cores} option using
