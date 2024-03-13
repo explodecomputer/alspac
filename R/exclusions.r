@@ -77,6 +77,7 @@ readExclusions <- function() {
 #' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
+#' @param dictionary The name of an existing dictionary or the dictionary itself.
 addSourcesToDictionary <- function(dictionary) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
