@@ -182,7 +182,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     data.vars <- setdiff(colnames(dat),c(colnames(core.dat),remove.vars))
     admin.vars <- setdiff(colnames(core.dat),c(id.vars, remove.vars))
 
-    bind_cols(
+    dplyr::bind_cols(
         core.dat[,id.vars],
         dat[,data.vars],
         core.dat[,admin.vars])
@@ -307,7 +307,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
         })
         dat <- c(list(ids), dat)
         names(dat) <- NULL
-        x <- do.call(bind_cols, dat)
+        x <- do.call(dplyr::bind_cols, dat)
 
         ## convert 1/NA to 1/0 for all "in_obj_XX" columns and rename them "in_XX"
         is_in_obj_column <- grepl("^in_obj_", colnames(x))
