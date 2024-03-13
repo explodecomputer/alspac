@@ -58,7 +58,7 @@ extractDataset <- function(variable_file, cid_file,
     variables <- utils::read.csv(variable_file,stringsAsFactors=F)
     colnames(variables) <- tolower(colnames(variables))
     if (!"name" %in% colnames(variables))
-        stop("Variable name column 'name' is missing from ", variables_file)
+        stop("Variable name column 'name' is missing from ", variable_file)
     
     dictionary <- retrieveDictionary(dictionary)
 
