@@ -88,7 +88,7 @@ updateDictionaries <- function() {
 #' will be saved to a file in the R package for use next time the package
 #' is loaded. The dictionary will be available with the given name (Default: NULL).
 #'
-#' The function uses multiple processors using \code{\link{mclapply}()}.
+#' The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 #' Use multiple processors by setting \code{mc.cores} option using
 #' \code{options()}.
 #' 
@@ -105,7 +105,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F) {
                         recursive=T,
                         ignore.case=T)
 
-    dictionary <- mclapply(files, function(file) {
+    dictionary <- parallel::mclapply(files, function(file) {
         cat(date(), "loading", file, "\n")
         tryCatch({
             merge(
