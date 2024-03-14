@@ -10,7 +10,7 @@ extractVars(
   core_only = TRUE,
   adult_only = FALSE,
   spss = FALSE,
-  haven = F
+  haven = FALSE
 )
 }
 \arguments{
