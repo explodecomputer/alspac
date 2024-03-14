@@ -48,7 +48,7 @@ sapply(dat[,varnames], function(x) sum(x > 0, na.rm=T))
 
 sapply(dat[,grep("^woc_", colnames(dat))], sum)
 
-dat.full <- extractVars(do.call(rbind, vars), core_only=F)
+dat.full <- extractVars(do.call(rbind, vars), core_only=FALSE)
 dim(dat.full)
 
 sapply(dat.full[,varnames], function(x) sum(x > 0, na.rm=T))
@@ -56,7 +56,7 @@ sapply(dat.full[,varnames], function(x) sum(x > 0, na.rm=T))
 length(setdiff(dat.full$aln, dat$aln))
 
 dat.full <- extractVars(rbind(do.call(rbind, vars)),
-                        core_only=F)
+                        core_only=FALSE)
 dim(dat.full)
 
 length(setdiff(dat.full$aln, dat$aln))

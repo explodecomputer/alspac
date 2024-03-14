@@ -46,7 +46,7 @@
 #' bmi <- extractVars(subset(bmi_variables, cat3 %in% c("Mother", "Adult")))
 #' }
 #' 
-extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=F) {
+extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=FALSE) {
     dictionaryGood(x)
 
     if (adult_only) 
@@ -192,7 +192,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
 
 
 
-extractVarsFull <- function(x, spss=F, haven=F)
+extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 {
 	# require(plyr)
 	# require(readstata13)
@@ -277,14 +277,14 @@ extractVarsFull <- function(x, spss=F, haven=F)
         aln <- unique(unlist(lapply(dat, function(dat) dat$aln)))
         if (all(aln %in% aln2))
             ## includes only mothers and/or partners
-            ids <- data.frame(aln2=aln2, aln=aln2, stringsAsFactors=F)
+            ids <- data.frame(aln2=aln2, aln=aln2, stringsAsFactors=FALSE)
         else {
             ## includes young people
             aln <- setdiff(aln, aln2)
             ids <- data.frame(aln2=as.integer(sub("[A-Z]+","",aln)),
                               aln=as.character(aln),
                               qlet=sub("[0-9]+","",aln),
-                              stringsAsFactors=F)
+                              stringsAsFactors=FALSE)
             aln2 <- setdiff(aln2,ids$aln2)
             if (length(aln2) > 0)
                 ## includes some mothers with no young people
@@ -292,7 +292,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
                              data.frame(aln2=aln2,
                                         aln=aln2,
                                         qlet=NA,
-                                        stringsAsFactors=F))
+                                        stringsAsFactors=FALSE))
         }
         if (spss)
             ids <- tibble::as_tibble(ids)
@@ -304,7 +304,7 @@ extractVarsFull <- function(x, spss=F, haven=F)
             else
                 row.idx <- match(ids$aln2, dat$aln2)
             col.idx <- which(!(colnames(dat) %in% c("aln","qlet","aln2")))
-            dat[row.idx,col.idx,drop=F]
+            dat[row.idx,col.idx,drop=FALSE]
         })
         dat <- c(list(ids), dat)
         names(dat) <- NULL

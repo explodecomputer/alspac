@@ -74,8 +74,8 @@ dictionaryGood <- function(dictionary, max.print=10) {
 #' 
 #' @export
 updateDictionaries <- function() {
-    createDictionary("Current", name="current", quick=F)
-    #createDictionary("Useful_data", name="useful", quick=F)
+    createDictionary("Current", name="current", quick=FALSE)
+    #createDictionary("Useful_data", name="useful", quick=FALSE)
     return(T)
 }
 
@@ -95,7 +95,7 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=F) {
+createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
     stopifnot(datadir == "Current")
     
     alspacdir <- options()$alspac_data_dir
@@ -179,7 +179,7 @@ createFileTable <- function(fls, alspacdir)
 	return(dat)
 }
 
-processDTA <- function(fn, quick=F)
+processDTA <- function(fn, quick=FALSE)
 {
 	if (quick)
 		temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))

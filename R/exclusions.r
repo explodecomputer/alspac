@@ -98,7 +98,7 @@ addSourcesToDictionary <- function(dictionary) {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    sources <- utils::read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
+    sources <- utils::read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=FALSE)
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column
@@ -143,7 +143,7 @@ addSourcesToDictionary <- function(dictionary) {
 #' information provided for each variable in the dictionary.
 #'
 #' sources <- generateSourcesSpreadsheet()
-#' utils::write.csv(sources, file="data/sources.csv", row.names=F)
+#' utils::write.csv(sources, file="data/sources.csv", row.names=FALSE)
 generateSourcesSpreadsheet <- function() {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
@@ -159,7 +159,7 @@ generateSourcesSpreadsheet <- function() {
     }
 
     for (src in names(paths)) {
-        dictionary[[src]] <- F
+        dictionary[[src]] <- FALSE
         for (path in paths[[src]])
             dictionary[[src]] <- dictionary[[src]] | grepl(path, paste0(dictionary$path,dictionary$obj))
     }

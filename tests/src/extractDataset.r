@@ -66,8 +66,8 @@ haven::write_dta(dat, path=dta.filename)
 dat.dta <- haven::read_dta(dta.filename)
 
 csv.filename <- sub("sav", "csv", output_filename)
-utils::write.csv(dat, file=csv.filename, row.names=F)
-dat.csv <- utils::read.csv(csv.filename,stringsAsFactors=F)
+utils::write.csv(dat, file=csv.filename, row.names=FALSE)
+dat.csv <- utils::read.csv(csv.filename,stringsAsFactors=FALSE)
 
 similar <- function(x,y) {
     harmonize <- function(x) 
