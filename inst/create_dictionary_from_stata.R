@@ -1,4 +1,4 @@
-args <- commandArgs(T)
+args <- commandArgs(TRUE)
 
 alspac.dir <- args[1]
 

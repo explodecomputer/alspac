@@ -76,7 +76,7 @@ extractDataset <- function(variable_file, cid_file,
         warning(msg)
     }
 
-    dictionary <- dictionary[order(dictionary$counts,decreasing=T),]
+    dictionary <- dictionary[order(dictionary$counts,decreasing=TRUE),]
     idx <- match(tolower(variables$name), tolower(dictionary$name))    
     if (any(is.na(idx))) {
         if (all(is.na(idx)))
@@ -119,7 +119,7 @@ extractDataset <- function(variable_file, cid_file,
     else if (output_format=="csv")
         utils::write.csv(dat, file=output_file, row.names=FALSE)
     else if (output_format=="sav")
-        haven::write_sav(dat, path=output_file, compress=T)
+        haven::write_sav(dat, path=output_file, compress=TRUE)
     
     invisible(dat)
 }

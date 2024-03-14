@@ -27,7 +27,7 @@ stopifnot(sum(dat$woc_partner) == 5)
 
 ## check that all variable values for WoCs have been removed
 requested.vars <- utils::read.csv(file.path(example_path, "inputs/variables.csv"))
-requested.vars <- findVars(requested.vars$Name, whole.word=T)
+requested.vars <- findVars(requested.vars$Name, whole.word=TRUE)
 for (group in c("mother","partner","child_based","child_completed")) {
     for (varname in requested.vars$name[requested.vars[[group]]]) {
         cat(group, varname,"\n")
@@ -50,7 +50,7 @@ for (var in vars) {
     labels <- paste(paste(names(labels), labels, sep="="), collapse="  ")
     freq <- table(dat[[var]])
     if (length(freq) > 20)
-        freq <- quantile(dat[[var]], na.rm=T)
+        freq <- quantile(dat[[var]], na.rm=TRUE)
     freq <- paste(paste(names(freq), freq, sep="="), collapse="  ")
     cat("-----------------------------------\n",
         var, label, "\n",
@@ -60,7 +60,7 @@ for (var in vars) {
         " ", freq, "\n")
 }
 
-output_filename <- list.files(output_path, "Smith_B0001", full.names=T)[1]
+output_filename <- list.files(output_path, "Smith_B0001", full.names=TRUE)[1]
 dta.filename <- sub("sav", "dta", output_filename)
 haven::write_dta(dat, path=dta.filename)
 dat.dta <- haven::read_dta(dta.filename)

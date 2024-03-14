@@ -55,7 +55,7 @@ removeExclusions <- function(x) {
 readExclusions <- function() {
     do.files <- list.files(file.path(options()$alspac_data_dir, "Syntax/Withdrawal of consent"),
                            pattern=".do$",
-                           full.names=T)
+                           full.names=TRUE)
     if (length(do.files) == 0)
         stop("do files in Syntax/Withdrawal of consent/ appear to be missing")
     
@@ -167,18 +167,18 @@ generateSourcesSpreadsheet <- function() {
     ## more complicated cases below
     ## 1. Longitudinal data
     is.longitudinal <- grepl("Other/Longitudinal", dictionary$path)
-    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=T)
-    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
-    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=T) | grepl("_yp_", dictionary$obj, ignore.case=T))
-    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- TRUE
+    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=TRUE) | grepl("_yp_", dictionary$obj, ignore.case=TRUE))
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- TRUE
     ## 2. Covid data    
     is.covid <- grepl("Current/Quest/COVID", dictionary$path) 
-    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=T)
-    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- T
-    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=T)
-    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
-    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
-    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- TRUE
+    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- TRUE
+    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- TRUE
     ## 3. Useful data
     #is.useful <- grepl("Useful_data", dictionary$path)
     #dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])

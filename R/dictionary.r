@@ -1,7 +1,7 @@
 loadDictionaries <- function() {        
     path <- file.path(system.file(package = "alspac"), "data")
     assign("globals", new.env(), envir=parent.env(environment()))
-    for (file in list.files(path, "rdata$", full.names=T))
+    for (file in list.files(path, "rdata$", full.names=TRUE))
         load(file, globals)
     #combineDictionaries()
 }
@@ -76,7 +76,7 @@ dictionaryGood <- function(dictionary, max.print=10) {
 updateDictionaries <- function() {
     createDictionary("Current", name="current", quick=FALSE)
     #createDictionary("Useful_data", name="useful", quick=FALSE)
-    return(T)
+    return(TRUE)
 }
 
 
@@ -102,9 +102,9 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
     datadir <- file.path(alspacdir, datadir)
     files <- list.files(datadir,  
                         pattern="dta$",
-                        full.names=T,
-                        recursive=T,
-                        ignore.case=T)
+                        full.names=TRUE,
+                        recursive=TRUE,
+                        ignore.case=TRUE)
 
     dictionary <- parallel::mclapply(files, function(file) {
         cat(date(), "loading", file, "\n")
@@ -160,7 +160,7 @@ createFileTable <- function(fls, alspacdir)
 	#fls_dn <- dirname(fls) ## does some weird things with windows network paths
 	fls_bn <- basename(fls)
     fls_dn <- sub(fls_bn, "", fls)
-	fls_n <- gsub(".dta", "", fls_bn, ignore.case=T)
+	fls_n <- gsub(".dta", "", fls_bn, ignore.case=TRUE)
 	fls_d <- gsub(alspacdir, "", fls_dn)
 	fls_d <- gsub("^/", "", fls_d)
 	nfield <- max(countCharOccurrences("/", fls_d)) + 1

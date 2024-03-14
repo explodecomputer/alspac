@@ -76,7 +76,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
 
     ## return TRUE for each row in x iff that row contains at least one TRUE
     any.row <- function(x) {
-        rowSums(as.matrix(x),na.rm=T) > 0
+        rowSums(as.matrix(x),na.rm=TRUE) > 0
     }    
     var.has.mother.data <- any.row(x[,grepl("^mother",colnames(x))])
     var.has.partner.data <- any.row(x[,grepl("^partner",colnames(x))])
@@ -214,7 +214,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 		}
                 if (spss) {
                     fn.sav <- sub("dta$", "sav", fn)
-                    obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=T))
+                    obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=TRUE))
                 }
                 else {
                     if (haven)
@@ -239,7 +239,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 			names(obj)[qletc] <- "qlet"
 		}
 		# Get aln, mult and qlet variables
-		ivars <- grep("^(aln|mult|qlet)$", names(obj), ignore.case=FALSE, value=T)
+		ivars <- grep("^(aln|mult|qlet)$", names(obj), ignore.case=FALSE, value=TRUE)
 		index <- x$name %in% names(obj)
 		if(!all(index == TRUE))
 		{
