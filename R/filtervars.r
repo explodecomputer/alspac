@@ -1,4 +1,3 @@
-
 #' Filter duplicate variables from findVars
 #'
 #' @details \code{\link{findVars}()} may identify multiple
