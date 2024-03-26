@@ -12,37 +12,86 @@
 #' @return The input data frame but with appropriate values set to missing
 #' with additional variables ("woc_*") identifying participants
 #' who have withdrawn consent.
-removeExclusions <- function(x) {
-  stopifnot("aln" %in% names(x))
-  
+removeExclusions <- function(x, dictionary) {
+    stopifnot("aln" %in% names(x))
+ 
   ## obtain alns for individuals that have withdrawn consent
   withdrawals <- readExclusions()
   
-  ## obtain dictionary corresponding the requested dataset
-  dictionary <- retrieveDictionary("current")
-  dictionary <- dictionary[match(colnames(x), dictionary$name),]
-  
-  ## check that exclusions information in the dictionary is up-to-date
-  if(!all(names(withdrawals) %in% colnames(dictionary))) {
-    stop(
-      "New exclusion file(s) have been created but are not being handled here: ",
-      paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
-  }
-  
-  for (group in names(withdrawals)) {
-    sample.idx <- which(x$aln %in% withdrawals[[group]])
-    if (length(sample.idx) == 0) next
+    #Below list from extractvars.R but better off in list 
+    # coreFilters <- function(return list c(x,y,z))
+    # motherFilters <- etc/
+    # childFilters <- etc/   
+     exceptions <- c(
+      "aln", 
+      "qlet", 
+      "alnqlet",
+      "preg_in_alsp",                
+      "preg_in_core",
+      "preg_enrol_status",
+      "mum_enrol_status",
+      "mum_and_preg_enrolled",
+      "mz005l",             
+      "mz005m",                      
+      "mz010a",   
+      "mz013", 
+      "mz014",                       
+      "bestgest",                 
+      "mz028b",
+      "mum_in_alsp",
+      "mum_in_core",
+      "partner_in_alspac",
+      "partner_data",
+      "partner_enrolled",
+      "partner_in_core",
+      "pz_mult",
+      "pz_multid",
+      "partner_changed",
+      "partner_changed_when",
+      "partner_age",
+      "second_partner_age",
+      "kz011b",
+      "kz021",
+      "kz030",
+      "in_core",
+      "in_alsp",
+      "in_phase2",
+      "in_phase3",
+      "in_phase4",
+      "tripquad",
+      colnames(x)[grepl("^in_obj_", colnames(x))])
     
-    var.idx <- which(dictionary[[group]])
-    if (length(var.idx) == 0) next
-    
-    x[sample.idx,var.idx] <- NA
-    withdrawal.name <- paste("woc",group,sep="_")
-    x[[withdrawal.name]] <- 1:nrow(x) %in% sample.idx
-  } 
-  
-  x
+    #check that all variables in x are also in dictionary
+     allowed_names <- c(exceptions, dictionary$name)
+     if (!all(colnames(x) %in% allowed_names))
+       stop("Column names do not match the allowed names in the dictionary or exceptions.")
+
+    # Filter dictionary to only include allowed names
+     dictionary <- dictionary[match(allowed_names, dictionary$name),]
+
+
+    ## check that exclusions information in the dictionary is up-to-date
+    if(!all(names(withdrawals) %in% colnames(dictionary))) {
+        stop(
+            "New exclusion file(s) have been created but are not being handled here: ",
+            paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
+    }
+
+    for (group in names(withdrawals)) {
+        sample.idx <- which(x$aln %in% withdrawals[[group]])
+        if (length(sample.idx) == 0) next
+
+        var.idx <- which(dictionary[[group]])
+        if (length(var.idx) == 0) next
+
+        x[sample.idx,var.idx] <- NA
+        withdrawal.name <- paste("woc",group,sep="_")
+        x[[withdrawal.name]] <- 1:nrow(x) %in% sample.idx
+    } 
+
+    x
 }
+
 #' Get list of ALNs to exclude
 #'
 #' The exclusion lists for mothers and children are stored in .do
