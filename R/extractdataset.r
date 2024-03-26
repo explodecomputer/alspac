@@ -39,7 +39,7 @@ extractDataset <- function(variable_file, cid_file,
                                    b_number, "_",
                                    format(Sys.time(), "%d%b%y"),
                                    ".", output_format)),
-                           dictionary) {
+                           dictionary = "current") {
   
   
   

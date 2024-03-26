@@ -12,7 +12,7 @@
 #' @return The input data frame but with appropriate values set to missing
 #' with additional variables ("woc_*") identifying participants
 #' who have withdrawn consent.
-removeExclusions <- function(x, dictionary = "both") {
+removeExclusions <- function(x, dictionary) {
     stopifnot("aln" %in% names(x))
  
   ## obtain alns for individuals that have withdrawn consent
