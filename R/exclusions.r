@@ -17,58 +17,20 @@ removeExclusions <- function(x, dictionary) {
   
   ## obtain alns for individuals that have withdrawn consent
   withdrawals <- readExclusions()
-  
-  #Below list from extractvars.R but better off in list 
-  # coreFilters <- function(return list c(x,y,z))
-  # motherFilters <- etc/
-  # childFilters <- etc/   
-  exceptions <- c(
-    "aln", 
-    "qlet", 
-    "alnqlet",
-    "preg_in_alsp",                
-    "preg_in_core",
-    "preg_enrol_status",
-    "mum_enrol_status",
-    "mum_and_preg_enrolled",
-    "mz005l",             
-    "mz005m",                      
-    "mz010a",   
-    "mz013", 
-    "mz014",                       
-    "bestgest",                 
-    "mz028b",
-    "mum_in_alsp",
-    "mum_in_core",
-    "partner_in_alspac",
-    "partner_data",
-    "partner_enrolled",
-    "partner_in_core",
-    "pz_mult",
-    "pz_multid",
-    "partner_changed",
-    "partner_changed_when",
-    "partner_age",
-    "second_partner_age",
-    "kz011b",
-    "kz021",
-    "kz030",
-    "in_core",
-    "in_alsp",
-    "in_phase2",
-    "in_phase3",
-    "in_phase4",
-    "tripquad",
-    colnames(x)[grepl("^in_obj_", colnames(x))])
-  
-  #check that all variables in x are also in dictionary
-  allowed_names <- c(exceptions, dictionary$name)
-  if (!all(colnames(x) %in% allowed_names))
-    stop("Column names do not match the allowed names in the dictionary or exceptions.")
-  
-  # Filter dictionary to only include allowed names
-  dictionary <- dictionary[match(allowed_names, dictionary$name),]
-  
+
+  ## add variables for identifying core ALSPAC participants
+  current <- retrieveDictionary("current")
+  current <- current[which(!current$name %in% dictionary$name),]
+  for (col in setdiff(colnames(dictionary),colnames(current)))
+      current[[col]] <- NA
+  dictionary <- rbind(dictionary,current)
+
+  ## these variables are computed, ignore them
+  exceptions <- c("alnqlet",colnames(x)[grep("^in_obj_", colnames(x))])
+
+  ## check all variables are in the dictionary or are computed variables
+  if (!all(colnames(x) %in% c(dictionary$name,exceptions)))
+    stop("Column names do not match the allowed names in the dictionary.")
   
   ## check that exclusions information in the dictionary is up-to-date
   if(!all(names(withdrawals) %in% colnames(dictionary))) {
@@ -76,6 +38,10 @@ removeExclusions <- function(x, dictionary) {
       "New exclusion file(s) have been created but are not being handled here: ",
       paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
   }
+
+  ## make sure that the rows of the dictionary match
+  ##the columns of x (needed below to know which variable values to exclude)
+  dictionary <- dictionary[match(colnames(x),dictionary$name),]
   
   for (group in names(withdrawals)) {
     sample.idx <- which(x$aln %in% withdrawals[[group]])

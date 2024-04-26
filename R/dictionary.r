@@ -174,7 +174,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile 
   
   ## add data sources information so that withdrawn consent can be 
   ## handled correctly for each variable
-  dictionary <- addSourcesToDictionary(dictionary, file.path(alspacdir,sourcesFile))
+  dictionary <- addSourcesToDictionary(dictionary,sourcesFile)
   
   if (!is.null(name))
     saveDictionary(name, dictionary)
