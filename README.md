@@ -16,7 +16,7 @@
 To obtain ALSPAC variables, the general procedure is:
 
 1. search through PDFs to find the variable(s)
-2. search through STATA files to extract
+2. search through Stata files to extract
 3. load into R files to use
 
 This package combines the search and extraction procedure into two functions, this makes the work a bit more reproducible. It works for the curated data in the `R:/Current/` directory.
@@ -28,7 +28,7 @@ You can browse the variables here: [http://variables.alspac.bris.ac.uk/](http://
 
 ## Limitations
 
-- The data is not curated further than what is present already in the STATA `.dta` files
+- The data is not curated further than what is present already in the Stata `.dta` files
 - This is a beta version of the package, please report errors or suggestions to [g.hemani@bristol.ac.uk](mailto:g.hemani@bristol.ac.uk)
 - Variable look-ups can be performed off-line and without any restrictions, but variable extraction requires access to the R drive where the data is residing.
 - ALN IDs refer to pregnancies. The same ALN is shared between mothers, their children, partners and fathers. Children can be distinguished from the others by virtue of having a QLET code. But distinguishing between mothers, fathers and partners is not straightforward. See note below on how data that includes different individuals with the same ALN is presented.
@@ -143,7 +143,7 @@ vars <- vars[vars$name=="kz021" & startsWith(vars$obj,"cp")
 ```
 
 In other words, I require that the "kz021" variable come from a
-STATA file name starting with "kz" ("obj" column in `vars`),
+Stata file name starting with "kz" ("obj" column in `vars`),
 "kz011b" comes from a file name starting with "cp"
 and the description of the variable ("lab" column in `vars`)
 include the word "Participant",

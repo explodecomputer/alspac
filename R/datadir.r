@@ -1,5 +1,3 @@
-
-
 #' Guess the default data directory
 #'
 #' The R drive will be mounted in different paths for different systems.
@@ -7,9 +5,6 @@
 #' 
 #' @export
 #' @return NULL
-#' @examples \dontrun{
-#'
-#'}
 getDefaultDataDir <- function()
 {
 

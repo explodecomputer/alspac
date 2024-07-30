@@ -13,7 +13,7 @@ extractDataset(
   output_path = ".",
   output_file = file.path(output_path, paste0(author, "_", b_number, "_",
     format(Sys.time(), "\%d\%b\%y"), ".", output_format)),
-  dictionary = "both"
+  dictionary = "current"
 )
 }
 \arguments{
@@ -35,8 +35,8 @@ of the filename (e.g. for "ACEHDBFG.txt" the column would be named "G").}
 derived from function arguments as follows:
 <output_path>/<author>_<b_number>_<date>.<output_format>.}
 
-\item{dictionary}{ALSPAC dictionary to use "current", "useful" or "both"
-(Default: "both").}
+\item{dictionary}{ALSPAC dictionary to use "current" 
+(Default: "current").}
 }
 \value{
 Saves the output dataset to `output_file` and returns it.

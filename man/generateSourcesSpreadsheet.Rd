@@ -6,16 +6,15 @@
 spreadsheet which provides the source of data for each data file ('obj')
 in the dictionary. This information is then used to determine 
 which bits of data to remove to satisfy exclusion lists. 
-Sources include mother_clinic, mother_quest, partner, partner_clinic, partner_quest,
+Sources include mother, mother_clinic, mother_quest,
+partner, partner_clinic, partner_quest,
 child_based and child_completed.
 Sources can for the most part be determined automatically from the 'path'
-information provided for each variable in the dictionary.
-However, for variables in "Useful_data", the source isn't always clear 
-so needs to be identified manually.}
+information provided for each variable in the dictionary.}
 \usage{
 generateSourcesSpreadsheet()
 }
 \description{
 sources <- generateSourcesSpreadsheet()
-write.csv(sources, file="data/sources.csv", row.names=F)
+utils::write.csv(sources, file="data/sources.csv", row.names=FALSE)
 }

@@ -55,7 +55,7 @@ removeExclusions <- function(x) {
 readExclusions <- function() {
     do.files <- list.files(file.path(options()$alspac_data_dir, "Syntax/Withdrawal of consent"),
                            pattern=".do$",
-                           full.names=T)
+                           full.names=TRUE)
     if (length(do.files) == 0)
         stop("do files in Syntax/Withdrawal of consent/ appear to be missing")
     
@@ -77,6 +77,7 @@ readExclusions <- function() {
 #' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
+#' @param dictionary The name of an existing dictionary or the dictionary itself.
 addSourcesToDictionary <- function(dictionary) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
@@ -97,7 +98,7 @@ addSourcesToDictionary <- function(dictionary) {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    sources <- read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
+    sources <- utils::read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=FALSE)
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column
@@ -142,12 +143,12 @@ addSourcesToDictionary <- function(dictionary) {
 #' information provided for each variable in the dictionary.
 #'
 #' sources <- generateSourcesSpreadsheet()
-#' write.csv(sources, file="data/sources.csv", row.names=F)
+#' utils::write.csv(sources, file="data/sources.csv", row.names=FALSE)
 generateSourcesSpreadsheet <- function() {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
                     
-    dictionary <- alspac:::retrieveDictionary("current")
+    dictionary <- retrieveDictionary("current")
     
     ## list variable paths relevant to sources of ALSPAC data
     paths <- getPaths()
@@ -158,7 +159,7 @@ generateSourcesSpreadsheet <- function() {
     }
 
     for (src in names(paths)) {
-        dictionary[[src]] <- F
+        dictionary[[src]] <- FALSE
         for (path in paths[[src]])
             dictionary[[src]] <- dictionary[[src]] | grepl(path, paste0(dictionary$path,dictionary$obj))
     }
@@ -166,18 +167,18 @@ generateSourcesSpreadsheet <- function() {
     ## more complicated cases below
     ## 1. Longitudinal data
     is.longitudinal <- grepl("Other/Longitudinal", dictionary$path)
-    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=T)
-    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
-    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=T) | grepl("_yp_", dictionary$obj, ignore.case=T))
-    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    is.mother <- is.longitudinal & grepl("^mlon", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- TRUE
+    is.child <- is.longitudinal & (grepl("^clon", dictionary$obj, ignore.case=TRUE) | grepl("_yp_", dictionary$obj, ignore.case=TRUE))
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- TRUE
     ## 2. Covid data    
     is.covid <- grepl("Current/Quest/COVID", dictionary$path) 
-    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=T)
-    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- T
-    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=T)
-    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- T
-    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=T)
-    dictionary[is.child, grepl("child", colnames(dictionary))] <- T
+    is.partner <- is.covid & grepl("(partner|G0dad)", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.partner, grepl("partner", colnames(dictionary))] <- TRUE
+    is.mother <- is.covid & grepl("_(G0mum|mum)_", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.mother, grepl("mother", colnames(dictionary))] <- TRUE
+    is.child <- is.covid & grepl("_yp_", dictionary$obj, ignore.case=TRUE)
+    dictionary[is.child, grepl("child", colnames(dictionary))] <- TRUE
     ## 3. Useful data
     #is.useful <- grepl("Useful_data", dictionary$path)
     #dictionary$obj[!is.useful] <- sub("_[a-z0-9]+[.]{1}[a-z]+$", "_", dictionary$obj[!is.useful])

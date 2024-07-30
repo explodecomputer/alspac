@@ -1,20 +1,24 @@
 Package: alspac
 Title: Data dictionary for ALSPAC
-Description: Functions to search and extract variables based on keywords from the ALSPAC data dictionary
 Version: 0.46.0
-Authors@R: c(person("Gibran", "Hemani", email = "g.hemani@bristol.ac.uk",
-                  role = c("aut", "cre")),
-             person("Matthew", "Suderman", email = "matt.suderman@bristol.ac.uk",
-                  role = c("aut"))
-            )
-Depends:
-	R (>= 3.0.0),
-	readstata13,
-	haven,
-	stringr,
-	plyr,
-	dplyr,
-	parallel
+Authors@R: c(
+    person("Gibran", "Hemani", , "g.hemani@bristol.ac.uk", role = c("aut", "cre")),
+    person("Matthew", "Suderman", , "matt.suderman@bristol.ac.uk", role = "aut")
+  )
+Description: Functions to search and extract variables based on keywords
+    from the ALSPAC data dictionary.
 License: Artistic-2.0
-LazyData: no
-RoxygenNote: 7.1.2
+Depends:
+    R (>= 3.5.0)
+Imports:
+    dplyr,
+    haven,
+    magrittr,
+    parallel,
+    plyr,
+    readstata13,
+    stringr,
+    tibble
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2

@@ -1,7 +1,7 @@
 loadDictionaries <- function() {        
     path <- file.path(system.file(package = "alspac"), "data")
     assign("globals", new.env(), envir=parent.env(environment()))
-    for (file in list.files(path, "rdata$", full.names=T))
+    for (file in list.files(path, "rdata$", full.names=TRUE))
         load(file, globals)
     #combineDictionaries()
 }
@@ -74,49 +74,50 @@ dictionaryGood <- function(dictionary, max.print=10) {
 #' 
 #' @export
 updateDictionaries <- function() {
-    createDictionary("Current", name="current", quick=F)
-    #createDictionary("Useful_data", name="useful", quick=F)
-    return(T)
+    createDictionary("Current", name="current", quick=FALSE)
+    #createDictionary("Useful_data", name="useful", quick=FALSE)
+    return(TRUE)
 }
 
 
-#' Create a dictionary from ALSPAC STATA files
+#' Create a dictionary from ALSPAC Stata files
 #'
 #' @param datadir ALSPAC data subdirectory from which to create the index
 #' (Default: "Current"). .
 #' @param name If not \code{NULL}, then the resulting dictionary
 #' will be saved to a file in the R package for use next time the package
-#' is loaded. The dictionary will be available with the given name (Default: NULL).
+#' is loaded. The dictionary will be available with the given name (Default: \code{NULL}).
+#' @param quick Logical. Default \code{FALSE}.
 #'
-#' The function uses multiple processors using \code{\link{mclapply}()}.
+#' The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 #' Use multiple processors by setting \code{mc.cores} option using
 #' \code{options()}.
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=F) {
+createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
     stopifnot(datadir == "Current")
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
     files <- list.files(datadir,  
                         pattern="dta$",
-                        full.names=T,
-                        recursive=T,
-                        ignore.case=T)
+                        full.names=TRUE,
+                        recursive=TRUE,
+                        ignore.case=TRUE)
 
-    dictionary <- mclapply(files, function(file) {
+    dictionary <- parallel::mclapply(files, function(file) {
         cat(date(), "loading", file, "\n")
         tryCatch({
             merge(
-                alspac:::processDTA(file, quick),
-                alspac:::createFileTable(file, alspacdir), by = "obj")
+                processDTA(file, quick),
+                createFileTable(file, alspacdir), by = "obj")
         }, error=function(e) {
             warning("Error loading", file, "\n")
             print(e)
             NULL
         })
-    }) %>% bind_rows
+    }) %>% dplyr::bind_rows
 
     dictionary <- dictionary[which(dictionary$counts > 0),]
     
@@ -159,7 +160,7 @@ createFileTable <- function(fls, alspacdir)
 	#fls_dn <- dirname(fls) ## does some weird things with windows network paths
 	fls_bn <- basename(fls)
     fls_dn <- sub(fls_bn, "", fls)
-	fls_n <- gsub(".dta", "", fls_bn, ignore.case=T)
+	fls_n <- gsub(".dta", "", fls_bn, ignore.case=TRUE)
 	fls_d <- gsub(alspacdir, "", fls_dn)
 	fls_d <- gsub("^/", "", fls_d)
 	nfield <- max(countCharOccurrences("/", fls_d)) + 1
@@ -178,7 +179,7 @@ createFileTable <- function(fls, alspacdir)
 	return(dat)
 }
 
-processDTA <- function(fn, quick=F)
+processDTA <- function(fn, quick=FALSE)
 {
 	if (quick)
 		temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))
