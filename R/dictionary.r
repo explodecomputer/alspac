@@ -117,7 +117,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
             print(e)
             NULL
         })
-    }) %>% dplyr::bind_rows
+    }) %>% dplyr::bind_rows()
 
     dictionary <- dictionary[which(dictionary$counts > 0),]
     
