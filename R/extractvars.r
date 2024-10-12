@@ -215,8 +215,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
                 if (spss) {
                     fn.sav <- sub("dta$", "sav", fn)
                     obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=TRUE))
-                }
-                else {
+                } else {
                     if (haven)
                         obj <- suppressWarnings(haven::read_dta(fn))
                     else
@@ -275,10 +274,10 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
         ## create a complete id set ids=aln/aln2/[optional]qlet
         aln2 <- unique(unlist(lapply(dat, function(dat) dat$aln2)))
         aln <- unique(unlist(lapply(dat, function(dat) dat$aln)))
-        if (all(aln %in% aln2))
+        if (all(aln %in% aln2)) {
             ## includes only mothers and/or partners
             ids <- data.frame(aln2=aln2, aln=aln2, stringsAsFactors=FALSE)
-        else {
+        } else {
             ## includes young people
             aln <- setdiff(aln, aln2)
             ids <- data.frame(aln2=as.integer(sub("[A-Z]+","",aln)),

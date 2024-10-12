@@ -54,9 +54,9 @@ dictionaryGood <- function(dictionary, max.print=10) {
     filenames <- unique(with(dictionary, file.path(alspacdir, path, obj)))
     missing.idx <- which(!sapply(filenames, file.exists))
     num.missing <- length(missing.idx)
-    if (num.missing == 0)
+    if (num.missing == 0) {
         TRUE
-    else {
+    } else {
         missing.idx <- missing.idx[1:min(max.print,num.missing)]
         warning("Please run 'updateDictionaries()' and try again. ",
                 "If you are using input from 'findVars()', ",

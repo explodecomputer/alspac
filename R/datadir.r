@@ -46,9 +46,9 @@ setDataDir <- function(datadir=getDefaultDataDir())
 checkDataDir <- function(datadir) {
     test <- file.exists(datadir)
     if(test) {
-        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current")))))
+        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current"))))) {
             TRUE
-        else {
+        } else {
             stop("The specified data directory exists but it is not the correct directory. ",
                  "It should have the directories 'Syntax' and 'Current' contained within. ",
                  "It is normally located on the remote R drive, R:/Data/")

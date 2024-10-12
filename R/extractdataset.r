@@ -79,9 +79,9 @@ extractDataset <- function(variable_file, cid_file,
     dictionary <- dictionary[order(dictionary$counts,decreasing=TRUE),]
     idx <- match(tolower(variables$name), tolower(dictionary$name))    
     if (any(is.na(idx))) {
-        if (all(is.na(idx)))
+        if (all(is.na(idx))) {
             stop("None of the requested variables could be found.")
-        else {
+        } else {
             msg <- paste(
                 "Several requested variables could not be found:",
                 paste(variables$name[is.na(idx)],collapse=", "))
