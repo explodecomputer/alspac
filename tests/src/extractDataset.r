@@ -70,8 +70,9 @@ utils::write.csv(dat, file=csv.filename, row.names=FALSE)
 dat.csv <- utils::read.csv(csv.filename,stringsAsFactors=FALSE)
 
 similar <- function(x,y) {
-    harmonize <- function(x) 
+    harmonize <- function(x) {
         ifelse(any(c("integer", "double", "logical") %in% class(x)), as.numeric(x), x)
+    }
     identical(harmonize(x), harmonize(y))
 }
 stopifnot(all(sapply(colnames(dat.csv), function(col) similar(dat.csv[[col]], dat[[col]]))))
