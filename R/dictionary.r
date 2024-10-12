@@ -134,7 +134,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
 countCharOccurrences <- function(char, s)
 {
 	s2 <- gsub(char,"",s)
-	return (nchar(s) - nchar(s2))
+	return(nchar(s) - nchar(s2))
 }
 
 
