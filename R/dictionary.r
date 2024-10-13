@@ -1,8 +1,9 @@
 loadDictionaries <- function() {        
     path <- file.path(system.file(package = "alspac"), "data")
     assign("globals", new.env(), envir=parent.env(environment()))
-    for (file in list.files(path, "rdata$", full.names=TRUE))
+    for (file in list.files(path, "rdata$", full.names=TRUE)) {
         load(file, globals)
+    }
     #combineDictionaries()
 }
 
