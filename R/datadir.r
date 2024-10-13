@@ -5,8 +5,7 @@
 #' 
 #' @export
 #' @return NULL
-getDefaultDataDir <- function()
-{
+getDefaultDataDir <- function() {
 
 	d <- switch(Sys.info()['sysname'],
 		Darwin = "/Volumes/ALSPAC-data/",
@@ -37,8 +36,7 @@ getDefaultDataDir <- function()
 #' setDataDir() # This sets the path based on the operating system's default
 #' setDataDir("/some/other/path/") # This is how to supply a path manually
 #'}
-setDataDir <- function(datadir=getDefaultDataDir())
-{
+setDataDir <- function(datadir=getDefaultDataDir()) {
     checkDataDir(datadir)
     options(alspac_data_dir=path.expand(datadir))
 }

@@ -193,8 +193,7 @@ generateSourcesSpreadsheet <- function() {
     dictionary[order(dictionary$path),]
 }
 
-getPaths <- function()
-{
+getPaths <- function() {
     list(
         mother_clinic=c(
             "Other/Cohort Profile/mz",

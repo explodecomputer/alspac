@@ -198,8 +198,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
 
 
 
-extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
-{
+extractVarsFull <- function(x, spss=FALSE, haven=FALSE) {
 	# require(plyr)
 	# require(readstata13)
 	message("Starting extraction from ", length(unique(x$obj)), " files in the ALSPAC data directory")
@@ -332,8 +331,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 
 
 
-convertQlet <- function(qlet)
-{
+convertQlet <- function(qlet) {
 	if (!is.factor(qlet)) {
 		qlet <- as.factor(qlet)
 	}
@@ -361,8 +359,7 @@ convertQlet <- function(qlet)
 #' @export
 #' @return Data frame
 #' 
-extractWebOutput <- function(filename)
-{
+extractWebOutput <- function(filename) {
 	input <- utils::read.csv(filename)
 	if (names(input)[1] != "Variable") {
 		stop("The first column in ", filename, " should be names 'Variable'. Make sure this file has been exported from the ALSPAC variable lookup webapp.")

@@ -32,8 +32,7 @@ whole.word.regex <- function(x) paste("\\b", x, "\\b", sep="")
 #' # Find variables with BMI or height in the description (this will return a lot of results!)
 #' bmi_variables <- findVars("bmi", "height", logic="any", ignore.case=TRUE)
 #'}
-findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="current")
-{
+findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="current") {
         if (is.character(dictionary)) {
             dictionary <- retrieveDictionary(dictionary)
         }
@@ -49,7 +48,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	n <- 1:nrow(dictionary)
 
 	# Search for patterns in label
-        g <- lapply(l, function(l){
+        g <- lapply(l, function(l) {
             c(grep(l, dictionary$lab, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert),
               grep(whole.word.regex(l), dictionary$name, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert))
         })

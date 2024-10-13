@@ -136,23 +136,19 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
     invisible(dictionary)
 }
 
-countCharOccurrences <- function(char, s)
-{
+countCharOccurrences <- function(char, s) {
 	s2 <- gsub(char,"",s)
 	return(nchar(s) - nchar(s2))
 }
 
 
-trimWhitespace <- function(x)
-{
-	if(is.numeric(x))
-	{
+trimWhitespace <- function(x) {
+	if (is.numeric(x)) {
 		return(x)
 	}
 	flag <- is.factor(x)
 	x <- gsub("^\\s+|\\s+$", "", x)
-	if(flag) 
-	{
+	if (flag) {
 		return(as.factor(x))
 	} else {
 		return(x)
@@ -160,8 +156,7 @@ trimWhitespace <- function(x)
 }
 
 
-createFileTable <- function(fls, alspacdir)
-{
+createFileTable <- function(fls, alspacdir) {
 	#fls_dn <- dirname(fls) ## does some weird things with windows network paths
 	fls_bn <- basename(fls)
     fls_dn <- sub(fls_bn, "", fls)
@@ -184,8 +179,7 @@ createFileTable <- function(fls, alspacdir)
 	return(dat)
 }
 
-processDTA <- function(fn, quick=FALSE)
-{
+processDTA <- function(fn, quick=FALSE) {
 	if (quick) {
 		temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))
 	} else {
