@@ -14,10 +14,11 @@ combineDictionaries <- function() {
 }
 
 retrieveDictionary <- function(name) {
-    if (name %in% ls(envir=globals))
+    if (name %in% ls(envir=globals)) {
         get(name, envir=globals)
-    else
+    } else {
         stop("dictionary '", name, "' does not exist")
+    }
 }
 
 saveDictionary <- function(name, dictionary) {
@@ -26,8 +27,9 @@ saveDictionary <- function(name, dictionary) {
     #    combineDictionaries()
     
     path <- file.path(system.file(package="alspac"), "data")
-    if (!file.exists(path))
+    if (!file.exists(path)) {
         dir.create(path)
+    }
     save(list=name,
          file=file.path(path, paste(name, "rdata", sep=".")),
          envir=globals)
@@ -46,8 +48,9 @@ saveDictionary <- function(name, dictionary) {
 #' \code{max.print} missing files.
 #' 
 dictionaryGood <- function(dictionary, max.print=10) {
-    if (is.character(dictionary))
+    if (is.character(dictionary)) {
         dictionary <- retrieveDictionary(dictionary)
+    }
     
     alspacdir <- options()$alspac_data_dir
 
@@ -125,8 +128,9 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
     ## handled correctly for each variable
     dictionary <- addSourcesToDictionary(dictionary)
     
-    if (!is.null(name))
+    if (!is.null(name)) {
         saveDictionary(name, dictionary)
+    }
     
     invisible(dictionary)
 }
@@ -181,11 +185,12 @@ createFileTable <- function(fls, alspacdir)
 
 processDTA <- function(fn, quick=FALSE)
 {
-	if (quick)
+	if (quick) {
 		temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))
-	else
+	} else {
 		temp <- suppressWarnings(readstata13::read.dta13(fn))
 	# temp <- haven::read_dta(fn)
+	}
 	dat <- dplyr::tibble(
 		name = colnames(temp),
 		lab = attributes(temp)$var.labels,
@@ -193,11 +198,11 @@ processDTA <- function(fn, quick=FALSE)
 		type = sapply(temp, function(x) class(x)[1]),
 		obj = basename(fn)
 	)
-	if (quick)
+	if (quick) {
 		dat$counts <- NA
-	else
+	} else {
 		dat$counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11))
-
+	}
 	return(dat)
 }
 
