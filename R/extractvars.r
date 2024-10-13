@@ -382,7 +382,3 @@ extractWebOutput <- function(filename)
 	}
 	return(l)
 }
-
-
-
-
