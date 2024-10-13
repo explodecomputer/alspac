@@ -205,4 +205,3 @@ processDTA <- function(fn, quick=FALSE)
 	}
 	return(dat)
 }
-
