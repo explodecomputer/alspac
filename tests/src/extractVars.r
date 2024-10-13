@@ -3,8 +3,9 @@ library(alspac)
 setDataDir("/home/alspac")
 #setDataDir("alspac")
 
-if (!dictionaryGood("current"))
+if (!dictionaryGood("current")) {
     createDictionary("Current", "current")
+}
 
 vars <- list(partner=c("pb910","ff1a011"),
              child=c("ccaa991b","ka498","f7003a"),
