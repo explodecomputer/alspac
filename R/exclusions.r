@@ -56,8 +56,9 @@ readExclusions <- function() {
     do.files <- list.files(file.path(options()$alspac_data_dir, "Syntax/Withdrawal of consent"),
                            pattern=".do$",
                            full.names=TRUE)
-    if (length(do.files) == 0)
+    if (length(do.files) == 0) {
         stop("do files in Syntax/Withdrawal of consent/ appear to be missing")
+    }
     
     names(do.files) <- sub("_WoC.do", "", basename(do.files))
     lapply(do.files, function(file) {
@@ -115,18 +116,21 @@ addSourcesToDictionary <- function(dictionary) {
         idx
     })
     n.matches <- sapply(obj.idx, length)
-    if (all(n.matches==0))
+    if (all(n.matches==0)) {
         stop("The dictionary does not match anything in 'alspac::data/sources.csv'.")
+    }
     sources <- sources[n.matches>0,]
     obj.idx <- unlist(obj.idx[n.matches>0])
     sources$obj <- dict.obj[obj.idx]
-    for (group in names(keep))
-        dictionary[[group]] <- sources[[group]][match(dictionary$obj, sources$obj)]        
+    for (group in names(keep)) {
+        dictionary[[group]] <- sources[[group]][match(dictionary$obj, sources$obj)]
+    }
 
     for (group in names(keep)) {
         idx <- which(dictionary$name %in% keep[[group]])
-        if (length(idx) > 0)
+        if (length(idx) > 0) {
             dictionary[[group]][idx] <- FALSE
+        }
     }
     dictionary
 }
