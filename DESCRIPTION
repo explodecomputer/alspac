@@ -1,6 +1,6 @@
 Package: alspac
 Title: Data dictionary for ALSPAC
-Version: 0.48.1
+Version: 0.48.2
 Authors@R: c(
     person("Gibran", "Hemani", , "g.hemani@bristol.ac.uk", role = c("aut", "cre")),
     person("Matthew", "Suderman", , "matt.suderman@bristol.ac.uk", role = "aut")
