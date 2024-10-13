@@ -164,8 +164,9 @@ generateSourcesSpreadsheet <- function() {
 
     for (src in names(paths)) {
         dictionary[[src]] <- FALSE
-        for (path in paths[[src]])
+        for (path in paths[[src]]) {
             dictionary[[src]] <- dictionary[[src]] | grepl(path, paste0(dictionary$path,dictionary$obj))
+        }
     }
 
     ## more complicated cases below
