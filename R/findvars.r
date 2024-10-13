@@ -34,15 +34,15 @@ whole.word.regex <- function(x) paste("\\b", x, "\\b", sep="")
 #'}
 findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE, whole.word=FALSE, dictionary="current")
 {
-        if (is.character(dictionary))
+        if (is.character(dictionary)) {
             dictionary <- retrieveDictionary(dictionary)
+        }
         
 	l <- unlist(list(...))
 	stopifnot(length(l) > 0)
 	stopifnot(logic %in% c("any", "all", "none"))
 	invert <- ifelse("none", TRUE, FALSE)
-	if(whole.word)
-	{
+	if (whole.word) {
 		l <- lapply(l, whole.word.regex)
 	}
 
@@ -54,8 +54,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
               grep(whole.word.regex(l), dictionary$name, ignore.case = ignore.case, perl = perl, fixed = fixed, invert = invert))
         })
 
-	if(logic == "any")
-	{
+	if (logic == "any") {
 		g <- unique(unlist(g))
 	} else if(logic == "all") {
 		g <- Reduce(intersect, g)
@@ -73,8 +72,9 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
         dictionaryGood(out)
 	
         var.freq <- table(out$name)
-        if (any(var.freq > 1))
+        if (any(var.freq > 1)) {
             warning("One or more variables has multiple sources (fix with filterVars()): ",
                     paste(names(var.freq)[which(var.freq > 1)], collapse=", "))
+        }
 	return(out)
 }
