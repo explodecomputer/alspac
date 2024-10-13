@@ -49,15 +49,17 @@
 extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=FALSE) {
     dictionaryGood(x)
 
-    if (adult_only) 
+    if (adult_only) {
         warning("'adult_only' is no longer supported. Parent-specific restrictions are applied automatically when child-based or child-completed variables are not requested.")
-
+    }
+      
     x <- unique(x)
-    if (core_only) 
+    if (core_only) {
         x <- extractVarsCore(x, spss=spss, haven=haven) 
-    else
+    } else {
         x <- extractVarsFull(x, spss=spss, haven=haven)
-    
+    }
+        
     if(exclude_withdrawn) {
         message("Automatically removing data for individuals who have withdrawn consent.")
         x <- removeExclusions(x)
@@ -112,8 +114,9 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     mother.filters <- list(
         mum_in_alsp=mz.obj.pat,
         mum_in_core=mz.obj.pat)
-    if (any(var.has.mother.data))
+    if (any(var.has.mother.data)) {
         core.filters <- c(core.filters, mother.filters)
+    }
 
     pz.obj.pat <- c(obj="pz_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
     partner.filters <- list(
@@ -127,8 +130,9 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         partner_changed_when=pz.obj.pat,
         partner_age=pz.obj.pat,
         second_partner_age=pz.obj.pat)
-    if (any(var.has.partner.data))
+    if (any(var.has.partner.data)) {
         core.filters <- c(core.filters, partner.filters)
+    }
     
     cp.obj.pat <- c(obj="cp_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
     child.filters <- list(
@@ -141,19 +145,20 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         in_phase3=cp.obj.pat,
         in_phase4=cp.obj.pat,
         tripquad=cp.obj.pat)
-    if (any(var.has.child.data))
+    if (any(var.has.child.data)) {
         core.filters <- c(core.filters, child.filters)
-    
+    }
+        
     suppressWarnings(core.vars <- findVars(names(core.filters), dictionary="current"))
     core.vars <- core.vars[which(core.vars$name %in% names(core.filters)),]
     core.vars <- do.call(filterVars, c(list(x=core.vars), core.filters))
    
     missing.vars <- setdiff(names(core.filters), core.vars$name)
-    if (length(missing.vars) > 0)
+    if (length(missing.vars) > 0) {
         stop("Variables required to identify core ALSPAC participants not available. Please contact maintainers. ",
              "Missing variables: ", 
              paste(missing.vars, collapse=", "))
-
+    }
     core.dat <- extractVarsFull(core.vars, spss=spss, haven=haven)
     
     if (any(var.has.child.data)) {
@@ -166,16 +171,17 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         core.dat <- core.dat[which(mum_enrol_status %in% 1:2 & mum_and_preg_enrolled == 1),]
     }
 
-    if ("qlet" %in% colnames(core.dat) && "qlet" %in% colnames(dat))
+    if ("qlet" %in% colnames(core.dat) && "qlet" %in% colnames(dat)) {
         dat <- dat[match(core.dat$alnqlet, dat$alnqlet),]
-    else
+    } else {
         dat <- dat[match(core.dat$aln, dat$aln),]
-
+    }
     if (any(var.has.partner.data)) {
         partner_in_alspac <- as.numeric(as.character(core.dat$partner_in_alspac)) 
         remove.idx <- which(partner_in_alspac==0)
-        for (varname in x$name[var.has.partner.data])
+        for (varname in x$name[var.has.partner.data]) {
             dat[remove.idx,varname] <- NA
+        }
     }
     
     id.vars <- intersect(c("aln","qlet","alnqlet"),colnames(core.dat))
@@ -202,7 +208,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 		# Read in data
 		fn <- paste0(options()$alspac_data_dir, "/", x$path[1], "/", x$obj[1])
 		message("Extracting from: ", fn)
-		if(!file.exists(fn)) {
+		if (!file.exists(fn)) {
                     stop(
                         fn, " does not exist. ",
                         "Please run 'updateDictionaries()' and try again. ",
@@ -216,10 +222,11 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
                     fn.sav <- sub("dta$", "sav", fn)
                     obj <- suppressWarnings(haven::read_sav(fn.sav, user_na=TRUE))
                 } else {
-                    if (haven)
+                    if (haven) {
                         obj <- suppressWarnings(haven::read_dta(fn))
-                    else
+                    } else {
                         obj <- suppressWarnings(readstata13::read.dta13(fn))
+                    }
                 }
 
 		# Make sure aln and qlet variables are lower case
@@ -233,15 +240,13 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
                     stop("Please contact maintainers.")
 		}
 		qletc <- grep("^QLET$", names(obj), ignore.case=TRUE)
-		if(length(qletc) != 0)
-		{
+		if (length(qletc) != 0) {
 			names(obj)[qletc] <- "qlet"
 		}
 		# Get aln, mult and qlet variables
 		ivars <- grep("^(aln|mult|qlet)$", names(obj), ignore.case=FALSE, value=TRUE)
 		index <- x$name %in% names(obj)
-		if(!all(index == TRUE))
-		{
+		if (!all(index == TRUE)) {
 			print(x$name)
 			message("Missing vars from ", x$obj, ":", x$name[!index], "\n")
 		}
@@ -256,8 +261,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
                 obj[[paste("in_obj", objname, sep="_")]] <- 1   
 		# Create aln and aln2 variables
 		obj$aln2 <- obj$aln
-		if("qlet" %in% vars)
-		{
+		if ("qlet" %in% vars) {
 			obj$qlet <- convertQlet(obj$qlet)
 			obj$aln <- paste(obj$aln, obj$qlet, sep="")
 		}
@@ -265,8 +269,7 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 	})
 	message("Collapsing data")
 	dat <- Filter(Negate(is.null), dat)
-	if(length(dat) == 0)
-	{
+	if (length(dat) == 0) {
 		message("No data found")
 		return(NULL)
 	}
@@ -285,23 +288,26 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
                               qlet=sub("[0-9]+","",aln),
                               stringsAsFactors=FALSE)
             aln2 <- setdiff(aln2,ids$aln2)
-            if (length(aln2) > 0)
+            if (length(aln2) > 0) {
                 ## includes some mothers with no young people
                 ids <- rbind(ids,
                              data.frame(aln2=aln2,
                                         aln=aln2,
                                         qlet=NA,
                                         stringsAsFactors=FALSE))
+            }
         }
-        if (spss)
+        if (spss) {
             ids <- tibble::as_tibble(ids)
-        
+        }
+            
         ## merge ids and dat into a single data frame
         dat <- lapply(dat, function(dat) {
-            if ("qlet" %in% colnames(dat))
+            if ("qlet" %in% colnames(dat)) {
                 row.idx <- match(ids$aln, dat$aln)
-            else
+            } else {
                 row.idx <- match(ids$aln2, dat$aln2)
+            }
             col.idx <- which(!(colnames(dat) %in% c("aln","qlet","aln2")))
             dat[row.idx,col.idx,drop=FALSE]
         })
@@ -312,8 +318,9 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
         ## convert 1/NA to 1/0 for all "in_obj_XX" columns and rename them "in_XX"
         is_in_obj_column <- grepl("^in_obj_", colnames(x))
         if (any(is_in_obj_column)) {
-            for (i in which(is_in_obj_column))
+            for (i in which(is_in_obj_column)) {
                 x[[i]] <- ifelse(is.na(x[[i]]), 0, 1)
+            }
             colnames(x)[is_in_obj_column] <- sub("_obj", "", colnames(x)[is_in_obj_column])
         }
         
@@ -327,12 +334,10 @@ extractVarsFull <- function(x, spss=FALSE, haven=FALSE)
 
 convertQlet <- function(qlet)
 {
-	if(!is.factor(qlet))
-	{
+	if (!is.factor(qlet)) {
 		qlet <- as.factor(qlet)
 	}
-	if(!all(levels(qlet) %in% c("A", "B", "C", "D")))
-	{
+	if (!all(levels(qlet) %in% c("A", "B", "C", "D"))) {
 		levels(qlet) <- c("A", "B", "C", "D")		
 	}
 	return(qlet)
@@ -359,20 +364,17 @@ convertQlet <- function(qlet)
 extractWebOutput <- function(filename)
 {
 	input <- utils::read.csv(filename)
-	if(names(input)[1] != "Variable")
-	{
+	if (names(input)[1] != "Variable") {
 		stop("The first column in ", filename, " should be names 'Variable'. Make sure this file has been exported from the ALSPAC variable lookup webapp.")
 	}
-	if(nrow(input) == 0)
-	{
+	if (nrow(input) == 0) {
 		stop("No variables present in ", filename)
 	}
         
         l <- retrieveDictionary("current")
 	l <- subset(l, name %in% input$Variable)
 
-	if(nrow(l) != 0)
-	{
+	if (nrow(l) != 0) {
 		out <- extractVars(l)
 		return(out)
 	} else {
