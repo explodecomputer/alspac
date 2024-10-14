@@ -6,8 +6,9 @@ setDataDir("/home/alspac")
 example_path <- "."
 output_path <- file.path(example_path, "outputs")
 
-if (!dictionaryGood("current"))
+if (!dictionaryGood("current")) {
     createDictionary("Current", "current")
+}
        
 dat <- extractDataset(
     variable_file=file.path(example_path, "inputs/variables.csv"),
@@ -49,8 +50,9 @@ for (var in vars) {
     labels <- attributes(dat[[var]])$labels
     labels <- paste(paste(names(labels), labels, sep="="), collapse="  ")
     freq <- table(dat[[var]])
-    if (length(freq) > 20)
+    if (length(freq) > 20) {
         freq <- quantile(dat[[var]], na.rm=TRUE)
+    }
     freq <- paste(paste(names(freq), freq, sep="="), collapse="  ")
     cat("-----------------------------------\n",
         var, label, "\n",
@@ -70,8 +72,9 @@ utils::write.csv(dat, file=csv.filename, row.names=FALSE)
 dat.csv <- utils::read.csv(csv.filename,stringsAsFactors=FALSE)
 
 similar <- function(x,y) {
-    harmonize <- function(x) 
+    harmonize <- function(x) {
         ifelse(any(c("integer", "double", "logical") %in% class(x)), as.numeric(x), x)
+    }
     identical(harmonize(x), harmonize(y))
 }
 stopifnot(all(sapply(colnames(dat.csv), function(col) similar(dat.csv[[col]], dat[[col]]))))

@@ -5,8 +5,7 @@
 #' 
 #' @export
 #' @return NULL
-getDefaultDataDir <- function()
-{
+getDefaultDataDir <- function() {
 
 	d <- switch(Sys.info()['sysname'],
 		Darwin = "/Volumes/ALSPAC-data/",
@@ -37,8 +36,7 @@ getDefaultDataDir <- function()
 #' setDataDir() # This sets the path based on the operating system's default
 #' setDataDir("/some/other/path/") # This is how to supply a path manually
 #'}
-setDataDir <- function(datadir=getDefaultDataDir())
-{
+setDataDir <- function(datadir=getDefaultDataDir()) {
     checkDataDir(datadir)
     options(alspac_data_dir=path.expand(datadir))
 }
@@ -46,9 +44,9 @@ setDataDir <- function(datadir=getDefaultDataDir())
 checkDataDir <- function(datadir) {
     test <- file.exists(datadir)
     if(test) {
-        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current")))))
+        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current"))))) {
             TRUE
-        else {
+        } else {
             stop("The specified data directory exists but it is not the correct directory. ",
                  "It should have the directories 'Syntax' and 'Current' contained within. ",
                  "It is normally located on the remote R drive, R:/Data/")

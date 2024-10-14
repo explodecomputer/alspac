@@ -1,5 +1,4 @@
-if(! "devtools" %in% installed.packages()[,"Package"])
-{
+if(! "devtools" %in% installed.packages()[,"Package"]) {
 	install.packages("devtools")
 }
 
