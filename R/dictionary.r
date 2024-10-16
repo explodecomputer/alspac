@@ -121,7 +121,7 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile = NULL) {
+createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   if(is.null(sourcesFile))
     sourcesFile <- system.file("data", "sources.csv", package = "alspac")
@@ -135,18 +135,18 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile 
                         recursive=TRUE,
                         ignore.case=TRUE)
 
-    dictionary <- mclapply(files, function(file) {
+    dictionary <- parallel::mclapply(files, function(file) {
       cat(date(), "loading", file, "\n")
       tryCatch({
         merge(
-          alspac:::processDTA(file, quick),
-          alspac:::createFileTable(file, alspacdir), by = "obj")
+          processDTA(file, quick),
+          createFileTable(file, alspacdir), by = "obj")
       }, error=function(e) {
         warning("Error loading", file, "\n")
         print(e)
         NULL
       })
-    }) %>% bind_rows
+    }) %>% dplyr::bind_rows()
 
     dictionary <- dictionary[which(dictionary$counts > 0),]
     

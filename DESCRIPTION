@@ -8,8 +8,6 @@ Authors@R: c(
 Description: Functions to search and extract variables based on keywords
     from the ALSPAC data dictionary.
 License: Artistic-2.0
-LazyData: no
-RoxygenNote: 7.3.1
 Depends:
     R (>= 3.5.0)
 Imports:
