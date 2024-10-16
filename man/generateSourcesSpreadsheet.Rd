@@ -16,5 +16,5 @@ generateSourcesSpreadsheet()
 }
 \description{
 sources <- generateSourcesSpreadsheet()
-write.csv(sources, file="data/sources.csv", row.names=F)
+utils::write.csv(sources, file="data/sources.csv", row.names=FALSE)
 }

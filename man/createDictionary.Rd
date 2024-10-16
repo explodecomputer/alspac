@@ -2,14 +2,9 @@
 % Please edit documentation in R/dictionary.r
 \name{createDictionary}
 \alias{createDictionary}
-\title{Create a dictionary from ALSPAC STATA files}
+\title{Create a dictionary from ALSPAC Stata files}
 \usage{
-createDictionary(
-  datadir = "Current",
-  name = NULL,
-  quick = F,
-  sourcesFile = NULL
-)
+createDictionary(datadir = "Current", name = NULL, quick = FALSE, sourcesFile = NULL)
 }
 \arguments{
 \item{datadir}{ALSPAC data subdirectory from which to create the index
@@ -17,9 +12,11 @@ createDictionary(
 
 \item{name}{If not \code{NULL}, then the resulting dictionary
 will be saved to a file in the R package for use next time the package
-is loaded. The dictionary will be available with the given name (Default: NULL).
+is loaded. The dictionary will be available with the given name (Default: \code{NULL}).}
 
-The function uses multiple processors using \code{\link{mclapply}()}.
+\item{quick}{Logical. Default \code{FALSE}.
+
+The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 Use multiple processors by setting \code{mc.cores} option using
 \code{options()}.}
 }
@@ -27,5 +24,5 @@ Use multiple processors by setting \code{mc.cores} option using
 Data frame dictionary listing available variables.
 }
 \description{
-Create a dictionary from ALSPAC STATA files
+Create a dictionary from ALSPAC Stata files
 }

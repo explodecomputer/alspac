@@ -10,7 +10,7 @@ extractVars(
   core_only = TRUE,
   adult_only = FALSE,
   spss = FALSE,
-  haven = F
+  haven = FALSE
 )
 }
 \arguments{
@@ -22,10 +22,14 @@ if you have a more specific list of withdrawn consent IDs for your specific vari
 
 \item{core_only}{Whether to automatically exclude data from participants
 not in the core ALSPAC dataset (Default: TRUE).
-This should give the same samples as the STATA/SPSS scripts in the R:/Data/Syntax folder.}
+This should give the same samples as the Stata/SPSS scripts in the R:/Data/Syntax folder.}
 
 \item{adult_only}{No longer supported. Parent-specific restrictions are applied
 automatically when child-based or child-completed variables are not requested.}
+
+\item{spss}{Logical. Default \code{FALSE}.}
+
+\item{haven}{Logical. Default \code{FALSE}.}
 }
 \value{
 A data frame with all the variable specified in `x`. If \code{exclude_withdrawn} was \code{TRUE}, then columns

@@ -1,9 +1,10 @@
-args <- commandArgs(T)
+args <- commandArgs(TRUE)
 
 alspac.dir <- args[1]
 
-if (length(args) > 1)
+if (length(args) > 1) {
     mc.cores <- as.integer(args[2])
+}
 
 options(mc.cores=mc.cores)
 

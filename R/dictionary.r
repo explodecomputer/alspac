@@ -1,33 +1,20 @@
-#' Loads dictionaries
-#'
-#' Load dictionaries, required for creating custom dictionary
-#' 
-#'
-#' @export
-#' 
-loadDictionaries <- function() {        
-  path <- file.path(system.file(package = "alspac"), "data")
-  
-  # Initialize globals in the global environment
-  if (!exists("globals")) {
-    assign("globals", new.env(), envir = .GlobalEnv)
+  loadDictionaries <- function() {        
+    path <- file.path(system.file(package = "alspac"), "data")
+    
+    # Initialize globals in the global environment
+    if (!exists("globals")) {
+      assign("globals", new.env(), envir = .GlobalEnv)
+    }
+    
+    for (file in list.files(path, "rdata$", full.names = TRUE))
+      load(file, globals)
+    combineDictionaries()
   }
-  
-  for (file in list.files(path, "rdata$", full.names = TRUE))
-    load(file, globals)
-  combineDictionaries()
-}
 
-#' combineDictionaries
-#'
-#' Combine dictionaries, required for creating custom dictionary
-#' 
-#'
-#' @export
-#' 
+
 combineDictionaries <- function() {
   both <- NULL
-
+  
   # Check if "current" exists
   if (exists("current", envir=globals)) {
     both <- retrieveDictionary("current")
@@ -48,38 +35,27 @@ combineDictionaries <- function() {
   }
 }
 
-#' Retrieve Dictionaries
-#'
-#' Retrieve dictionaries, required for creating custom dictionary
-#' 
-#'
-#' @export
-#' 
+
 retrieveDictionary <- function(name) {
-  if (name %in% ls(envir=globals))
-    get(name, envir=globals)
-  else
-    stop("dictionary '", name, "' does not exist")
+    if (name %in% ls(envir=globals)) {
+        get(name, envir=globals)
+    } else {
+        stop("dictionary '", name, "' does not exist")
+    }
 }
 
-#' Save Dictionaries
-#'
-#' Save dictionaries, required for creating custom dictionary
-#' 
-#'
-#' @export
-#' 
 saveDictionary <- function(name, dictionary) {
-  assign(name, dictionary, globals)
-  #if (name == "current" || name == "useful")
-  #    combineDictionaries()
-  
-  path <- file.path(system.file(package="alspac"), "data")
-  if (!file.exists(path))
-    dir.create(path)
-  save(list=name,
-       file=file.path(path, paste(name, "rdata", sep=".")),
-       envir=globals)
+    assign(name, dictionary, globals)
+    #if (name == "current" || name == "useful")
+    #    combineDictionaries()
+    
+    path <- file.path(system.file(package="alspac"), "data")
+    if (!file.exists(path)) {
+        dir.create(path)
+    }
+    save(list=name,
+         file=file.path(path, paste(name, "rdata", sep=".")),
+         envir=globals)
 }
 
 #' Checks a dictionary
@@ -95,25 +71,26 @@ saveDictionary <- function(name, dictionary) {
 #' \code{max.print} missing files.
 #' 
 dictionaryGood <- function(dictionary, max.print=10) {
-  if (is.character(dictionary))
-    dictionary <- retrieveDictionary(dictionary)
-  
-  alspacdir <- options()$alspac_data_dir
-  
-  filenames <- unique(with(dictionary, file.path(alspacdir, path, obj)))
-  missing.idx <- which(!sapply(filenames, file.exists))
-  num.missing <- length(missing.idx)
-  if (num.missing == 0)
-    TRUE
-  else {
-    missing.idx <- missing.idx[1:min(max.print,num.missing)]
-    warning("Please run 'updateDictionaries()' and try again. ",
-            "If you are using input from 'findVars()', ",
-            "then you will need to rerun that as well. ",
-            "Dictionary refers to missing files, e.g. ",
-            paste(filenames[missing.idx], collapse=", "))
-    FALSE
-  }
+    if (is.character(dictionary)) {
+        dictionary <- retrieveDictionary(dictionary)
+    }
+    
+    alspacdir <- options()$alspac_data_dir
+
+    filenames <- unique(with(dictionary, file.path(alspacdir, path, obj)))
+    missing.idx <- which(!sapply(filenames, file.exists))
+    num.missing <- length(missing.idx)
+    if (num.missing == 0) {
+        TRUE
+    } else {
+        missing.idx <- missing.idx[1:min(max.print,num.missing)]
+        warning("Please run 'updateDictionaries()' and try again. ",
+                "If you are using input from 'findVars()', ",
+                "then you will need to rerun that as well. ",
+                "Dictionary refers to missing files, e.g. ",
+                paste(filenames[missing.idx], collapse=", "))
+        FALSE
+    }
 }
 
 
@@ -123,21 +100,22 @@ dictionaryGood <- function(dictionary, max.print=10) {
 #' 
 #' @export
 updateDictionaries <- function() {
-  createDictionary("Current", name="current", quick=F)
-  #createDictionary("Useful_data", name="useful", quick=F)
-  return(T)
+    createDictionary("Current", name="current", quick=FALSE)
+    #createDictionary("Useful_data", name="useful", quick=FALSE)
+    return(TRUE)
 }
 
 
-#' Create a dictionary from ALSPAC STATA files
+#' Create a dictionary from ALSPAC Stata files
 #'
 #' @param datadir ALSPAC data subdirectory from which to create the index
 #' (Default: "Current"). .
 #' @param name If not \code{NULL}, then the resulting dictionary
 #' will be saved to a file in the R package for use next time the package
-#' is loaded. The dictionary will be available with the given name (Default: NULL).
+#' is loaded. The dictionary will be available with the given name (Default: \code{NULL}).
+#' @param quick Logical. Default \code{FALSE}.
 #'
-#' The function uses multiple processors using \code{\link{mclapply}()}.
+#' The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 #' Use multiple processors by setting \code{mc.cores} option using
 #' \code{options()}.
 #' 
@@ -147,107 +125,104 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F, sourcesFile 
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   if(is.null(sourcesFile))
     sourcesFile <- system.file("data", "sources.csv", package = "alspac")
+  
+    
+    alspacdir <- options()$alspac_data_dir
+    datadir <- file.path(alspacdir, datadir)
+    files <- list.files(datadir,  
+                        pattern="dta$",
+                        full.names=TRUE,
+                        recursive=TRUE,
+                        ignore.case=TRUE)
 
-  
-  alspacdir <- options()$alspac_data_dir
-  datadir <- file.path(alspacdir, datadir)
-  files <- list.files(datadir,  
-                      pattern="dta$",
-                      full.names=T,
-                      recursive=T,
-                      ignore.case=T)
-  
-  dictionary <- mclapply(files, function(file) {
-    cat(date(), "loading", file, "\n")
-    tryCatch({
-      merge(
-        alspac:::processDTA(file, quick),
-        alspac:::createFileTable(file, alspacdir), by = "obj")
-    }, error=function(e) {
-      warning("Error loading", file, "\n")
-      print(e)
-      NULL
-    })
-  }) %>% bind_rows
-  
-  dictionary <- dictionary[which(dictionary$counts > 0),]
-  
-  ## add data sources information so that withdrawn consent can be 
-  ## handled correctly for each variable
-  dictionary <- addSourcesToDictionary(dictionary,sourcesFile)
-  
-  if (!is.null(name))
-    saveDictionary(name, dictionary)
-  
-  invisible(dictionary)
+    dictionary <- mclapply(files, function(file) {
+      cat(date(), "loading", file, "\n")
+      tryCatch({
+        merge(
+          alspac:::processDTA(file, quick),
+          alspac:::createFileTable(file, alspacdir), by = "obj")
+      }, error=function(e) {
+        warning("Error loading", file, "\n")
+        print(e)
+        NULL
+      })
+    }) %>% bind_rows
+
+    dictionary <- dictionary[which(dictionary$counts > 0),]
+    
+    ## add data sources information so that withdrawn consent can be 
+    ## handled correctly for each variable
+    dictionary <- addSourcesToDictionary(dictionary)
+    
+    if (!is.null(name)) {
+        saveDictionary(name, dictionary)
+    }
+    
+    invisible(dictionary)
 }
 
-countCharOccurrences <- function(char, s)
-{
-  s2 <- gsub(char,"",s)
-  return (nchar(s) - nchar(s2))
-}
-
-
-trimWhitespace <- function(x)
-{
-  if(is.numeric(x))
-  {
-    return(x)
-  }
-  flag <- is.factor(x)
-  x <- gsub("^\\s+|\\s+$", "", x)
-  if(flag) 
-  {
-    return(as.factor(x))
-  } else {
-    return(x)
-  }
+countCharOccurrences <- function(char, s) {
+	s2 <- gsub(char,"",s)
+	return(nchar(s) - nchar(s2))
 }
 
 
-createFileTable <- function(fls, alspacdir)
-{
-  #fls_dn <- dirname(fls) ## does some weird things with windows network paths
-  fls_bn <- basename(fls)
-  fls_dn <- sub(fls_bn, "", fls)
-  fls_n <- gsub(".dta", "", fls_bn, ignore.case=T)
-  fls_d <- gsub(alspacdir, "", fls_dn)
-  fls_d <- gsub("^/", "", fls_d)
-  nfield <- max(countCharOccurrences("/", fls_d)) + 1
-  stopifnot(! any(duplicated(fls_n)))
-  
-  sp <- strsplit(fls_d, split="/")
-  sp <- lapply(sp, function(x) {
-    y <- rep(NA, nfield)
-    y[1:length(x)] <- x
-    return(y)
-  })
-  dat <- data.frame(do.call("rbind", sp), stringsAsFactors=FALSE)
-  names(dat) <- paste("cat", 1:nfield, sep="")
-  dat$obj <- fls_bn
-  dat$path <- fls_d
-  return(dat)
+trimWhitespace <- function(x) {
+	if (is.numeric(x)) {
+		return(x)
+	}
+	flag <- is.factor(x)
+	x <- gsub("^\\s+|\\s+$", "", x)
+	if (flag) {
+		return(as.factor(x))
+	} else {
+		return(x)
+	}
 }
 
-processDTA <- function(fn, quick=F)
-{
-  if (quick)
-    temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))
-  else
-    temp <- suppressWarnings(readstata13::read.dta13(fn))
-  # temp <- haven::read_dta(fn)
-  dat <- dplyr::tibble(
-    name = colnames(temp),
-    lab = attributes(temp)$var.labels,
-    # lab = sapply(temp, function(x) attr(x, "label")),
-    type = sapply(temp, function(x) class(x)[1]),
-    obj = basename(fn)
-  )
-  if (quick)
-    dat$counts <- NA
-  else
-    dat$counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11))
-  
-  return(dat)
+
+createFileTable <- function(fls, alspacdir) {
+	#fls_dn <- dirname(fls) ## does some weird things with windows network paths
+	fls_bn <- basename(fls)
+    fls_dn <- sub(fls_bn, "", fls)
+	fls_n <- gsub(".dta", "", fls_bn, ignore.case=TRUE)
+	fls_d <- gsub(alspacdir, "", fls_dn)
+	fls_d <- gsub("^/", "", fls_d)
+	nfield <- max(countCharOccurrences("/", fls_d)) + 1
+	stopifnot(! any(duplicated(fls_n)))
+
+	sp <- strsplit(fls_d, split="/")
+	sp <- lapply(sp, function(x) {
+		y <- rep(NA, nfield)
+		y[1:length(x)] <- x
+		return(y)
+	})
+	dat <- data.frame(do.call("rbind", sp), stringsAsFactors=FALSE)
+	names(dat) <- paste("cat", 1:nfield, sep="")
+	dat$obj <- fls_bn
+	dat$path <- fls_d
+	return(dat)
 }
+
+processDTA <- function(fn, quick=FALSE) {
+	if (quick) {
+		temp <- suppressWarnings(readstata13::read.dta13(fn, select.rows=5))
+	} else {
+		temp <- suppressWarnings(readstata13::read.dta13(fn))
+	# temp <- haven::read_dta(fn)
+	}
+	dat <- dplyr::tibble(
+		name = colnames(temp),
+		lab = attributes(temp)$var.labels,
+		# lab = sapply(temp, function(x) attr(x, "label")),
+		type = sapply(temp, function(x) class(x)[1]),
+		obj = basename(fn)
+	)
+	if (quick) {
+		dat$counts <- NA
+	} else {
+		dat$counts = sapply(temp, function(x) sum(!is.na(x) & x != -10 & x != -11))
+	}
+	return(dat)
+}
+

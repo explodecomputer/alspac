@@ -39,32 +39,33 @@ extractDataset <- function(variable_file, cid_file,
                                    b_number, "_",
                                    format(Sys.time(), "%d%b%y"),
                                    ".", output_format)),
-                           dictionary = "current") {
-  
-  
-  
-  
-    if (!dir.exists(output_path))
+                           dictionary="current") {
+    if (!dir.exists(output_path)) {
         stop("Path in 'output_path' does not exist: ", output_path)
+    }
   
     stopifnot(output_format %in% c("sav","csv","dta"))
-    if (file.exists(output_file))
+    if (file.exists(output_file)) {
         stop("Output file already exists: ", output_file)
+    }
         
-    cid_map <- read.csv(cid_file,stringsAsFactors=F)
+    cid_map <- utils::read.csv(cid_file,stringsAsFactors=FALSE)
     cid_column <- tolower(sub(".*(.{1})\\.[^.]*","\\1",cid_file))
     colnames(cid_map) <- tolower(colnames(cid_map))
-    if (!"aln" %in% colnames(cid_map))
+    if (!"aln" %in% colnames(cid_map)) {
         stop("ALN column is missing from ", cid_file)
-    if (!cid_column %in% colnames(cid_map))
+    }
+    if (!cid_column %in% colnames(cid_map)) {
         stop("CID column ", cid_column, " is missing from ", cid_file)
+    }
 
-    variables <- read.csv(variable_file,stringsAsFactors=F)
+    variables <- utils::read.csv(variable_file,stringsAsFactors=FALSE)
     colnames(variables) <- tolower(colnames(variables))
-    if (!"name" %in% colnames(variables))
-        stop("Variable name column 'name' is missing from ", variables_file)
+    if (!"name" %in% colnames(variables)) {
+        stop("Variable name column 'name' is missing from ", variable_file)
+    }
     
-    dictionary <- alspac:::retrieveDictionary(dictionary)
+    dictionary <- retrieveDictionary(dictionary)
 
     idx <- which(tolower(dictionary$name) %in% tolower(variables$name))
     freq <- table(dictionary$name[idx])
@@ -80,18 +81,18 @@ extractDataset <- function(variable_file, cid_file,
         warning(msg)
     }
 
-    dictionary <- dictionary[order(dictionary$counts,decreasing=T),]
+    dictionary <- dictionary[order(dictionary$counts,decreasing=TRUE),]
     idx <- match(tolower(variables$name), tolower(dictionary$name))    
     if (any(is.na(idx))) {
-        if (all(is.na(idx)))
+        if (all(is.na(idx))) {
             stop("None of the requested variables could be found.")
-        else {
+        } else {
             msg <- paste(
                 "Several requested variables could not be found:",
                 paste(variables$name[is.na(idx)],collapse=", "))
             warning(msg)
         }
-        idx <- na.omit(idx)
+        idx <- stats::na.omit(idx)
     }
     dictionary <- dictionary[idx,]
     
@@ -105,8 +106,9 @@ extractDataset <- function(variable_file, cid_file,
     new_column <- paste0("cid",b_number)
     colnames(dat)[colnames(dat)=="aln"] <- new_column
     
-    if ("alnqlet" %in% colnames(dat))
+    if ("alnqlet" %in% colnames(dat)) {
         dat[["alnqlet"]] <- NULL
+    }
 
     dat <- dat[order(dat[[new_column]]),]
 
@@ -114,16 +116,18 @@ extractDataset <- function(variable_file, cid_file,
         "Unique pregnancy identifier for ",
         author,
         " (", sub("\\.[^.]+$", "", basename(cid_file)), ")")
-    if ("qlet" %in% colnames(dat))
+    if ("qlet" %in% colnames(dat)) {
         attributes(dat$qlet)$label <- "Birth order (within pregnancy)"
-    
+    }
+        
     message("Saving output to ", output_file, "\n")
-    if (output_format=="dta")
+    if (output_format=="dta") {
         haven::write_dta(dat, path=output_file)
-    else if (output_format=="csv")
-        write.csv(dat, file=output_file, row.names=F)
-    else if (output_format=="sav")
-        haven::write_sav(dat, path=output_file, compress=T)
-    
+    } else if (output_format=="csv") {
+        utils::write.csv(dat, file=output_file, row.names=FALSE)
+    } else if (output_format=="sav") {
+        haven::write_sav(dat, path=output_file, compress=TRUE)
+    }
     invisible(dat)
 }
+

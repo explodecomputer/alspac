@@ -10,6 +10,9 @@ to remove for participants who have withdrawn consent.}
 \usage{
 addSourcesToDictionary(dictionary, sourcesFile = "sources.csv")
 }
+\arguments{
+\item{dictionary}{The name of an existing dictionary or the dictionary itself.}
+}
 \description{
 Add data sources information to the dictionary
 from the data/sources.csv file.
