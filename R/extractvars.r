@@ -47,22 +47,23 @@
 #' }
 #' 
 extractVars <- function(x, exclude_withdrawn = TRUE, core_only=TRUE, adult_only=FALSE, spss=FALSE, haven=FALSE) {
-    dictionaryGood(x)
+  vars <- x  
+  dictionaryGood(vars)
 
     if (adult_only) {
         warning("'adult_only' is no longer supported. Parent-specific restrictions are applied automatically when child-based or child-completed variables are not requested.")
     }
       
-    x <- unique(x)
+    vars <- unique(vars)
     if (core_only) {
-        x <- extractVarsCore(x, spss=spss, haven=haven) 
+        x <- extractVarsCore(vars, spss=spss, haven=haven) 
     } else {
-        x <- extractVarsFull(x, spss=spss, haven=haven)
+        x <- extractVarsFull(vars, spss=spss, haven=haven)
     }
         
     if(exclude_withdrawn) {
         message("Automatically removing data for individuals who have withdrawn consent.")
-        x <- removeExclusions(x)
+        x <- removeExclusions(x, vars)
     } else {        
         warning("Withdrawn consent individuals have NOT been removed. ",
                 "Re-run with the default option or remove the relevant ",

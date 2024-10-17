@@ -1,18 +1,40 @@
-loadDictionaries <- function() {        
+  loadDictionaries <- function() {        
     path <- file.path(system.file(package = "alspac"), "data")
-    assign("globals", new.env(), envir=parent.env(environment()))
-    for (file in list.files(path, "rdata$", full.names=TRUE)) {
-        load(file, globals)
+    
+    # Initialize globals in the global environment
+    if (!exists("globals")) {
+      assign("globals", new.env(), envir = .GlobalEnv)
     }
-    #combineDictionaries()
-}
+    
+    for (file in list.files(path, "rdata$", full.names = TRUE))
+      load(file, globals)
+    combineDictionaries()
+  }
+
 
 combineDictionaries <- function() {
+  both <- NULL
+  
+  # Check if "current" exists
+  if (exists("current", envir=globals)) {
     both <- retrieveDictionary("current")
-    #if (exists("useful", envir=globals))
-    #    both <- rbind.fill(both, retrieveDictionary("useful"))
+  } else {
+    # Handle the case when "current" doesn't exist
+    warning("Dictionary 'current' does not exist. Please run 'updateDictionaries()' to create it.")
+    return(NULL)
+  }  
+  
+  # Check if "custom" exists
+  if (exists("custom", envir=globals)) {
+    custom <- retrieveDictionary("custom")
+    library(plyr)
+    both <- rbind.fill(both, custom)
     assign("both", both, globals)
+  } else {
+    warning("Dictionary 'custom' does not exist.")
+  }
 }
+
 
 retrieveDictionary <- function(name) {
     if (name %in% ls(envir=globals)) {
@@ -99,8 +121,11 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
-    stopifnot(datadir == "Current")
+createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
+  stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
+  if(is.null(sourcesFile))
+    sourcesFile <- system.file("data", "sources.csv", package = "alspac")
+  
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
@@ -111,16 +136,16 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE) {
                         ignore.case=TRUE)
 
     dictionary <- parallel::mclapply(files, function(file) {
-        cat(date(), "loading", file, "\n")
-        tryCatch({
-            merge(
-                processDTA(file, quick),
-                createFileTable(file, alspacdir), by = "obj")
-        }, error=function(e) {
-            warning("Error loading", file, "\n")
-            print(e)
-            NULL
-        })
+      cat(date(), "loading", file, "\n")
+      tryCatch({
+        merge(
+          processDTA(file, quick),
+          createFileTable(file, alspacdir), by = "obj")
+      }, error=function(e) {
+        warning("Error loading", file, "\n")
+        print(e)
+        NULL
+      })
     }) %>% dplyr::bind_rows()
 
     dictionary <- dictionary[which(dictionary$counts > 0),]
@@ -200,3 +225,4 @@ processDTA <- function(fn, quick=FALSE) {
 	}
 	return(dat)
 }
+

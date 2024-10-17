@@ -8,7 +8,7 @@ See generateSourcesSpreadsheet() for details about creating this file.
 This information is used when decide which data values
 to remove for participants who have withdrawn consent.}
 \usage{
-addSourcesToDictionary(dictionary)
+addSourcesToDictionary(dictionary, sourcesFile = "sources.csv")
 }
 \arguments{
 \item{dictionary}{The name of an existing dictionary or the dictionary itself.}

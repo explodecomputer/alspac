@@ -12,36 +12,50 @@
 #' @return The input data frame but with appropriate values set to missing
 #' with additional variables ("woc_*") identifying participants
 #' who have withdrawn consent.
-removeExclusions <- function(x) {
-    stopifnot("aln" %in% names(x))
+removeExclusions <- function(x, dictionary) {
+  stopifnot("aln" %in% names(x))
+  
+  ## obtain alns for individuals that have withdrawn consent
+  withdrawals <- readExclusions()
 
-    ## obtain alns for individuals that have withdrawn consent
-    withdrawals <- readExclusions()
+  ## add variables for identifying core ALSPAC participants
+  current <- retrieveDictionary("current")
+  current <- current[which(!current$name %in% dictionary$name),]
+  for (col in setdiff(colnames(dictionary),colnames(current)))
+      current[[col]] <- NA
+  dictionary <- rbind(dictionary,current)
 
-    ## obtain dictionary corresponding the requested dataset
-    dictionary <- retrieveDictionary("current")
-    dictionary <- dictionary[match(colnames(x), dictionary$name),]
+  ## these variables are computed, ignore them
+  exceptions <- c("alnqlet",colnames(x)[grep("^in_obj_", colnames(x))])
 
-    ## check that exclusions information in the dictionary is up-to-date
-    if(!all(names(withdrawals) %in% colnames(dictionary))) {
-        stop(
-            "New exclusion file(s) have been created but are not being handled here: ",
-            paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
-    }
+  ## check all variables are in the dictionary or are computed variables
+  if (!all(colnames(x) %in% c(dictionary$name,exceptions)))
+    stop("Column names do not match the allowed names in the dictionary.")
+  
+  ## check that exclusions information in the dictionary is up-to-date
+  if(!all(names(withdrawals) %in% colnames(dictionary))) {
+    stop(
+      "New exclusion file(s) have been created but are not being handled here: ",
+      paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
+  }
 
-    for (group in names(withdrawals)) {
-        sample.idx <- which(x$aln %in% withdrawals[[group]])
-        if (length(sample.idx) == 0) next
-
-        var.idx <- which(dictionary[[group]])
-        if (length(var.idx) == 0) next
-
-        x[sample.idx,var.idx] <- NA
-        withdrawal.name <- paste("woc",group,sep="_")
-        x[[withdrawal.name]] <- 1:nrow(x) %in% sample.idx
-    } 
-
-    x
+  ## make sure that the rows of the dictionary match
+  ##the columns of x (needed below to know which variable values to exclude)
+  dictionary <- dictionary[match(colnames(x),dictionary$name),]
+  
+  for (group in names(withdrawals)) {
+    sample.idx <- which(x$aln %in% withdrawals[[group]])
+    if (length(sample.idx) == 0) next
+    
+    var.idx <- which(dictionary[[group]])
+    if (length(var.idx) == 0) next
+    
+    x[sample.idx,var.idx] <- NA
+    withdrawal.name <- paste("woc",group,sep="_")
+    x[[withdrawal.name]] <- 1:nrow(x) %in% sample.idx
+  } 
+  
+  x
 }
 
 #' Get list of ALNs to exclude
@@ -78,8 +92,9 @@ readExclusions <- function() {
 #' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
+    
 #' @param dictionary The name of an existing dictionary or the dictionary itself.
-addSourcesToDictionary <- function(dictionary) {
+addSourcesToDictionary <- function(dictionary, sourcesFile = "sources.csv") {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
     paths <- getPaths()
@@ -99,7 +114,7 @@ addSourcesToDictionary <- function(dictionary) {
             paste(setdiff(names(withdrawals), names(paths)), collapse=", "))
     }
 
-    sources <- utils::read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=FALSE)
+    sources <- utils::read.csv(sourcesFile, stringsAsFactors=FALSE)
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column

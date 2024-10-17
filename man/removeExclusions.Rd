@@ -4,7 +4,7 @@
 \alias{removeExclusions}
 \title{Remove data for participants who have withdrawn consent.}
 \usage{
-removeExclusions(x)
+removeExclusions(x, dictionary)
 }
 \arguments{
 \item{x}{Data frame output from \code{\link{extractVars}()}.}
