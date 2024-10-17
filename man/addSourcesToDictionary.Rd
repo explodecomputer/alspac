@@ -10,7 +10,7 @@ to remove for participants who have withdrawn consent.}
 \usage{
 addSourcesToDictionary(
   dictionary,
-  sourcesFile = system.file("extdata", "sources.csv", package = "alspac")
+  sourcesFile = system.file("data/extdata", "sources.csv", package = "alspac")
 )
 }
 \arguments{
