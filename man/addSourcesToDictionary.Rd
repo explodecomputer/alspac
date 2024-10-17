@@ -8,7 +8,10 @@ See generateSourcesSpreadsheet() for details about creating this file.
 This information is used when decide which data values
 to remove for participants who have withdrawn consent.}
 \usage{
-addSourcesToDictionary(dictionary, sourcesFile = "sources.csv")
+addSourcesToDictionary(
+  dictionary,
+  sourcesFile = system.file("extdata", "sources.csv", package = "alspac")
+)
 }
 \arguments{
 \item{dictionary}{The name of an existing dictionary or the dictionary itself.}
