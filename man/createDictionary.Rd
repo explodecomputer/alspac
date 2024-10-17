@@ -7,7 +7,7 @@
 createDictionary(
   datadir = "Current",
   name = NULL,
-  quick = F,
+  quick = FALSE,
   sourcesFile = NULL
 )
 }
