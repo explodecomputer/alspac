@@ -94,7 +94,7 @@ readExclusions <- function() {
 #' to remove for participants who have withdrawn consent.
     
 #' @param dictionary The name of an existing dictionary or the dictionary itself.
-addSourcesToDictionary <- function(dictionary, sourcesFile = "sources.csv") {
+addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("extdata", "sources.csv", package = "alspac")) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
     paths <- getPaths()

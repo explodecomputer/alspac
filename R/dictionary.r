@@ -124,8 +124,8 @@ updateDictionaries <- function() {
 createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   if(is.null(sourcesFile))
-    sourcesFile <- system.file("data", "sources.csv", package = "alspac")
-  
+    sourcesFilePath <- system.file("extdata", "sources.csv", package = "alspac")
+    sourcesFile <- read.csv(sourcesFilePath, stringsAsFactors = FALSE)
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
