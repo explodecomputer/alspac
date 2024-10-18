@@ -18,6 +18,26 @@ removeExclusions <- function(x, dictionary) {
   ## obtain alns for individuals that have withdrawn consent
   withdrawals <- readExclusions()
 
+  #Below list from extractvars.R but better off in list 
+  # coreFilters <- function(return list c(x,y,z))
+  # motherFilters <- etc/
+  # childFilters <- etc/ 
+  
+  exceptions <- c(
+    "aln", "qlet", "alnqlet","preg_in_alsp",                
+    "preg_in_core",                 "preg_enrol_status",            "mum_enrol_status",            
+    "mum_and_preg_enrolled",        "mz005l",                       "mz005m",                      
+    "mz010a",                       "mz013",   "mz014",                       
+    "bestgest",                     "mz028b",  "mum_in_alsp", "mum_in_core",
+    colnames(x)[grepl("^in_obj_", colnames(x))]
+  )
+  
+  #check that all variables in x are also in dictionary
+  if (!all(colnames(x) %in% dictionary$name))
+    stop("Dictionary does not include all variables requested.")  
+  
+  
+  
   ## add variables for identifying core ALSPAC participants
   current <- retrieveDictionary("current")
   current <- current[which(!current$name %in% dictionary$name),]
