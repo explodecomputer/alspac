@@ -29,7 +29,7 @@ removeExclusions <- function(x, dictionary) {
     "mum_and_preg_enrolled",        "mz005l",                       "mz005m",                      
     "mz010a",                       "mz013",   "mz014",                       
     "bestgest",                     "mz028b",  "mum_in_alsp", "mum_in_core",
-    colnames(x)[grepl("^in_obj_", colnames(x))]
+    colnames(x)[grepl("^in_", colnames(x))]
   )
   
   
@@ -41,7 +41,7 @@ removeExclusions <- function(x, dictionary) {
   dictionary <- rbind(dictionary,current)
 
   ## these variables are computed, ignore them
-  exceptions <- c("alnqlet",colnames(x)[grep("^in_obj_", colnames(x))])
+  exceptions <- c("alnqlet",colnames(x)[grep("^in_", colnames(x))])
   
   ## Debugging step: print column names and dictionary names
   print("Columns in x:")
