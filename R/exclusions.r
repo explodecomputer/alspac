@@ -32,11 +32,6 @@ removeExclusions <- function(x, dictionary) {
     colnames(x)[grepl("^in_obj_", colnames(x))]
   )
   
-  #check that all variables in x are also in dictionary
-  if (!all(colnames(x) %in% dictionary$name))
-    stop("Dictionary does not include all variables requested.")  
-  
-  
   
   ## add variables for identifying core ALSPAC participants
   current <- retrieveDictionary("current")
