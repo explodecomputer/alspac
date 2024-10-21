@@ -18,6 +18,21 @@ removeExclusions <- function(x, dictionary) {
   ## obtain alns for individuals that have withdrawn consent
   withdrawals <- readExclusions()
 
+  #Below list from extractvars.R but better off in list 
+  # coreFilters <- function(return list c(x,y,z))
+  # motherFilters <- etc/
+  # childFilters <- etc/ 
+  
+  exceptions <- c(
+    "aln", "qlet", "alnqlet","preg_in_alsp",                
+    "preg_in_core",                 "preg_enrol_status",            "mum_enrol_status",            
+    "mum_and_preg_enrolled",        "mz005l",                       "mz005m",                      
+    "mz010a",                       "mz013",   "mz014",                       
+    "bestgest",                     "mz028b",  "mum_in_alsp", "mum_in_core",
+    colnames(x)[grepl("^in_", colnames(x))]
+  )
+  
+  
   ## add variables for identifying core ALSPAC participants
   current <- retrieveDictionary("current")
   current <- current[which(!current$name %in% dictionary$name),]
@@ -26,11 +41,19 @@ removeExclusions <- function(x, dictionary) {
   dictionary <- rbind(dictionary,current)
 
   ## these variables are computed, ignore them
-  exceptions <- c("alnqlet",colnames(x)[grep("^in_obj_", colnames(x))])
+  exceptions <- c("alnqlet",colnames(x)[grep("^in_", colnames(x))])
+  
+  ## Debugging step: print column names and dictionary names
+  print("Columns in x:")
+  print(colnames(x))
+  print("Allowed names in dictionary:")
+  print(dictionary$name)
 
   ## check all variables are in the dictionary or are computed variables
-  if (!all(colnames(x) %in% c(dictionary$name,exceptions)))
-    stop("Column names do not match the allowed names in the dictionary.")
+  if (!all(colnames(x) %in% c(dictionary$name, exceptions))) {
+    mismatched <- setdiff(colnames(x), c(dictionary$name, exceptions))
+    stop("Column names do not match the allowed names in the dictionary. Mismatches: ", paste(mismatched, collapse = ", "))
+  }
   
   ## check that exclusions information in the dictionary is up-to-date
   if(!all(names(withdrawals) %in% colnames(dictionary))) {
@@ -38,11 +61,13 @@ removeExclusions <- function(x, dictionary) {
       "New exclusion file(s) have been created but are not being handled here: ",
       paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
   }
+  
 
   ## make sure that the rows of the dictionary match
   ##the columns of x (needed below to know which variable values to exclude)
   dictionary <- dictionary[match(colnames(x),dictionary$name),]
   
+  ##Apply exclusions
   for (group in names(withdrawals)) {
     sample.idx <- which(x$aln %in% withdrawals[[group]])
     if (length(sample.idx) == 0) next
@@ -94,7 +119,7 @@ readExclusions <- function() {
 #' to remove for participants who have withdrawn consent.
     
 #' @param dictionary The name of an existing dictionary or the dictionary itself.
-addSourcesToDictionary <- function(dictionary, sourcesFile = "sources.csv") {
+addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("data/extdata", "sources.csv", package = "alspac")) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
     paths <- getPaths()
