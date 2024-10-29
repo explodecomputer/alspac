@@ -1,3 +1,17 @@
+# 29/10/2024
+
+1. G1 (YPM) file (Life @31 Questionnaire 2023)
+ 
+- YPM data filename: YPM_1a in R:\Data\Current\Quest\Child Completed\YPM_1a.sav
+- YPM data documentation: D1402_YPM in R:\Data\documentation\built_pdf\Quest\Child Completed\D1402_YPM.pdf
+
+2. G0 Mothers (MB) and Partners (FPF) files (Parents Summer 2022 Questionnaire) 
+
+- MB data filename: MB_1a in R:\Data\Current\Quest\Mother
+- MB data documentation: D1199_MB in R:\Data\documentation\built_pdf\Quest\Mother
+- FPF data filename: FPF_1a in R:\Data\Current\Quest\Partner
+- FPF data documentation: D1202_FPF in R:\Data\documentation\built_pdf\Quest\Partner 
+
 # 05/01/2024
 
 1. G1 (YPL) files (Life@30 Winter 2022 Questionnaire) 
