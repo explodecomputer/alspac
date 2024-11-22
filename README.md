@@ -25,7 +25,6 @@ The extracted data has withdrawn consent individuals removed automatically.
 
 You can browse the variables here: [http://variables.alspac.bris.ac.uk/](http://variables.alspac.bris.ac.uk/)
 
-
 ## Limitations
 
 - The data is not curated further than what is present already in the Stata `.dta` files
