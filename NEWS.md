@@ -2,7 +2,7 @@
 
 1. First version release of G1 (YPM) file (Life @31 Questionnaire 2023)
  
-- YPM data filename: YPM_1a in R:\Data\Current\Quest\Child Completed\YPM_1a.sav
+- YPM data file: YPM_1a in R:\Data\Current\Quest\Child Completed\YPM_1a.sav
 - YPM data documentation: D1402_YPM in R:\Data\documentation\built_pdf\Quest\Child Completed\D1402_YPM.pdf
 
 2. First version release of G0 Mothers (MB) and Partners (FPF) files (Parents Summer 2022 Questionnaire) 
