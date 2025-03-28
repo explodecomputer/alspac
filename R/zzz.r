@@ -9,3 +9,5 @@
     loadDictionaries()
     tryCatch(setDataDir(), error=function(e) print(e$message))
 }
+
+
