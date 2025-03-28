@@ -62,6 +62,7 @@ removeExclusions <- function(x, dictionary) {
       paste(setdiff(names(withdrawals), colnames(dictionary)), collapse=", "))
   }
   
+  
 
   ## make sure that the rows of the dictionary match
   ##the columns of x (needed below to know which variable values to exclude)

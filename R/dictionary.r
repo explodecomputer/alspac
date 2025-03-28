@@ -9,6 +9,7 @@
     for (file in list.files(path, "rdata$", full.names = TRUE))
       load(file, globals)
     combineDictionaries()
+    checkDictionaries()
   }
 
 
@@ -225,4 +226,60 @@ processDTA <- function(fn, quick=FALSE) {
 	}
 	return(dat)
 }
+
+#' Check dictionaries
+#'
+#' Check for missing values in the dictionaries to indicate WoCs are out of date
+#' 
+#' @export
+checkDictionaries <- function() {
+  #Column names in the dictionary
+  columns_to_check <- c("mother", "mother_clinic", "mother_quest", "partner_quest","partner_clinic", "partner", "child_based",
+                        "child_completed")
+  
+  globals <- get("globals", envir = .GlobalEnv) #Get the environment
+  dict_names <- ls(envir = globals) # List all dictionary names
+  
+  if(length(dict_names)== 0){
+    message("No dictionaries found in the library.")
+    return(NULL)
+  }
+  
+  for (dict_name in dict_names) {
+    dict <-get(dict_name, envir = globals) #Retrieve a dictionary
+    #Flag to track if any missing values were found in any column
+    missing_found <- FALSE
+    
+  
+    # Iterate through each dictionary
+    for (dict_name in dict_names) {
+      dict <- get(dict_name, envir = globals)  # Retrieve the dictionary
+      
+      # Flag to check if any missing values are found
+      missing_found <- FALSE
+      
+      # Iterate over the specific hard-coded columns to check
+      for (col in columns_to_check) {
+        # Check if the column exists in the dictionary
+        if (col %in% colnames(dict)) {
+          # Check for missing values in the column
+          num_NA <- sum(is.na(dict[[col]]))  
+          
+          if (num_NA > 0) {
+            cat(sprintf("Dictionary '%s' has %d missing values in column '%s'.\n", dict_name, num_NA, col))
+            missing_found <- TRUE
+          }
+        } else {
+          cat(sprintf("Column '%s' not found in dictionary '%s'.\n", col, dict_name))
+        }
+      }
+      
+      # If no missing values were found, print this message once per dictionary
+      if (!missing_found) {
+        cat(sprintf("Dictionary '%s' has no missing values in the Withdrawal of Consent logic columns.\n", dict_name))
+      }
+    }
+  }
+}
+
 
