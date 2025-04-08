@@ -1,3 +1,19 @@
+# 08/04/2025
+
+1. First release of G2 based data - cohort profiles and both mother and child based questionnaires
+
+- G2 mother based cohort profile G2motherCP_1 in R:\Data\current\other\cohort profile\mother
+- G2 mother enrolmment questionnaire in R:\Data\current\quest\G2\mother
+- G2 mother pregnancy questionnaire in R:\Data\current\quest\G2\mother
+- G2 mother birth questionnaire in R:\Data\current\quest\G2\mother
+
+- G2 child based cohort profile G2childCP_1 in R:\Data\current\other\cohort profile\child
+- G2 child based 6 month questionnaire in R:\Data\current\quest\G2\proxy
+- G2 child based 12 month questionnaire in R:\Data\current\quest\G2\proxy
+- G2 child based 24 month questionnaire in R:\Data\current\quest\G2\proxy
+
+Other minor changes made to several release files - details will follow shortly
+
 # 29/10/2024
 
 1. First version release of G1 (YPM) file (Life @31 Questionnaire 2023)
