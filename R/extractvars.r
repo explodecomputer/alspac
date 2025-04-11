@@ -86,7 +86,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
     var.has.child.data <- any.row(x[,grepl("^child",colnames(x))])
     
     ##based on R:\Data\Syntax\syntax_template_04Nov22.do
-    mz.obj.pat <- c(obj="mz_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
+    mz.obj.pat <- c(obj="mz_[0-9]+[a-z]+",path="Current/other/cohort profile/G0/mother")
     core.filters <- list(
         mz010a=mz.obj.pat,
         preg_in_alsp=mz.obj.pat,
@@ -119,7 +119,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         core.filters <- c(core.filters, mother.filters)
     }
 
-    pz.obj.pat <- c(obj="pz_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
+    pz.obj.pat <- c(obj="pz_[0-9]+[a-z]+",path="Current/other/cohort profile/G0/partner")
     partner.filters <- list(
         partner_in_alspac=pz.obj.pat,
         partner_data=pz.obj.pat,
@@ -135,7 +135,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         core.filters <- c(core.filters, partner.filters)
     }
     
-    cp.obj.pat <- c(obj="cp_[0-9]+[a-z]+",path="Current/Other/Cohort Profile/")
+    cp.obj.pat <- c(obj="cp_[0-9]+[a-z]+",path="Current/other/cohort profile/G1")
     child.filters <- list(
         kz011b=cp.obj.pat,
         kz021=cp.obj.pat,
