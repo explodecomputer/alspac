@@ -40,7 +40,7 @@ findVars <- function(..., logic="any", ignore.case=TRUE, perl=FALSE, fixed=FALSE
 	l <- unlist(list(...))
 	stopifnot(length(l) > 0)
 	stopifnot(logic %in% c("any", "all", "none"))
-	invert <- ifelse("none", TRUE, FALSE)
+	invert <- logic == "none"
 	if (whole.word) {
 		l <- lapply(l, whole.word.regex)
 	}
