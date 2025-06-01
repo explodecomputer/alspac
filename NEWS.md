@@ -1,3 +1,10 @@
+# 29/05/2025
+
+1. First version release of G1 Focus@30 clinic data 
+ 
+- F30_G1 data filename: F30_G1_1a in R:\Data\Current\clinic\G1
+- F30_G1 data documentation: D1199_MB in R:\Data\documentation\built pdf\clinic\G1
+
 # 08/04/2025
 
 1. First release of G2 based data - cohort profiles and both mother and child based questionnaires
