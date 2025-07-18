@@ -28,7 +28,6 @@ MRI_YP_,current/Other/Longitudinal/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE
 OA_,current/Other/Obstetric/G0/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 OB_,current/Other/Obstetric/G0/partner/,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 OC_,current/Other/Obstetric/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-cp_,current/Other/Cohort Profile/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE
 Child_bloods_,current/biosamples/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 child_metabolomics_,current/biosamples/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 Father_metabolomics_,current/biosamples/G0/partner/,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE
@@ -39,7 +38,7 @@ maternal_grandfather_social_class_,current/other/social class/G0/partner/,FALSE,
 maternal_grandmother_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 mother_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 partner_complete_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
-partner_proxy/_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+partner_proxy_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 paternal_grandfather_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
 paternal_grandmother_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
 ka_,current/quest/G1/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
@@ -193,11 +192,11 @@ sd_,current/quest/G1/schools/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 sefg_,current/quest/G1/schools/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 sh_,current/quest/G1/schools/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 sk_,current/quest/G1/schools/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-g2mothercp_,current/other/cohort profile/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-g2childcp_,current/other/cohort profile/child/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-g2mqb_,current/quest/G2/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-g2mqp_,current/quest/G2/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-g2mqe_,current/quest/G2/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+G2motherCP_,current/other/cohort profile/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+G2childCP_,current/other/cohort profile/child/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+g2MQB_,current/quest/G2/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+g2MQP_,current/quest/G2/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+G2MQE_,current/quest/G2/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 G2CQ6M_,current/quest/G2/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 G2CQ12M_,current/quest/G2/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 G2CQ24M_,current/quest/G2/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
