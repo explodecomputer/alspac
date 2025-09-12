@@ -28,8 +28,7 @@ combineDictionaries <- function() {
   # Check if "custom" exists
   if (exists("custom", envir=globals)) {
     custom <- retrieveDictionary("custom")
-    library(plyr)
-    both <- rbind.fill(both, custom)
+    both <- plyr::rbind.fill(both, custom)
     assign("both", both, globals)
   } else {
     warning("Dictionary 'custom' does not exist.")
