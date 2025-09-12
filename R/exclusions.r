@@ -7,7 +7,7 @@
 #' and adds indicator variables for these participants ("woc_*").
 #'
 #' @param x Data frame output from \code{\link{extractVars}()}.
-#' 
+#' @param dictionary The name of an existing dictionary or the dictionary itself.
 #' @export
 #' @return The input data frame but with appropriate values set to missing
 #' with additional variables ("woc_*") identifying participants
@@ -118,8 +118,8 @@ readExclusions <- function() {
 #' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
-    
 #' @param dictionary The name of an existing dictionary or the dictionary itself.
+#' @param sourcesFile The path to the sources.csv file
 addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("data/extdata", "sources.csv", package = "alspac")) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
