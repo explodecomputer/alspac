@@ -15,6 +15,8 @@ addSourcesToDictionary(
 }
 \arguments{
 \item{dictionary}{The name of an existing dictionary or the dictionary itself.}
+
+\item{sourcesFile}{The path to the sources.csv file}
 }
 \description{
 Add data sources information to the dictionary
