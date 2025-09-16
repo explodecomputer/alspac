@@ -125,7 +125,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   if(is.null(sourcesFile))
 
-    sourcesFile <- system.file("data/extdata", "sources.csv", package = "alspac")
+    sourcesFile <- system.file("extdata", "sources.csv", package = "alspac")
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
