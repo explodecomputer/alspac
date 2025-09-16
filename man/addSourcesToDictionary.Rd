@@ -3,14 +3,14 @@
 \name{addSourcesToDictionary}
 \alias{addSourcesToDictionary}
 \title{Add data sources information to the dictionary
-from the data/sources.csv file.
+from the extdata/sources.csv file.
 See generateSourcesSpreadsheet() for details about creating this file. 
 This information is used when decide which data values
 to remove for participants who have withdrawn consent.}
 \usage{
 addSourcesToDictionary(
   dictionary,
-  sourcesFile = system.file("data/extdata", "sources.csv", package = "alspac")
+  sourcesFile = system.file("extdata", "sources.csv", package = "alspac")
 )
 }
 \arguments{
@@ -20,7 +20,7 @@ addSourcesToDictionary(
 }
 \description{
 Add data sources information to the dictionary
-from the data/sources.csv file.
+from the extdata/sources.csv file.
 See generateSourcesSpreadsheet() for details about creating this file. 
 This information is used when decide which data values
 to remove for participants who have withdrawn consent.

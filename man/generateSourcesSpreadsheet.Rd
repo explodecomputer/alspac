@@ -2,7 +2,7 @@
 % Please edit documentation in R/exclusions.r
 \name{generateSourcesSpreadsheet}
 \alias{generateSourcesSpreadsheet}
-\title{This function was used to initially create the data/sources.csv
+\title{This function was used to initially create the inst/extdata/sources.csv
 spreadsheet which provides the source of data for each data file ('obj')
 in the dictionary. This information is then used to determine 
 which bits of data to remove to satisfy exclusion lists. 
@@ -16,5 +16,5 @@ generateSourcesSpreadsheet()
 }
 \description{
 sources <- generateSourcesSpreadsheet()
-utils::write.csv(sources, file="data/sources.csv", row.names=FALSE)
+utils::write.csv(sources, file="inst/extdata/sources.csv", row.names=FALSE)
 }
