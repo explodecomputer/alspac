@@ -1,11 +1,11 @@
-# 29/05/2025
+# alspac 29/05/2025
 
 1. First version release of G1 Focus@30 clinic data 
  
 - F30_G1 data filename: F30_G1_1a in R:\Data\Current\clinic\G1
 - F30_G1 data documentation: D1199_MB in R:\Data\documentation\built pdf\clinic\G1
 
-# 08/04/2025
+# alspac 08/04/2025
 
 1. First release of G2 based data - cohort profiles and both mother and child based questionnaires
 
@@ -21,7 +21,7 @@
 
 Other minor changes made to several release files - details will follow shortly
 
-# 29/10/2024
+# alspac package 29/10/2024
 
 1. First version release of G1 (YPM) file (Life @31 Questionnaire 2023)
  
@@ -35,14 +35,14 @@ Other minor changes made to several release files - details will follow shortly
 - FPF data filename: FPF_1a in R:\Data\Current\Quest\Partner
 - FPF data documentation: D1202_FPF in R:\Data\documentation\built_pdf\Quest\Partner 
 
-# 05/01/2024
+# alspac 05/01/2024
 
 1. First version release of G1 (YPL) files (Life@30 Winter 2022 Questionnaire) 
 
 - YPL data filename: YPL_1a in R:\Data\Current\Quest\Child Completed 
 - YPL data documentation: D1498_YPL in R:\Data\documentation\built_pdf\Quest\Child Completed
 
-# 15/12/2023
+# alspac 15/12/2023
 
 1. First version release of G0 Mothers (MA) and Partners (FPE) files (Parents Summer 2022 Questionnaire) 
 
@@ -51,7 +51,7 @@ Other minor changes made to several release files - details will follow shortly
 - FPE data filename: FPE_1a in R:\Data\Current\Quest\Partner
 - FPE data documentation: D1295_FPE in R:\Data\documentation\built_pdf\Quest\Partner 
 
-# 16/11/2023
+# alspac 16/11/2023
 
 1. Updated version release of G0 Mothers (Z) - Parents Questionnaire 2022 
  
@@ -60,14 +60,14 @@ Changes - correction to mult-mum cases included and cohort case selection criter
 - Z data filename: Z_1b in R:\Data\Current\Quest\Mother
 - Z data documentation: D1196_Z.pdf in R:\Data\documentation\built_pdf\Quest\Mother
 
-# 06/09/2023
+# alspac package 06/09/2023
 
 1. G0 Partners (FD) files (Parents 2022 Questionnaire) 
 
 - FD data filename: FD_1a in R:\Data\Current\Quest\Partner
 - FD data documentation: D1297_FD in R:\Data\documentation\built_pdf\Quest\Partner
 
-# 01/09/2023
+# alspac 01/09/2023
 
 1. First version release of G0 Mothers (Z) and Partners (FD) files (Parents 2022 Questionnaire) 
 
@@ -87,7 +87,7 @@ Contents page updated with explanation of legacy issue regarding error in format
 - KL data documentation: D1310_KL in R:\Data\documentation\built_pdf\Quest\Child Based
  
 
-# 12/07/2023
+# alspac 12/07/2023
 
 1. First version release of G1 YPK file (Summer 2022 Questionnaire) 
  
@@ -116,7 +116,7 @@ Fm1a011 erroneously included (from FOM1 clinic) in FOM2 data file. Text in docum
 - FOM2 data filename: FOM2_5b in R:\Data\Current\Clinic\Adult
 - FOM2 data documentation: D2202_FOM2 in R:\Data\documentation\built_pdf\Clinic\Mother
 
-# 04/04/2023
+# alspac 04/04/2023
 
 We are pleased to announce that the following new data is now available on general release:
  
@@ -142,7 +142,7 @@ Mental health treatment derived data: antidepessant/antipsychotic/anxiolytic med
 The mult_mum variable is used to detect those mothers who have had multiple G1 pregnancies. This variable is now located within the mothers cohort profile file (MZ). 
  
 
-# 22/08/2022
+# alspac 22/08/2022
 
 MRI_YP 
 
@@ -164,19 +164,19 @@ COVID5_YP_2a, COVID5_Mum_2a and COVID5_G0Partner_2a
 
 * Updates to Yes/No labels and lower cutpoints added for EPDS and SMF scores for men.
 
-# 03/08/2022
+# alspac 03/08/2022
 
 COVID6
 
 * This is the latest set of questions relating to COVID for G0 and G1 participants collected during 29th April-12th May 2022. This questionnaire was available in online format only. It was one part of a triple data collection along with a second round of antibody testing and CAMCOG cognitive testing – results for both will be announced separately.
 
-# 21/07/2022
+# alspac 21/07/2022
 
 COVID5
 
 * This is the latest set of questions relating to COVID for G0 and G1 participants collected during July-December 2021.
 
-# 12/11/2021
+# alspac 12/11/2021
 
 Child-based Deprivation Indices & urban/rural status
 
@@ -186,7 +186,7 @@ Serology 2 dataset
 
 * This is the results of the second serology test sent out between 9-11th April 2021. Data note with further details is available here: https://wellcomeopenresearch.org/articles/6-283
 
-# 10/06/2020
+# alspac 10/06/2020
 
 COVID questionnaire data now available
 
@@ -195,7 +195,7 @@ COVID questionnaire data now available
 * COVID1_YP_1a - D1472_COVID1_YP - The G1 YP's COVID1 questionnaire data (459 variables).
 * COVID1_YPpartner_1a - D1473_COVID1_YPP - The G1 YP's partner's COVID1 questionnaire data (459 variables). Note that this dataset is not openly available due to low n, but researchers can request it - Please contact ALSPAC if you are interested in using this data.
 
-# 07/08/2018
+# alspac 07/08/2018
 
 Updates have been made to the following variable collections
 
@@ -216,7 +216,7 @@ Updates have been made to the following variable collections
 * Father_metabolomics_1a
 * mum_metabolomics_2a
 
-# 25/04/2018
+# alspac 25/04/2018
 
 Updates have been made to the following variable collections
 
@@ -226,7 +226,7 @@ Updates have been made to the following variable collections
 * Focus 10
 * Focus 11
 
-# 29/12/2017
+# alpsac 29/12/2017
 
 Welcome
 
