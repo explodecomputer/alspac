@@ -7,7 +7,7 @@
 #' and adds indicator variables for these participants ("woc_*").
 #'
 #' @param x Data frame output from \code{\link{extractVars}()}.
-#' 
+#' @param dictionary The name of an existing dictionary or the dictionary itself.
 #' @export
 #' @return The input data frame but with appropriate values set to missing
 #' with additional variables ("woc_*") identifying participants
@@ -114,13 +114,13 @@ readExclusions <- function() {
 
 
 #' Add data sources information to the dictionary
-#' from the data/sources.csv file.
+#' from the extdata/sources.csv file.
 #' See generateSourcesSpreadsheet() for details about creating this file. 
 #' This information is used when decide which data values
 #' to remove for participants who have withdrawn consent.
-    
 #' @param dictionary The name of an existing dictionary or the dictionary itself.
-addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("data/extdata", "sources.csv", package = "alspac")) {
+#' @param sourcesFile The path to the sources.csv file
+addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("extdata", "sources.csv", package = "alspac")) {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()
     paths <- getPaths()
@@ -158,7 +158,7 @@ addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("data/e
     })
     n.matches <- sapply(obj.idx, length)
     if (all(n.matches==0)) {
-        stop("The dictionary does not match anything in 'alspac::data/sources.csv'.")
+        stop("The dictionary does not match anything in 'extdata/sources.csv'.")
     }
     sources <- sources[n.matches>0,]
     obj.idx <- unlist(obj.idx[n.matches>0])
@@ -177,7 +177,7 @@ addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("data/e
 }
 
 
-#' This function was used to initially create the data/sources.csv
+#' This function was used to initially create the inst/extdata/sources.csv
 #' spreadsheet which provides the source of data for each data file ('obj')
 #' in the dictionary. This information is then used to determine 
 #' which bits of data to remove to satisfy exclusion lists. 
@@ -188,7 +188,7 @@ addSourcesToDictionary <- function(dictionary, sourcesFile = system.file("data/e
 #' information provided for each variable in the dictionary.
 #'
 #' sources <- generateSourcesSpreadsheet()
-#' utils::write.csv(sources, file="data/sources.csv", row.names=FALSE)
+#' utils::write.csv(sources, file="inst/extdata/sources.csv", row.names=FALSE)
 generateSourcesSpreadsheet <- function() {
     ## obtain alns for individuals that have withdrawn consent
     withdrawals <- readExclusions()

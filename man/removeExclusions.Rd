@@ -8,6 +8,8 @@ removeExclusions(x, dictionary)
 }
 \arguments{
 \item{x}{Data frame output from \code{\link{extractVars}()}.}
+
+\item{dictionary}{The name of an existing dictionary or the dictionary itself.}
 }
 \value{
 The input data frame but with appropriate values set to missing

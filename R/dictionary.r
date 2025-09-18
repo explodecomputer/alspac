@@ -28,8 +28,7 @@ combineDictionaries <- function() {
   # Check if "custom" exists
   if (exists("custom", envir=globals)) {
     custom <- retrieveDictionary("custom")
-    library(plyr)
-    both <- rbind.fill(both, custom)
+    both <- plyr::rbind.fill(both, custom)
     assign("both", both, globals)
   } else {
     warning("Dictionary 'custom' does not exist.")
@@ -115,7 +114,7 @@ updateDictionaries <- function() {
 #' will be saved to a file in the R package for use next time the package
 #' is loaded. The dictionary will be available with the given name (Default: \code{NULL}).
 #' @param quick Logical. Default \code{FALSE}.
-#'
+#' @param sourcesFile The path to the sources.csv file
 #' The function uses multiple processors using \code{\link[parallel]{mclapply}()}.
 #' Use multiple processors by setting \code{mc.cores} option using
 #' \code{options()}.
@@ -126,7 +125,7 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   if(is.null(sourcesFile))
 
-    sourcesFile <- system.file("data/extdata", "sources.csv", package = "alspac")
+    sourcesFile <- system.file("extdata", "sources.csv", package = "alspac")
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
