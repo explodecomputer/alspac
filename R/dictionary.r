@@ -121,7 +121,7 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
+createDictionary <- function(datadir="Current", name= "current", quick=FALSE, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   
   if(is.null(sourcesFile))
@@ -137,13 +137,11 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
                       recursive=TRUE,
                       ignore.case=TRUE)
   
-  # Extract base name and version (assuming suffix like _1a, _2b etc.)
   fnames <- basename(files)
   parts  <- sub("\\.dta$", "", fnames)               # drop extension
   base   <- sub("_[0-9]+[a-zA-Z]$", "", parts)       # everything before version
   vers   <- sub(".*_", "", parts)                    # the version part (e.g., 1a, 2b)
   
-  # Split numeric and letter parts
   num <- suppressWarnings(as.integer(sub("([0-9]+).*", "\\1", vers)))
   let <- sub("[0-9]+", "", vers)
   
@@ -156,7 +154,6 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
     stringsAsFactors = FALSE
   )
   
-  # Keep latest per base (highest number, then highest letter)
   latest_files <- file_info |>
     dplyr::group_by(base) |>
     dplyr::arrange(dplyr::desc(num), dplyr::desc(let)) |>
@@ -177,13 +174,13 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
     })
   }) %>% dplyr::bind_rows()
   
-  dictionary <- dictionary[which(dictionary$counts > 0),]
   
+  dictionary <- dictionary[which(dictionary$counts > 0),]
+  ## add sources info
   dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
   
-  if (!is.null(name)) {
-    saveDictionary(name, dictionary)
-  }
+  ## Save to /data/ as proper package dataset
+  do.call(usethis::use_data, list(as.name(name), overwrite = TRUE))
   
   invisible(dictionary)
 }
