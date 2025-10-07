@@ -130,47 +130,73 @@ updateDictionaries <- function() {
 #' @return Data frame dictionary listing available variables.
 createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
+  
   if(is.null(sourcesFile))
-
     sourcesFile <- system.file("extdata", "sources.csv", package = "alspac")
-    
-    alspacdir <- options()$alspac_data_dir
-    datadir <- file.path(alspacdir, datadir)
-    files <- list.files(datadir,  
-                        pattern="dta$",
-                        full.names=TRUE,
-                        recursive=TRUE,
-                        ignore.case=TRUE)
-
-    dictionary <- parallel::mclapply(files, function(file) {
-      cat(date(), "loading", file, "\n")
-      tryCatch({
-        merge(
-          processDTA(file, quick),
-          createFileTable(file, alspacdir), by = "obj")
-      }, error=function(e) {
-        warning("Error loading", file, "\n")
-        print(e)
-        NULL
-      })
-    }) %>% dplyr::bind_rows()
-
-    dictionary <- dictionary[which(dictionary$counts > 0),]
-    
-    ## add data sources information so that withdrawn consent can be 
-    ## handled correctly for each variable
-    dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
-    
-    if (!is.null(name)) {
-        saveDictionary(name, dictionary)
-    }
-    
-    ## Also save a copy in /inst/data/ for devtools::load_all()
-    inst_path <- file.path("inst", "data")
-    if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
-    save(list = name, file = file.path(inst_path, paste0(name, ".rdata")))
-    
-    invisible(dictionary)
+  
+  alspacdir <- options()$alspac_data_dir
+  datadir <- file.path(alspacdir, datadir)
+  
+  # --- NEW list.files section with version handling ---
+  files <- list.files(datadir,  
+                      pattern="dta$",
+                      full.names=TRUE,
+                      recursive=TRUE,
+                      ignore.case=TRUE)
+  
+  # Extract base name and version (assuming suffix like _1a, _2b etc.)
+  fnames <- basename(files)
+  parts  <- sub("\\.dta$", "", fnames)               # drop extension
+  base   <- sub("_[0-9]+[a-zA-Z]$", "", parts)       # everything before version
+  vers   <- sub(".*_", "", parts)                    # the version part (e.g., 1a, 2b)
+  
+  # Split numeric and letter parts
+  num <- suppressWarnings(as.integer(sub("([0-9]+).*", "\\1", vers)))
+  let <- sub("[0-9]+", "", vers)
+  
+  # Build table of file info
+  file_info <- data.frame(
+    file = files,
+    base = base,
+    num = num,
+    let = let,
+    stringsAsFactors = FALSE
+  )
+  
+  # Keep latest per base (highest number, then highest letter)
+  latest_files <- file_info |>
+    dplyr::group_by(base) |>
+    dplyr::arrange(dplyr::desc(num), dplyr::desc(let)) |>
+    dplyr::slice_head(n = 1) |>
+    dplyr::pull(file)
+  # --- END of new section ---
+  
+  dictionary <- parallel::mclapply(latest_files, function(file) {
+    cat(date(), "loading", file, "\n")
+    tryCatch({
+      merge(
+        processDTA(file, quick),
+        createFileTable(file, alspacdir), by = "obj")
+    }, error=function(e) {
+      warning("Error loading", file, "\n")
+      print(e)
+      NULL
+    })
+  }) %>% dplyr::bind_rows()
+  
+  dictionary <- dictionary[which(dictionary$counts > 0),]
+  
+  dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
+  
+  if (!is.null(name)) {
+    saveDictionary(name, dictionary)
+  }
+  ## Also save a copy in /inst/data/ for devtools::load_all()
+  inst_path <- file.path("inst", "data")
+  if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
+  save(list = name, file = file.path(inst_path, paste0(name, ".rdata")))
+  
+  invisible(dictionary)
 }
 
 countCharOccurrences <- function(char, s) {
