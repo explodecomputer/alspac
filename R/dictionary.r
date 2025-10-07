@@ -52,17 +52,28 @@ retrieveDictionary <- function(name) {
 }
 
 saveDictionary <- function(name, dictionary) {
-    assign(name, dictionary, globals)
-    #if (name == "current" || name == "useful")
-    #    combineDictionaries()
-    
-    path <- file.path(system.file(package="alspac"), "data")
-    if (!file.exists(path)) {
-        dir.create(path)
-    }
-    save(list=name,
-         file=file.path(path, paste(name, "rdata", sep=".")),
-         envir=globals)
+  # Save in the globals environment
+  assign(name, dictionary, globals)
+  
+  # -------------------------------
+  # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
+  # -------------------------------
+  data_path <- file.path(system.file(package = "alspac"), "data")
+  if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
+  
+  save(list = name,
+       file = file.path(data_path, paste0(name, ".rdata")),
+       envir = globals)
+  
+  # -------------------------------
+  # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
+  # -------------------------------
+  inst_path <- file.path(getwd(), "inst", "data")  # relative to project root
+  if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
+  
+  save(list = name,
+       file = file.path(inst_path, paste0(name, ".rdata")),
+       envir = globals)
 }
 
 #' Checks a dictionary
@@ -128,7 +139,7 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
+createDictionary <- function(datadir="Current", name= "current", quick=FALSE, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   
   if(is.null(sourcesFile))
@@ -144,13 +155,11 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
                       recursive=TRUE,
                       ignore.case=TRUE)
   
-  # Extract base name and version (assuming suffix like _1a, _2b etc.)
   fnames <- basename(files)
   parts  <- sub("\\.dta$", "", fnames)               # drop extension
   base   <- sub("_[0-9]+[a-zA-Z]$", "", parts)       # everything before version
   vers   <- sub(".*_", "", parts)                    # the version part (e.g., 1a, 2b)
   
-  # Split numeric and letter parts
   num <- suppressWarnings(as.integer(sub("([0-9]+).*", "\\1", vers)))
   let <- sub("[0-9]+", "", vers)
   
@@ -163,7 +172,6 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
     stringsAsFactors = FALSE
   )
   
-  # Keep latest per base (highest number, then highest letter)
   latest_files <- file_info |>
     dplyr::group_by(base) |>
     dplyr::arrange(dplyr::desc(num), dplyr::desc(let)) |>
@@ -184,17 +192,18 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
     })
   }) %>% dplyr::bind_rows()
   
+  
   dictionary <- dictionary[which(dictionary$counts > 0),]
   
+  
+  ## Add sources info
   dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
   
-  if (!is.null(name)) {
-    saveDictionary(name, dictionary)
-  }
-  ## Also save a copy in /inst/data/ for devtools::load_all()
-  inst_path <- file.path("inst", "data")
-  if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
-  save(list = name, file = file.path(inst_path, paste0(name, ".rdata")))
+  ## Assign in globals so retrieveDictionary() can find it
+  assign(name, dictionary, globals)
+  
+  ## Save using your robust saveDictionary() function
+  saveDictionary(name, dictionary)
   
   invisible(dictionary)
 }
