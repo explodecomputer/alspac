@@ -45,17 +45,28 @@ retrieveDictionary <- function(name) {
 }
 
 saveDictionary <- function(name, dictionary) {
-    assign(name, dictionary, globals)
-    #if (name == "current" || name == "useful")
-    #    combineDictionaries()
-    
-    path <- file.path(system.file(package="alspac"), "data")
-    if (!file.exists(path)) {
-        dir.create(path)
-    }
-    save(list=name,
-         file=file.path(path, paste(name, "rdata", sep=".")),
-         envir=globals)
+  # Save in the globals environment
+  assign(name, dictionary, globals)
+  
+  # -------------------------------
+  # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
+  # -------------------------------
+  data_path <- file.path(system.file(package = "alspac"), "data")
+  if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
+  
+  save(list = name,
+       file = file.path(data_path, paste0(name, ".rdata")),
+       envir = globals)
+  
+  # -------------------------------
+  # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
+  # -------------------------------
+  inst_path <- file.path(getwd(), "inst", "data")  # relative to project root
+  if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
+  
+  save(list = name,
+       file = file.path(inst_path, paste0(name, ".rdata")),
+       envir = globals)
 }
 
 #' Checks a dictionary
@@ -176,11 +187,16 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   
   
   dictionary <- dictionary[which(dictionary$counts > 0),]
-  ## add sources info
+  
+  
+  ## Add sources info
   dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
   
-  ## Save to /data/ as proper package dataset
-  do.call(usethis::use_data, list(as.name(name), overwrite = TRUE))
+  ## Assign in globals so retrieveDictionary() can find it
+  assign(name, dictionary, globals)
+  
+  ## Save using your robust saveDictionary() function
+  saveDictionary(name, dictionary)
   
   invisible(dictionary)
 }
