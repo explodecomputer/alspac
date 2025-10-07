@@ -37,11 +37,18 @@ combineDictionaries <- function() {
 
 
 retrieveDictionary <- function(name) {
-    if (name %in% ls(envir=globals)) {
-        get(name, envir=globals)
+  if (name %in% ls(envir = globals)) {
+    get(name, envir = globals)
+  } else {
+    # Try loading from package /data folder
+    path <- system.file("data", paste0(name, ".rdata"), package = "alspac")
+    if (file.exists(path)) {
+      load(path, envir = globals)
+      get(name, envir = globals)
     } else {
-        stop("dictionary '", name, "' does not exist")
+      stop("dictionary '", name, "' does not exist")
     }
+  }
 }
 
 saveDictionary <- function(name, dictionary) {
@@ -184,6 +191,10 @@ createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesF
   if (!is.null(name)) {
     saveDictionary(name, dictionary)
   }
+  ## Also save a copy in /inst/data/ for devtools::load_all()
+  inst_path <- file.path("inst", "data")
+  if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
+  save(list = name, file = file.path(inst_path, paste0(name, ".rdata")))
   
   invisible(dictionary)
 }
