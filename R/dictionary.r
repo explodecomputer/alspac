@@ -51,12 +51,21 @@ saveDictionary <- function(name, dictionary) {
   # -------------------------------
   # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
   # -------------------------------
-  data_path <- file.path(system.file(package = "alspac"), "data")
-  if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
+  data_path <- system.file("data", package = "alspac")
   
-  save(list = name,
-       file = file.path(data_path, paste0(name, ".rdata")),
-       envir = globals)
+  if (nzchar(data_path)) {
+# Installed package case
+    save(list = name,
+         file = file.path(data_path, paste0(name, ".rda")),
+         envir = globals)
+  } else {
+# Dev case (write into source tree)
+    data_path <- file.path(getwd(), "data")
+    if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
+    save(list = name,
+         file = file.path(data_path, paste0(name, ".rda")),
+         envir = globals)
+  }
   
   # -------------------------------
   # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
@@ -141,7 +150,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   alspacdir <- options()$alspac_data_dir
   datadir <- file.path(alspacdir, datadir)
   
-  # --- NEW list.files section with version handling ---
+# ---list.files section with version handling ---
   files <- list.files(datadir,  
                       pattern="dta$",
                       full.names=TRUE,
@@ -156,7 +165,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   num <- suppressWarnings(as.integer(sub("([0-9]+).*", "\\1", vers)))
   let <- sub("[0-9]+", "", vers)
   
-  # Build table of file info
+# Build table of file info
   file_info <- data.frame(
     file = files,
     base = base,
@@ -170,7 +179,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
     dplyr::arrange(dplyr::desc(num), dplyr::desc(let)) |>
     dplyr::slice_head(n = 1) |>
     dplyr::pull(file)
-  # --- END of new section ---
+# --- END of new section ---
   
   dictionary <- parallel::mclapply(latest_files, function(file) {
     cat(date(), "loading", file, "\n")
@@ -195,7 +204,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   ## Assign in globals so retrieveDictionary() can find it
   assign(name, dictionary, globals)
   
-  ## Save using your robust saveDictionary() function
+  ## Save using saveDictionary() function
   saveDictionary(name, dictionary)
   
   invisible(dictionary)
