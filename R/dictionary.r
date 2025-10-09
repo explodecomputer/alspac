@@ -51,19 +51,20 @@ retrieveDictionary <- function(name) {
   }
 }
 
-saveDictionary <- function(name, dictionary) {
+saveDictionary <- function(name, dictionary, overwrite = TRUE) {
   # Save in the globals environment
   assign(name, dictionary, globals)
   
   # -------------------------------
   # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
   # -------------------------------
-  data_path <- file.path(system.file(package = "alspac"), "data")
+  data_path <- file.path(getwd(), "data")
   if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
   
   save(list = name,
-       file = file.path(data_path, paste0(name, ".rdata")),
+       file = file.path(data_path, paste0(name, ".rda")),
        envir = globals)
+  
   
   # -------------------------------
   # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
@@ -74,6 +75,9 @@ saveDictionary <- function(name, dictionary) {
   save(list = name,
        file = file.path(inst_path, paste0(name, ".rdata")),
        envir = globals)
+  message("Dictionary '", name, "' saved to:\n",
+          " - ", file.path(data_path, paste0(name, ".rda")), "\n",
+          " - ", file.path(inst_path, paste0(name, ".rdata")))
 }
 
 #' Checks a dictionary
