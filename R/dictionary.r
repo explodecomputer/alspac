@@ -45,32 +45,23 @@ retrieveDictionary <- function(name) {
 }
 
 saveDictionary <- function(name, dictionary) {
-  # Save in the globals environment
+# Save in the globals environment
   assign(name, dictionary, globals)
   
   # -------------------------------
   # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
   # -------------------------------
-  data_path <- system.file("data", package = "alspac")
+  data_path <- file.path(getwd(), "data")  # always dev source tree
+  if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
   
-  if (nzchar(data_path)) {
-# Installed package case
-    save(list = name,
-         file = file.path(data_path, paste0(name, ".rda")),
-         envir = globals)
-  } else {
-# Dev case (write into source tree)
-    data_path <- file.path(getwd(), "data")
-    if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
-    save(list = name,
-         file = file.path(data_path, paste0(name, ".rda")),
-         envir = globals)
-  }
+  save(list = name,
+       file = file.path(data_path, paste0(name, ".rdata")),
+       envir = globals)
   
   # -------------------------------
   # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
   # -------------------------------
-  inst_path <- file.path(getwd(), "inst", "data")  # relative to project root
+  inst_path <- file.path(getwd(), "inst", "data")
   if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
   
   save(list = name,
