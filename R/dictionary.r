@@ -51,14 +51,18 @@ retrieveDictionary <- function(name) {
   }
 }
 
+
 saveDictionary <- function(name, dictionary, overwrite = TRUE) {
   # Save in the globals environment
+
   assign(name, dictionary, globals)
   
   # -------------------------------
   # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
   # -------------------------------
+
   data_path <- file.path(getwd(), "data")
+
   if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
   
   save(list = name,
@@ -69,7 +73,7 @@ saveDictionary <- function(name, dictionary, overwrite = TRUE) {
   # -------------------------------
   # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
   # -------------------------------
-  inst_path <- file.path(getwd(), "inst", "data")  # relative to project root
+  inst_path <- file.path(getwd(), "inst", "data")
   if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
   
   save(list = name,
@@ -152,7 +156,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   alspacdir <- options()$alspac_data_dir
   datadir <- file.path(alspacdir, datadir)
   
-  # --- NEW list.files section with version handling ---
+# ---list.files section with version handling ---
   files <- list.files(datadir,  
                       pattern="dta$",
                       full.names=TRUE,
@@ -167,7 +171,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   num <- suppressWarnings(as.integer(sub("([0-9]+).*", "\\1", vers)))
   let <- sub("[0-9]+", "", vers)
   
-  # Build table of file info
+# Build table of file info
   file_info <- data.frame(
     file = files,
     base = base,
@@ -181,7 +185,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
     dplyr::arrange(dplyr::desc(num), dplyr::desc(let)) |>
     dplyr::slice_head(n = 1) |>
     dplyr::pull(file)
-  # --- END of new section ---
+# --- END of new section ---
   
   dictionary <- parallel::mclapply(latest_files, function(file) {
     cat(date(), "loading", file, "\n")
@@ -206,7 +210,7 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   ## Assign in globals so retrieveDictionary() can find it
   assign(name, dictionary, globals)
   
-  ## Save using your robust saveDictionary() function
+  ## Save using saveDictionary() function
   saveDictionary(name, dictionary)
   
   invisible(dictionary)
