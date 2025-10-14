@@ -52,34 +52,19 @@ retrieveDictionary <- function(name) {
 }
 
 
-saveDictionary <- function(name, dictionary, overwrite = TRUE) {
-  # Put the dictionary into memory
-  gl <- if (exists("globals", envir = .GlobalEnv)) get("globals", envir = .GlobalEnv) else .GlobalEnv
-  assign(name, dictionary, envir = gl)
+saveDictionary <- function(name, dictionary) {
+  assign(name, dictionary, globals)
+  #if (name == "current" || name == "useful")
+  #    combineDictionaries()
   
-  # Detect package root (dev) and install path
-  pkg_root <- tryCatch(rprojroot::find_root(rprojroot::has_dir("R")), error = function(e) getwd())
-  pkg_inst_path <- system.file(package = "alspac")
-  
-  # Decide where to save
-  if (nzchar(pkg_inst_path) && !grepl("Git|dev|Documents", pkg_inst_path, ignore.case = TRUE)) {
-    # Installed package
-    data_dir <- file.path(pkg_inst_path, "data")
-    mode <- "installed"
-  } else {
-    # Development mode
-    data_dir <- file.path(pkg_root, "data")
-    mode <- "dev"
+  path <- file.path(system.file(package="alspac"), "data")
+  if (!file.exists(path)) {
+    dir.create(path)
   }
-  
-  if (!dir.exists(data_dir)) dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
-  
-  save_path <- file.path(data_dir, paste0(name, ".rdata"))
-  save(list = name, file = save_path, envir = gl)
-  message("Dictionary '", name, "' saved to /data/ (", mode, "):\n  ", save_path)
-  invisible(save_path)
+  save(list=name,
+       file=file.path(path, paste(name, "rdata", sep=".")),
+       envir=globals)
 }
-
 
 
 
@@ -146,7 +131,7 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
-createDictionary <- function(datadir="Current", name= "current", quick=FALSE, sourcesFile = NULL) {
+createDictionary <- function(datadir="Current", name=NULL, quick=FALSE, sourcesFile = NULL) {
   stopifnot(datadir %in% c("Current", "../DataBuddy/DataRequests/Waiting Room"))
   
   if(is.null(sourcesFile))
@@ -155,22 +140,24 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
   alspacdir <- options()$alspac_data_dir
   datadir <- file.path(alspacdir, datadir)
   
-# ---list.files section with version handling ---
+  # --- NEW list.files section with version handling ---
   files <- list.files(datadir,  
                       pattern="dta$",
                       full.names=TRUE,
                       recursive=TRUE,
                       ignore.case=TRUE)
   
+  # Extract base name and version (assuming suffix like _1a, _2b etc.)
   fnames <- basename(files)
   parts  <- sub("\\.dta$", "", fnames)               # drop extension
   base   <- sub("_[0-9]+[a-zA-Z]$", "", parts)       # everything before version
   vers   <- sub(".*_", "", parts)                    # the version part (e.g., 1a, 2b)
   
+  # Split numeric and letter parts
   num <- suppressWarnings(as.integer(sub("([0-9]+).*", "\\1", vers)))
   let <- sub("[0-9]+", "", vers)
   
-# Build table of file info
+  # Build table of file info
   file_info <- data.frame(
     file = files,
     base = base,
@@ -179,12 +166,13 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
     stringsAsFactors = FALSE
   )
   
+  # Keep latest per base (highest number, then highest letter)
   latest_files <- file_info |>
     dplyr::group_by(base) |>
     dplyr::arrange(dplyr::desc(num), dplyr::desc(let)) |>
     dplyr::slice_head(n = 1) |>
     dplyr::pull(file)
-# --- END of new section ---
+  # --- END of new section ---
   
   dictionary <- parallel::mclapply(latest_files, function(file) {
     cat(date(), "loading", file, "\n")
@@ -199,18 +187,13 @@ createDictionary <- function(datadir="Current", name= "current", quick=FALSE, so
     })
   }) %>% dplyr::bind_rows()
   
-  
   dictionary <- dictionary[which(dictionary$counts > 0),]
   
-  
-  ## Add sources info
   dictionary <- addSourcesToDictionary(dictionary, sourcesFile)
   
-  ## Assign in globals so retrieveDictionary() can find it
-  assign(name, dictionary, globals)
-  
-  ## Save using saveDictionary() function
-  saveDictionary(name, dictionary)
+  if (!is.null(name)) {
+    saveDictionary(name, dictionary)
+  }
   
   invisible(dictionary)
 }
