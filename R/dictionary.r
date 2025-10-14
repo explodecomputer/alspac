@@ -53,36 +53,35 @@ retrieveDictionary <- function(name) {
 
 
 saveDictionary <- function(name, dictionary, overwrite = TRUE) {
-  # Save in the globals environment
-
-  assign(name, dictionary, globals)
+  # Put the dictionary into memory
+  gl <- if (exists("globals", envir = .GlobalEnv)) get("globals", envir = .GlobalEnv) else .GlobalEnv
+  assign(name, dictionary, envir = gl)
   
-  # -------------------------------
-  # 1️⃣ Save CRAN/GitHub-compliant copy (/data/)
-  # -------------------------------
-
-  data_path <- file.path(getwd(), "data")
-
-  if (!dir.exists(data_path)) dir.create(data_path, recursive = TRUE)
+  # Detect package root (dev) and install path
+  pkg_root <- tryCatch(rprojroot::find_root(rprojroot::has_dir("R")), error = function(e) getwd())
+  pkg_inst_path <- system.file(package = "alspac")
   
-  save(list = name,
-       file = file.path(data_path, paste0(name, ".rda")),
-       envir = globals)
+  # Decide where to save
+  if (nzchar(pkg_inst_path) && !grepl("Git|dev|Documents", pkg_inst_path, ignore.case = TRUE)) {
+    # Installed package
+    data_dir <- file.path(pkg_inst_path, "data")
+    mode <- "installed"
+  } else {
+    # Development mode
+    data_dir <- file.path(pkg_root, "data")
+    mode <- "dev"
+  }
   
+  if (!dir.exists(data_dir)) dir.create(data_dir, recursive = TRUE, showWarnings = FALSE)
   
-  # -------------------------------
-  # 2️⃣ Save dev copy (/inst/data/) for load_all() testing
-  # -------------------------------
-  inst_path <- file.path(getwd(), "inst", "data")
-  if (!dir.exists(inst_path)) dir.create(inst_path, recursive = TRUE)
-  
-  save(list = name,
-       file = file.path(inst_path, paste0(name, ".rdata")),
-       envir = globals)
-  message("Dictionary '", name, "' saved to:\n",
-          " - ", file.path(data_path, paste0(name, ".rda")), "\n",
-          " - ", file.path(inst_path, paste0(name, ".rdata")))
+  save_path <- file.path(data_dir, paste0(name, ".rdata"))
+  save(list = name, file = save_path, envir = gl)
+  message("Dictionary '", name, "' saved to /data/ (", mode, "):\n  ", save_path)
+  invisible(save_path)
 }
+
+
+
 
 #' Checks a dictionary
 #'
