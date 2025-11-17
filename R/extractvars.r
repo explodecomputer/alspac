@@ -145,6 +145,7 @@ extractVarsCore <- function(x, spss=FALSE, haven=haven) {
         in_phase2=cp.obj.pat,
         in_phase3=cp.obj.pat,
         in_phase4=cp.obj.pat,
+        in_phase5=cp.obj.pat,
         tripquad=cp.obj.pat)
     if (any(var.has.child.data)) {
         core.filters <- c(core.filters, child.filters)
