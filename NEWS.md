@@ -1,3 +1,24 @@
+# alspac 22/12/2025
+
+1. First version release of G1 (YPN) file (Life @32 Questionnaire 2024)
+ 
+- YPN data file: YPN_1a in R:\Data\Current\Quest\Child Completed
+- YPN data documentation: D1503_YPN in R:\Data\documentation\built_pdf\Quest\Child Completed
+
+2. First version release of G0 Mothers/Partners Focus@30 clinic data
+ 
+ - F30_G0M_1 data filename: F30_G0M_1a in R:\Data\current\clinic\G0\mother
+ - F30_G0M_1 data documentation: D2113_F30_G0M in R:\Data\documentation\built pdf\clinic\G0\mother
+ - F30_G0P_1 data filename: F30_G0P_1a in R:\Data\current\clinic\G0\partner
+ - F30_G0P_1 data documentation: D2314_F30_G0P in R:\Data\documentation\built pdf\clinic\G0\partner
+
+3. Updated version (v4) of G1 cohort profile 
+
+ - CP data file: CP_4a in R:\Data\current\other\cohort profile\G1
+ - CP data documentation: D2435_CP in \Data\documentation\built pdf\other\cohort profile\G1
+
+4. First version release of Twitter (X) data
+
 # alspac 29/05/2025
 
 1. First version release of G1 Focus@30 clinic data 
