@@ -9,7 +9,7 @@ Description: Functions to search and extract variables based on keywords
     from the ALSPAC data dictionary.
 License: Artistic-2.0
 Depends:
-    R (>= 3.5.0)
+    R (>= 4.1.0)
 Imports:
     dplyr,
     haven,
