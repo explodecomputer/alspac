@@ -42,13 +42,14 @@ Father_metabolomics_,current/biosamples/G0/partner/,FALSE,FALSE,FALSE,FALSE,TRUE
 Father_samples_,current/biosamples/G0/partner/,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE
 Mother_samples_,current/biosamples/G0/partner/,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 mum_metabolomics_,current/biosamples/G0/partner/,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
-maternal_grandfather_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
-maternal_grandmother_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
-mother_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
-partner_complete_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
-partner_proxy_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
-paternal_grandfather_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
-paternal_grandmother_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
+G0m_mgf_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+G0m_mgm_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+G0m_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+G0p_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
+G0p_proxy_social_class_,current/other/social class/G0/partner/,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
+G0p_pgf_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
+G0p_pgm_social_class_,current/other/social class/G0/partner/,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
+G1_social_class_,current/other/social class/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
 ka_,current/quest/G1/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
 kb_,current/quest/G1/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
 kc_,current/quest/G1/proxy/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
@@ -113,6 +114,7 @@ YPK_,current/quest/G1/self/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 YPL_,current/quest/G1/self/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 YPM_,current/quest/G1/self/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 YPN_,current/quest/G1/self/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+YPP_,current/quest/G1/self/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 PHE_COVID_YP_,current/quest/G1/self/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 COVID1_G0partner_,current/quest/G0/partner,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE
 COVID1_Mum_,current/quest/G0/partner/,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
