@@ -33,7 +33,7 @@ Twitter_G1_KEY_,current/other/third party/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALS
 cLon_,current/other/longitudinal/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 mLon_,current/other/longitudinal/G0/partner/,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 MRI_YP_,current/other/longitudinal/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
-OA_,current/other/obstetric/G0/partner/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
+OA_,current/other/obstetric/G0/partner/,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE
 OB_,current/other/obstetric/G0/partner/,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE
 OC_,current/other/obstetric/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
 Child_bloods_,current/biosamples/G1/,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE
